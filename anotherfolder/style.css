@@ -222,13 +222,17 @@ p {
 
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    grid-template-rows: auto auto;
+    gap: 0 40px;
 
     align-items: center;
 }
 
 .hero-copy {
     max-width: 650px;
+
+    grid-column: 1;
+    grid-row: 1;
 }
 
 
@@ -279,10 +283,13 @@ p {
     display: flex;
     gap: 44px;
 
-    margin-top: 25px;
+    margin-top: 0;
     padding-top: 20px;
 
     border-top: 1px solid var(--blue);
+
+    grid-column: 1;
+    grid-row: 2;
 }
 
 .hero-stats strong,
@@ -313,15 +320,20 @@ p {
 .hero-art {
     position: relative;
 
-    min-height: 420px;
+    min-height: 500px;
+    height: 100%;
 
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    grid-column: 2;
+    grid-row: 1 / span 2;
 }
 
 .hex-logo {
-    width: 430px;
-    height: 430px;
+    width: 390px;
+    height: 390px;
 
     display: flex;
     align-items: center;
@@ -1109,14 +1121,28 @@ p {
     /* Hero */
 
     .hero {
-        grid-template-columns: 1fr;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    padding: 60px 7%;
+}
 
-        padding: 60px 7%;
-    }
+.hero-copy {
+    grid-column: 1;
+    grid-row: auto;
+}
 
-    .hero-art {
-        min-height: 310px;
-    }
+.hero-stats {
+    grid-column: 1;
+    grid-row: auto;
+}
+
+.hero-art {
+    grid-column: 1;
+    grid-row: auto;
+
+    min-height: 310px;
+    height: 310px;
+}
 
     .hex-logo {
         width: 300px;

@@ -1,5 +1,13 @@
 <?php
-$year = date('Y');
+
+// Start the session so Home can recognize a logged-in user.
+session_start();
+
+// Check if the customer is already logged in.
+ $loggedIn = !empty($_SESSION['user_id']);
+
+ $year = date('Y');
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,45 +20,58 @@ $year = date('Y');
 
 <body>
 
-<!-- HEADER -->
-<header class="site-header">
-    <a class="brand" href="#home">
-        <img class="brand-logo" src="assets/frostcore_logo.png" alt="FROSTCORE logo">
-        <span>FROSTCORE</span>
-    </a>
+    <!-- HEADER -->
+    <header class="site-header">
+        <a class="brand" href="#home">
+            <img class="brand-logo" src="assets/frostcore_logo.png" alt="FROSTCORE logo">
+            <span>FROSTCORE</span>
+        </a>
 
-    <nav class="nav">
-        <a href="#why">Why Cooling</a>
-        <a href="#product">Product</a>
-        <a href="#specs">Specs</a>
-        <a href="#reviews">Reviews</a>
-    </nav>
+        <nav class="nav">
+            <a href="#why">Why Cooling</a>
+            <a href="#product">Product</a>
+            <a href="#specs">Specs</a>
+            <a href="#reviews">Reviews</a>
+        </nav>
 
-    <a class="btn btn-small requires-login" href="#login">SHOP NOW</a>
-</header>
+        <?php if ($loggedIn): ?>
+            <a class="btn btn-small" href="products.php">
+                SHOP NOW
+            </a>
+        <?php else: ?>
+            <a class="btn btn-small requires-login" href="#login">
+                SHOP NOW
+            </a>
+        <?php endif; ?>
+    </header>
 
 
-<!-- MAIN -->
-<main>
+    <!-- MAIN -->
+    <main>
 
-    <!-- HERO -->
-    <section id="home" class="hero">
-        <div class="hero-copy">
-            <div class="eyebrow">● EXTERNAL COOLING • ENGINEERED</div>
+        <!-- HERO -->
+        <section id="home" class="hero">
+            <div class="hero-copy">
+                <div class="eyebrow">● EXTERNAL COOLING • ENGINEERED</div>
 
-            <h1>
-                Stay cool.<br>
-                <span>Play better.</span>
-            </h1>
+                <h1>
+                    Stay cool.<br>
+                    <span>Play better.</span>
+                </h1>
 
-            <p class="lead">
-                FROSTCORE phone and laptop coolers pull heat away from your device in seconds — so frame drops, throttling, and overheat warnings stop deciding your matches.
-            </p>
+                <p class="lead">
+                    FROSTCORE phone and laptop coolers pull heat away from your device in seconds — so frame drops, throttling, and overheat warnings stop deciding your matches.
+                </p>
 
-            <div class="actions">
-                <a class="btn requires-login" href="#login">
-                    SHOP COOLERS <b>→</b>
-                </a>
+                <?php if ($loggedIn): ?>
+                    <a class="btn" href="products.php">
+                        SHOP COOLERS <b>→</b>
+                    </a>
+                <?php else: ?>
+                    <a class="btn requires-login" href="#login">
+                        SHOP COOLERS <b>→</b>
+                    </a>
+                <?php endif; ?>
 
                 <a class="btn btn-outline" href="#why">
                     SEE HOW IT WORKS
@@ -311,9 +332,15 @@ $year = date('Y');
             Free shipping on all coolers this week. 2 years warranty included.
         </p>
 
-        <a class="btn requires-login" href="#login">
-            SHOP COOLERS →
-        </a>
+        <?php if ($loggedIn): ?>
+            <a class="btn" href="products.php">
+                SHOP COOLERS →
+            </a>
+        <?php else: ?>
+            <a class="btn requires-login" href="#login">
+                SHOP COOLERS →
+            </a>
+        <?php endif; ?>
     </section>
 
 </main>
@@ -332,9 +359,31 @@ $year = date('Y');
 
         <div>
             <h3>SHOP</h3>
-            <a class="requires-login" href="#login">Phone Coolers</a>
-            <a class="requires-login" href="#login">Laptop Coolers</a>
-            <a class="requires-login" href="#login">Bundles</a>
+            <?php if ($loggedIn): ?>
+                <a href="products.php?category=Phone+Cooler">
+                    Phone Coolers
+                </a>
+
+                <a href="products.php?category=Laptop+Cooler">
+                    Laptop Coolers
+                </a>
+
+                <a href="products.php?category=Bundle">
+                    Bundles
+                </a>
+            <?php else: ?>
+                <a class="requires-login" href="#login">
+                    Phone Coolers
+                </a>
+
+                <a class="requires-login" href="#login">
+                    Laptop Coolers
+                </a>
+
+                <a class="requires-login" href="#login">
+                    Bundles
+                </a>
+            <?php endif; ?>
         </div>
 
         <div>

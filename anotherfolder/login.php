@@ -17,7 +17,7 @@ $email = "";
 
 
 // Allow the user to return to the page they originally wanted.
-$redirect = $_GET["redirect"] ?? $_POST["redirect"] ?? "index.php";
+$redirect = $_GET["redirect"] ?? $_POST["redirect"] ?? "products.php";
 
 
 // Only allow internal website pages as redirects.
