@@ -1,0 +1,1591 @@
+/* =========================================================
+   FROSTCORE WEBSITE
+   Main Stylesheet
+   ========================================================= */
+
+
+/* =========================================================
+   1. GOOGLE FONTS
+   ========================================================= */
+
+@import url(
+    'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;600;700;800&display=swap'
+);
+
+
+/* =========================================================
+   2. ROOT VARIABLES
+   ========================================================= */
+
+:root {
+    --bg: #050a16;
+    --panel: #111a31;
+    --panel-2: #17213a;
+
+    --line: #263452;
+    --line-light: #31506f;
+
+    --text: #f4f7ff;
+    --muted: #aab5ca;
+
+    --blue: #4dbcf4;
+    --cyan: #00d7ff;
+
+    --input-bg: #081225;
+}
+
+
+/* =========================================================
+   3. RESET
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Inter", Arial, sans-serif;
+    line-height: 1.6;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+
+/* =========================================================
+   4. TYPOGRAPHY
+   ========================================================= */
+
+h1,
+h2,
+h3 {
+    font-family: "Orbitron", sans-serif;
+    margin-top: 0;
+    line-height: 1.08;
+}
+
+h1 {
+    font-size: 64px;
+    letter-spacing: 0.01em;
+    margin-bottom: 20px;
+}
+
+h1 span {
+    color: var(--blue);
+}
+
+h2 {
+    font-size: 37px;
+}
+
+p {
+    margin-top: 0;
+}
+
+
+/* =========================================================
+   5. HEADER / NAVIGATION
+   ========================================================= */
+
+.site-header {
+    height: 72px;
+    padding: 0 5.5%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    position: sticky;
+    top: 0;
+    z-index: 10;
+
+    background: rgba(5, 10, 22, 0.94);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+
+    backdrop-filter: blur(12px);
+}
+
+
+/* Logo + Brand */
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-family: "Orbitron", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.brand-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+
+/* Navigation */
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+
+    font-size: 12px;
+    color: #d6ddec;
+}
+
+.nav a {
+    transition: 0.2s ease;
+}
+
+.nav a:hover {
+    color: var(--blue);
+}
+
+
+/* =========================================================
+   6. BUTTONS
+   ========================================================= */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+
+    padding: 13px 20px;
+
+    background: var(--blue);
+    color: #06101c;
+
+    border: 1px solid var(--blue);
+
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+}
+
+.btn-small {
+    padding: 10px 15px;
+    font-size: 10px;
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--text);
+    border-color: #42617e;
+}
+
+
+/* =========================================================
+   7. HERO SECTION
+   ========================================================= */
+
+.hero {
+    min-height: 650px;
+
+    padding: 70px 9%;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+
+    align-items: center;
+}
+
+.hero-copy {
+    max-width: 650px;
+}
+
+
+/* Small blue heading */
+
+.eyebrow {
+    display: inline-block;
+
+    margin-bottom: 18px;
+
+    color: var(--cyan);
+
+    font-family: "Orbitron", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+}
+
+.hero .eyebrow {
+    padding: 8px 13px;
+    border: 1px solid var(--line-light);
+}
+
+
+/* Hero paragraph */
+
+.lead {
+    max-width: 620px;
+
+    color: #e0e6f2;
+
+    font-size: 15px;
+}
+
+
+/* Hero buttons */
+
+.actions {
+    display: flex;
+    gap: 18px;
+
+    margin: 30px 0;
+}
+
+
+/* Hero statistics */
+
+.hero-stats {
+    display: flex;
+    gap: 44px;
+
+    margin-top: 25px;
+    padding-top: 20px;
+
+    border-top: 1px solid var(--blue);
+}
+
+.hero-stats strong,
+.specs strong {
+    display: block;
+
+    color: var(--blue);
+
+    font-family: "Orbitron", sans-serif;
+    font-size: 23px;
+}
+
+.hero-stats small,
+.specs small {
+    display: block;
+
+    margin-top: 6px;
+
+    color: var(--muted);
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   8. HERO IMAGE
+   ========================================================= */
+
+.hero-art {
+    position: relative;
+
+    min-height: 420px;
+
+    display: grid;
+    place-items: center;
+}
+
+.hex-logo {
+    width: 430px;
+    height: 430px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    filter: drop-shadow(
+        0 0 35px rgba(77, 188, 244, 0.22)
+    );
+}
+
+.hex-logo img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+
+/* Temperature card */
+
+.temp-card {
+    position: absolute;
+    right: 7%;
+    bottom: 40px;
+
+    padding: 10px 13px;
+
+    background: #101b34;
+    border: 1px solid var(--line-light);
+}
+
+.temp-card small {
+    display: block;
+
+    color: var(--muted);
+    font-size: 8px;
+}
+
+.temp-card strong {
+    color: var(--blue);
+
+    font-family: "Orbitron", sans-serif;
+    font-size: 19px;
+}
+
+
+/* =========================================================
+   9. GENERAL SECTIONS
+   ========================================================= */
+
+.section {
+    padding: 75px 9%;
+}
+
+.container {
+    max-width: 1120px;
+    margin: auto;
+}
+
+
+/* =========================================================
+   10. WHY COOLING / PROBLEM
+   ========================================================= */
+
+.problem {
+    background: var(--panel);
+}
+
+.section-intro {
+    max-width: 850px;
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+.problem-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    margin-top: 35px;
+
+    border: 1px solid var(--line);
+}
+
+.problem-grid article {
+    padding: 22px;
+
+    border-right: 1px solid var(--line);
+}
+
+.problem-grid article:last-child {
+    border-right: none;
+}
+
+.icon {
+    color: var(--cyan);
+    font-size: 20px;
+}
+
+.problem-grid h3 {
+    margin: 14px 0 8px;
+
+    font-size: 13px;
+}
+
+.problem-grid p {
+    margin: 0;
+
+    color: var(--muted);
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   11. PRODUCT SECTION
+   ========================================================= */
+
+.product {
+    background: var(--bg);
+}
+
+.product-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 60px;
+
+    margin-top: 30px;
+
+    align-items: center;
+}
+
+
+/* Product image */
+
+.product-image-card {
+    min-height: 330px;
+
+    padding: 15px;
+
+    background: var(--panel);
+    border: 1px solid var(--line);
+}
+
+.product-image-card > span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #cdd6e6;
+
+    font-family: "Orbitron", sans-serif;
+    font-size: 10px;
+}
+
+.product-image-card img {
+    width: 100%;
+    height: 285px;
+
+    object-fit: contain;
+}
+
+
+/* Product features */
+
+.features {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.feature {
+    display: grid;
+    grid-template-columns: 38px 1fr;
+    gap: 14px;
+}
+
+.feature > b {
+    width: 27px;
+    height: 27px;
+
+    display: grid;
+    place-items: center;
+
+    color: var(--cyan);
+
+    border: 1px solid var(--line-light);
+
+    font-family: "Orbitron", sans-serif;
+    font-size: 9px;
+}
+
+.feature h3 {
+    margin: 0 0 4px;
+
+    font-size: 13px;
+}
+
+.feature p {
+    margin: 0;
+
+    color: var(--muted);
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   12. SPECS
+   ========================================================= */
+
+.specs {
+    padding: 65px 9%;
+
+    background: var(--panel);
+}
+
+.specs-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+
+    text-align: center;
+}
+
+.specs strong {
+    font-size: 22px;
+}
+
+.specs small {
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   13. REVIEWS
+   ========================================================= */
+
+.reviews {
+    background: var(--bg);
+}
+
+.review-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 35px;
+
+    margin-top: 40px;
+}
+
+.review {
+    min-height: 190px;
+
+    padding: 24px;
+
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+}
+
+.stars {
+    color: var(--blue);
+
+    letter-spacing: 4px;
+    font-size: 11px;
+}
+
+.review p {
+    min-height: 75px;
+
+    font-size: 11px;
+}
+
+.person {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+
+    border-radius: 50%;
+    background: var(--blue);
+}
+
+.person b,
+.person small {
+    display: block;
+}
+
+.person b {
+    font-size: 10px;
+}
+
+.person small {
+    color: var(--muted);
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   14. CALL TO ACTION
+   ========================================================= */
+
+.cta {
+    padding: 65px 20px 70px;
+
+    text-align: center;
+
+    background: #111a2e;
+}
+
+.cta-logo img {
+    width: 75px;
+    height: 75px;
+
+    margin: 0 auto 15px;
+
+    object-fit: contain;
+}
+
+.cta h2 {
+    margin-bottom: 12px;
+
+    font-size: 36px;
+}
+
+.cta p {
+    margin-bottom: 22px;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   15. FOOTER
+   ========================================================= */
+
+.footer {
+    padding: 55px 9% 25px;
+
+    background: var(--bg);
+}
+
+.footer-grid {
+    max-width: 1120px;
+    margin: auto;
+
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 45px;
+}
+
+.footer h3 {
+    font-size: 11px;
+}
+
+.footer p,
+.footer a {
+    display: block;
+
+    color: var(--muted);
+    font-size: 9px;
+    line-height: 2;
+}
+
+.footer a:hover {
+    color: var(--blue);
+}
+
+.footer-bottom {
+    max-width: 1120px;
+    margin: 35px auto 0;
+
+    padding-top: 18px;
+
+    display: flex;
+    justify-content: space-between;
+
+    color: #68758d;
+
+    border-top: 1px solid var(--line);
+
+    font-family: "Orbitron", sans-serif;
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   16. LOGIN POPUP
+   ========================================================= */
+
+.login-overlay {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(1, 5, 14, 0.78);
+
+    backdrop-filter: blur(8px);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: 0.22s ease;
+
+    z-index: 100;
+}
+
+.login-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* Login box */
+
+.login-modal,
+.login-card {
+    position: relative;
+
+    width: min(420px, 100%);
+
+    padding: 35px;
+
+    background: var(--panel);
+
+    border: 1px solid #2d4568;
+    border-radius: 8px;
+
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.55);
+}
+
+.login-modal {
+    text-align: left;
+}
+
+
+/* Close button */
+
+.close-login {
+    position: absolute;
+    top: 8px;
+    right: 13px;
+
+    background: transparent;
+    border: none;
+
+    color: var(--muted);
+
+    font-size: 27px;
+
+    cursor: pointer;
+}
+
+.close-login:hover {
+    color: var(--blue);
+}
+
+
+/* Login logo */
+
+.login-logo {
+    width: 70px;
+    height: 70px;
+
+    margin: 0 auto 10px;
+
+    object-fit: contain;
+}
+
+
+/* Login heading */
+
+.login-modal h2,
+.login-card h1 {
+    margin: 0 0 5px;
+
+    text-align: center;
+
+    font-size: 27px;
+}
+
+.login-subtitle {
+    margin: 0 0 25px;
+
+    color: #71809b;
+
+    text-align: center;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   17. LOGIN / REGISTER FORM
+   ========================================================= */
+
+.login-modal label,
+.login-card label {
+    display: block;
+
+    margin: 13px 0 6px;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.login-modal input,
+.login-card input {
+    width: 100%;
+    height: 42px;
+
+    padding: 0 12px;
+
+    background: var(--input-bg);
+
+    border: 1px solid #2a4263;
+    border-radius: 4px;
+
+    color: white;
+
+    outline: none;
+
+    font-size: 11px;
+}
+
+.login-modal input::placeholder,
+.login-card input::placeholder {
+    color: #596a85;
+}
+
+.login-modal input:focus,
+.login-card input:focus {
+    border-color: var(--blue);
+}
+
+
+/* Password container */
+
+.password-wrap {
+    position: relative;
+}
+
+.password-wrap input {
+    padding-right: 60px;
+}
+
+.password-wrap button {
+    position: absolute;
+    top: 0;
+    right: 8px;
+
+    height: 42px;
+
+    background: transparent;
+    border: none;
+
+    color: var(--blue);
+
+    font-size: 9px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+/* Login button */
+
+.login-submit {
+    width: 100%;
+
+    margin-top: 20px;
+}
+
+
+/* Forgot password */
+
+.forgot {
+    margin: 8px 0 0;
+
+    color: var(--blue);
+
+    text-align: right;
+
+    font-size: 9px;
+}
+
+
+/* Create account */
+
+.create {
+    margin-top: 18px;
+
+    color: #71809b;
+
+    text-align: center;
+
+    font-size: 10px;
+}
+
+.create a {
+    color: var(--blue);
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   18. REGISTER PAGE
+   ========================================================= */
+
+.login-page {
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    background: var(--bg);
+}
+
+
+/* Registration main area */
+
+.login-page-main {
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 45px 20px;
+}
+
+
+/* Registration card */
+
+.login-card {
+    width: min(450px, 100%);
+
+    padding: 35px 40px;
+
+    background: rgba(17, 26, 49, 0.96);
+}
+
+
+/* Registration logo */
+
+.login-card .login-logo {
+    width: 70px;
+    height: 70px;
+
+    margin-bottom: 8px;
+}
+
+
+/* Registration title */
+
+.login-card h1 {
+    margin-bottom: 5px;
+
+    font-size: 27px;
+}
+
+.login-card .login-subtitle {
+    margin-bottom: 22px;
+}
+
+
+/* Registration form */
+
+#registerForm {
+    width: 100%;
+}
+
+
+/* Form groups */
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+
+/* Terms */
+
+.terms {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin: 15px 0;
+
+    color: #aab5ca;
+
+    font-size: 9px;
+}
+
+.terms input {
+    width: 13px;
+    height: 13px;
+
+    accent-color: var(--blue);
+}
+
+.terms a {
+    color: var(--blue);
+}
+
+
+/* Register button */
+
+.register-submit {
+    width: 100%;
+
+    margin-top: 8px;
+}
+
+
+/* Sign-in link */
+
+.sign-in-link {
+    margin-top: 18px;
+
+    text-align: center;
+
+    color: #71809b;
+
+    font-size: 10px;
+}
+
+.sign-in-link a {
+    color: var(--blue);
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   19. DEMO MESSAGE
+   ========================================================= */
+
+.demo-message {
+    margin-bottom: 15px;
+    padding: 10px;
+
+    color: #9edfff;
+
+    background: #0a1c31;
+    border: 1px solid var(--line-light);
+
+    text-align: center;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   20. LOGIN / REGISTER FOOTER
+   ========================================================= */
+
+.login-footer {
+    width: 100%;
+
+    padding: 15px 9%;
+
+    margin: 0;
+}
+
+
+/* =========================================================
+   21. TABLET RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .site-header {
+        padding: 0 5%;
+    }
+
+    .nav {
+        display: none;
+    }
+
+    /* Hero */
+
+    .hero {
+        grid-template-columns: 1fr;
+
+        padding: 60px 7%;
+    }
+
+    .hero-art {
+        min-height: 310px;
+    }
+
+    .hex-logo {
+        width: 300px;
+        height: 300px;
+    }
+
+    h1 {
+        font-size: 48px;
+    }
+
+
+    /* Problem */
+
+    .problem-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .problem-grid article {
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .problem-grid article:last-child {
+        border-bottom: none;
+    }
+
+
+    /* Product */
+
+    .product-layout {
+        grid-template-columns: 1fr;
+        gap: 35px;
+    }
+
+
+    /* Reviews */
+
+    .review-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+
+    /* Specs */
+
+    .specs-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+
+
+    /* Footer */
+
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+}
+
+
+/* =========================================================
+   22. MOBILE RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+    /* Header */
+
+    .site-header {
+        height: 62px;
+    }
+
+    .brand {
+        font-size: 14px;
+    }
+
+    .brand-logo {
+        width: 34px;
+        height: 34px;
+    }
+
+    .btn-small {
+        padding: 8px 10px;
+        font-size: 8px;
+    }
+
+
+    /* Hero */
+
+    .hero {
+        padding: 45px 6%;
+    }
+
+    h1 {
+        font-size: 40px;
+    }
+
+    h2,
+    .cta h2 {
+        font-size: 27px;
+    }
+
+
+    /* Hero buttons */
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .actions .btn {
+        width: 100%;
+    }
+
+
+    /* Hero statistics */
+
+    .hero-stats {
+        gap: 16px;
+
+        justify-content: space-between;
+    }
+
+    .hero-stats strong {
+        font-size: 17px;
+    }
+
+
+    /* Sections */
+
+    .section {
+        padding: 60px 6%;
+    }
+
+    .specs {
+        padding: 50px 6%;
+    }
+
+
+    /* Footer */
+
+    .footer {
+        padding: 45px 6% 20px;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+
+    /* Login */
+
+    .login-modal,
+    .login-card {
+        padding: 28px 22px;
+    }
+
+
+    /* Register */
+
+    .login-page-main {
+        padding: 30px 15px;
+    }
+
+    .login-card {
+        width: 100%;
+    }
+
+    .login-card h1 {
+        font-size: 23px;
+    }
+}
+/* =========================================================
+   REGISTRATION PAGE
+   ========================================================= */
+
+.register-page {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Main Registration Area */
+
+.register-main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 45px 20px;
+}
+
+
+/* Registration Card */
+
+.register-card {
+    width: min(460px, 100%);
+    background: var(--panel);
+    border: 1px solid #2d4568;
+    border-radius: 10px;
+    padding: 32px 38px;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
+}
+
+
+/* Brand */
+
+.register-brand {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.register-logo {
+    width: 62px;
+    height: 62px;
+    object-fit: contain;
+    margin: 0 auto 8px;
+}
+
+.register-brand-name {
+    font-family: Orbitron, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text);
+}
+
+
+/* Heading */
+
+.register-card h1 {
+    font-family: Orbitron, sans-serif;
+    font-size: 25px;
+    line-height: 1.15;
+    text-align: center;
+    margin: 0 0 6px;
+    color: var(--text);
+}
+
+
+/* Subtitle */
+
+.register-subtitle {
+    text-align: center;
+    color: #71809b;
+    font-size: 10px;
+    margin: 0 0 22px;
+}
+
+
+/* Form */
+
+.register-form {
+    width: 100%;
+}
+
+
+/* Form Group */
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+
+/* Labels */
+
+.form-group label {
+    display: block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+    color: #d6ddec;
+}
+
+
+/* Inputs */
+
+.form-group input {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+
+    background: #081225;
+    border: 1px solid #2a4263;
+    border-radius: 4px;
+
+    color: #ffffff;
+    font-family: Inter, Arial, sans-serif;
+    font-size: 10px;
+
+    outline: none;
+    transition: 0.2s ease;
+}
+
+
+.form-group input::placeholder {
+    color: #5e6d85;
+}
+
+
+.form-group input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 1px rgba(77, 188, 244, 0.15);
+}
+
+
+/* Password */
+
+.register-password {
+    position: relative;
+}
+
+
+.register-password input {
+    padding-right: 58px;
+}
+
+
+/* Show / Hide Button */
+
+.password-toggle {
+    position: absolute;
+    right: 7px;
+    top: 0;
+
+    height: 42px;
+
+    padding: 0 7px;
+
+    background: transparent;
+    border: 0;
+
+    color: var(--blue);
+
+    font-family: Orbitron, sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+/* Terms */
+
+.terms {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin: 17px 0;
+
+    color: #aab5ca;
+    font-size: 9px;
+
+    cursor: pointer;
+}
+
+
+.terms input {
+    width: 13px;
+    height: 13px;
+    accent-color: var(--blue);
+    cursor: pointer;
+}
+
+
+.terms a {
+    color: var(--blue);
+}
+
+
+.terms a:hover {
+    text-decoration: underline;
+}
+
+
+/* Create Account Button */
+
+.register-button {
+    width: 100%;
+    height: 42px;
+
+    padding: 0;
+
+    font-size: 9px;
+}
+
+
+/* Sign In */
+
+.register-login {
+    text-align: center;
+
+    color: #71809b;
+    font-size: 9px;
+
+    margin: 18px 0 0;
+}
+
+
+.register-login a {
+    color: var(--blue);
+    font-weight: 700;
+}
+
+
+.register-login a:hover {
+    text-decoration: underline;
+}
+
+
+/* Footer */
+
+.register-footer {
+    width: 100%;
+
+    padding: 16px 20px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+
+    color: #68758d;
+
+    font-family: Orbitron, sans-serif;
+    font-size: 7px;
+
+    text-align: center;
+}
+
+
+.register-footer span {
+    margin-left: 20px;
+    color: #68758d;
+}
+
+
+/* =========================================================
+   REGISTRATION RESPONSIVE DESIGN
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+    .register-main {
+        padding: 30px 15px;
+    }
+
+    .register-card {
+        padding: 28px 22px;
+    }
+
+    .register-logo {
+        width: 55px;
+        height: 55px;
+    }
+
+    .register-card h1 {
+        font-size: 21px;
+    }
+
+    .register-footer span {
+        display: block;
+        margin: 5px 0 0;
+    }
+
+}
