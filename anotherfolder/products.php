@@ -1,31 +1,42 @@
 <?php
 
-// Start the session.
+// ==================================================
+// START SESSION
+// ==================================================
+
 session_start();
 
-// Connect to the FROSTCORE MySQL database.
+// Connect to the FROSTCORE database.
 require_once "database/config.php";
 
 
-// --------------------------------------------------
-// GET FILTER / SEARCH VALUES
-// --------------------------------------------------
+// ==================================================
+// FILTER / SEARCH VALUES
+// ==================================================
 
-// Selected category from the URL.
 $category = trim($_GET["category"] ?? "");
 
-// Search text from the search box.
 $search = trim($_GET["search"] ?? "");
 
-// Selected sorting option.
 $sort = $_GET["sort"] ?? "featured";
 
+$minPrice = isset($_GET["min_price"])
+    ? (float)$_GET["min_price"]
+    : 0;
 
-// --------------------------------------------------
+$maxPrice = isset($_GET["max_price"])
+    ? (float)$_GET["max_price"]
+    : 5500;
+
+$minRating = isset($_GET["min_rating"])
+    ? (float)$_GET["min_rating"]
+    : 0;
+
+
+// ==================================================
 // BUILD PRODUCT QUERY
-// --------------------------------------------------
+// ==================================================
 
-// Start with all products.
 $sql = "
     SELECT
         id,
@@ -43,14 +54,21 @@ $sql = "
 $params = [];
 
 
-// Filter by category.
+// --------------------------------------------------
+// CATEGORY FILTER
+// --------------------------------------------------
+
 if (
     $category !== "" &&
-    in_array($category, [
-        "Phone Cooler",
-        "Laptop Cooler",
-        "Bundle"
-    ], true)
+    in_array(
+        $category,
+        [
+            "Phone Cooler",
+            "Laptop Cooler",
+            "Bundle"
+        ],
+        true
+    )
 ) {
 
     $sql .= " AND category = ?";
@@ -59,7 +77,10 @@ if (
 }
 
 
-// Search by product name, category, or description.
+// --------------------------------------------------
+// SEARCH FILTER
+// --------------------------------------------------
+
 if ($search !== "") {
 
     $sql .= "
@@ -77,46 +98,86 @@ if ($search !== "") {
     $params[] = $searchTerm;
 }
 
-
 // --------------------------------------------------
-// SORT PRODUCTS
+// PRICE FILTER
 // --------------------------------------------------
 
-switch ($sort) {
+if ($minPrice > 0) {
 
-    case "price_low":
-        $sql .= " ORDER BY price ASC";
-        break;
+    $sql .= " AND price >= ?";
 
-    case "price_high":
-        $sql .= " ORDER BY price DESC";
-        break;
+    $params[] = $minPrice;
+}
 
-    case "rating":
-        $sql .= " ORDER BY rating DESC";
-        break;
+if ($maxPrice < 5500) {
 
-    default:
-        // Keep the original product order.
-        $sql .= " ORDER BY id ASC";
-        break;
+    $sql .= " AND price <= ?";
+
+    $params[] = $maxPrice;
 }
 
 
 // --------------------------------------------------
-// GET PRODUCTS FROM DATABASE
+// RATING FILTER
 // --------------------------------------------------
+
+if ($minRating > 0) {
+
+    $sql .= " AND rating >= ?";
+
+    $params[] = $minRating;
+}
+
+
+// ==================================================
+// SORT PRODUCTS
+// ==================================================
+
+switch ($sort) {
+
+    case "price_low":
+
+        $sql .= " ORDER BY price ASC";
+
+        break;
+
+
+    case "price_high":
+
+        $sql .= " ORDER BY price DESC";
+
+        break;
+
+
+    case "rating":
+
+        $sql .= " ORDER BY rating DESC";
+
+        break;
+
+
+    default:
+
+        $sql .= " ORDER BY id ASC";
+
+        break;
+}
+
+
+// ==================================================
+// GET PRODUCTS
+// ==================================================
 
 $stmt = $pdo->prepare($sql);
 
 $stmt->execute($params);
 
-$products = $stmt->fetchAll();
+$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
-// --------------------------------------------------
+// ==================================================
 // GET CART COUNT
-// --------------------------------------------------
+// ==================================================
 
 $cartCount = 0;
 
@@ -136,11 +197,10 @@ if (!empty($_SESSION["user_id"])) {
 }
 
 
-// --------------------------------------------------
-// SMALL HELPER FUNCTIONS
-// --------------------------------------------------
+// ==================================================
+// HELPER FUNCTIONS
+// ==================================================
 
-// Safely display database values in HTML.
 function e($value)
 {
     return htmlspecialchars(
@@ -151,7 +211,6 @@ function e($value)
 }
 
 
-// Format Philippine peso.
 function money($amount)
 {
     return "₱" . number_format(
@@ -163,6 +222,7 @@ function money($amount)
 ?>
 
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -174,13 +234,16 @@ function money($amount)
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>FROSTCORE — Products</title>
+    <title>
+        FROSTCORE — Products
+    </title>
 
-    <!--
-        Separate CSS file for the Products page.
-        This keeps your existing landing-page style.css untouched.
-    -->
-    <link rel="stylesheet" href="product.css">
+
+    <!-- Products page stylesheet -->
+    <link
+        rel="stylesheet"
+        href="product.css"
+    >
 
 </head>
 
@@ -194,8 +257,13 @@ function money($amount)
 
 <header class="products-header">
 
-    <!-- FROSTCORE logo -->
-    <a href="index.php" class="brand">
+
+    <!-- FROSTCORE BRAND -->
+
+    <a
+        href="index.php"
+        class="brand"
+    >
 
         <img
             src="assets/frostcore_logo.png"
@@ -203,17 +271,21 @@ function money($amount)
             class="brand-logo"
         >
 
-        <span>FROSTCORE</span>
+        <span>
+            FROSTCORE
+        </span>
 
     </a>
 
 
-    <!-- Navigation -->
+    <!-- NAVIGATION -->
+
     <nav class="products-nav">
 
         <a href="index.php">
             HOME
         </a>
+
 
         <a
             href="products.php"
@@ -222,9 +294,11 @@ function money($amount)
             PRODUCTS
         </a>
 
+
         <a href="index.php#why">
             ABOUT US
         </a>
+
 
         <a href="index.php#reviews">
             CONTACT
@@ -233,13 +307,21 @@ function money($amount)
     </nav>
 
 
-    <!-- Header actions -->
+    <!-- HEADER ACTIONS -->
+
     <div class="header-actions">
 
-        <!-- Login / account -->
+
+        <!-- LOGIN / LOGOUT -->
+
         <?php if (!empty($_SESSION["user_id"])): ?>
 
-            <a href="logout.php" class="header-icon">
+            <a
+                href="#"
+                class="header-icon logout-button"
+                id = "logoutButton"
+                title="Logout"
+            >
                 ♙
             </a>
 
@@ -248,6 +330,7 @@ function money($amount)
             <a
                 href="login.php?redirect=products.php"
                 class="header-icon"
+                title="Login"
             >
                 ♙
             </a>
@@ -255,8 +338,12 @@ function money($amount)
         <?php endif; ?>
 
 
-        <!-- Cart -->
-        <a href="cart.php" class="cart-link">
+        <!-- CART -->
+
+        <a
+            href="cart.php"
+            class="cart-link"
+        >
 
             🛒
 
@@ -273,21 +360,27 @@ function money($amount)
 
 
 <!-- ==================================================
-     HERO
+     PRODUCTS HERO
 ================================================== -->
 
 <section class="products-hero">
 
     <div class="hero-content">
 
+
         <!-- Breadcrumb -->
+
         <div class="breadcrumbs">
 
             <a href="index.php">
                 Home
             </a>
 
-            <span>›</span>
+
+            <span>
+                ›
+            </span>
+
 
             <span>
                 Products
@@ -296,10 +389,13 @@ function money($amount)
         </div>
 
 
-        <!-- Main title -->
+        <!-- Heading -->
+
         <h1>
 
-            <span>OUR</span>
+            <span>
+                OUR
+            </span>
 
             PRODUCTS
 
@@ -332,6 +428,9 @@ function money($amount)
 
     <aside class="filter-sidebar">
 
+
+        <!-- CATEGORIES -->
+
         <div class="filter-section">
 
             <h2>
@@ -339,7 +438,6 @@ function money($amount)
             </h2>
 
 
-            <!-- All products -->
             <a
                 href="products.php"
                 class="<?= $category === "" ? "selected" : "" ?>"
@@ -348,7 +446,6 @@ function money($amount)
             </a>
 
 
-            <!-- Phone coolers -->
             <a
                 href="products.php?category=Phone+Cooler"
                 class="<?= $category === "Phone Cooler" ? "selected" : "" ?>"
@@ -357,7 +454,6 @@ function money($amount)
             </a>
 
 
-            <!-- Laptop coolers -->
             <a
                 href="products.php?category=Laptop+Cooler"
                 class="<?= $category === "Laptop Cooler" ? "selected" : "" ?>"
@@ -366,7 +462,6 @@ function money($amount)
             </a>
 
 
-            <!-- Bundles -->
             <a
                 href="products.php?category=Bundle"
                 class="<?= $category === "Bundle" ? "selected" : "" ?>"
@@ -378,81 +473,196 @@ function money($amount)
 
 
 
-        <div class="filter-section">
+        <!-- PRICE RANGE -->
 
-            <h2>
-                PRICE RANGE
-            </h2>
+<div class="filter-section">
 
-            <!-- Visual price range for now -->
-            <div class="price-line">
+    <h2>
+        PRICE RANGE
+    </h2>
 
-                <span class="price-dot"></span>
+    <form method="get" class="price-filter-form">
 
-                <span class="price-track"></span>
+        <?php if ($category !== ""): ?>
+            <input
+                type="hidden"
+                name="category"
+                value="<?= e($category) ?>"
+            >
+        <?php endif; ?>
 
-                <span class="price-dot"></span>
+        <?php if ($search !== ""): ?>
+            <input
+                type="hidden"
+                name="search"
+                value="<?= e($search) ?>"
+            >
+        <?php endif; ?>
 
-            </div>
+        <input
+            type="hidden"
+            name="sort"
+            value="<?= e($sort) ?>"
+        >
 
+        <div class="price-inputs">
 
-            <div class="price-labels">
+            <input
+                type="number"
+                name="min_price"
+                min="0"
+                max="5500"
+                step="100"
+                value="<?= e($minPrice) ?>"
+                placeholder="Min"
+            >
 
-                <span>₱0</span>
+            <span>—</span>
 
-                <span>₱5,500+</span>
-
-            </div>
-
-        </div>
-
-
-
-        <div class="filter-section">
-
-            <h2>
-                RATING
-            </h2>
-
-
-            <label class="check-option">
-
-                <input
-                    type="checkbox"
-                    disabled
-                >
-
-                <span>★★★★★</span>
-
-            </label>
-
-
-            <label class="check-option">
-
-                <input
-                    type="checkbox"
-                    disabled
-                >
-
-                <span>★★★★☆ &amp; Up</span>
-
-            </label>
-
-
-            <label class="check-option">
-
-                <input
-                    type="checkbox"
-                    disabled
-                >
-
-                <span>★★★☆☆ &amp; Up</span>
-
-            </label>
+            <input
+                type="number"
+                name="max_price"
+                min="0"
+                max="5500"
+                step="100"
+                value="<?= e($maxPrice) ?>"
+                placeholder="Max"
+            >
 
         </div>
 
+        <button
+            type="submit"
+            class="apply-filter-button"
+        >
+            APPLY
+        </button>
 
+    </form>
+
+</div>
+
+
+
+        <!-- RATING -->
+
+<div class="filter-section">
+
+    <h2>
+        RATING
+    </h2>
+
+    <form method="get">
+
+        <?php if ($category !== ""): ?>
+            <input
+                type="hidden"
+                name="category"
+                value="<?= e($category) ?>"
+            >
+        <?php endif; ?>
+
+        <?php if ($search !== ""): ?>
+            <input
+                type="hidden"
+                name="search"
+                value="<?= e($search) ?>"
+            >
+        <?php endif; ?>
+
+        <input
+            type="hidden"
+            name="sort"
+            value="<?= e($sort) ?>"
+        >
+
+        <input
+            type="hidden"
+            name="min_price"
+            value="<?= e($minPrice) ?>"
+        >
+
+        <input
+            type="hidden"
+            name="max_price"
+            value="<?= e($maxPrice) ?>"
+        >
+
+
+        <label class="check-option">
+
+            <input
+                type="radio"
+                name="min_rating"
+                value="5"
+                <?= $minRating == 5 ? "checked" : "" ?>
+                onchange="this.form.submit()"
+            >
+
+            <span>
+                ★★★★★
+            </span>
+
+        </label>
+
+
+        <label class="check-option">
+
+            <input
+                type="radio"
+                name="min_rating"
+                value="4"
+                <?= $minRating == 4 ? "checked" : "" ?>
+                onchange="this.form.submit()"
+            >
+
+            <span>
+                ★★★★☆ &amp; Up
+            </span>
+
+        </label>
+
+
+        <label class="check-option">
+
+            <input
+                type="radio"
+                name="min_rating"
+                value="3"
+                <?= $minRating == 3 ? "checked" : "" ?>
+                onchange="this.form.submit()"
+            >
+
+            <span>
+                ★★★☆☆ &amp; Up
+            </span>
+
+        </label>
+
+
+        <label class="check-option">
+
+            <input
+                type="radio"
+                name="min_rating"
+                value="0"
+                <?= $minRating == 0 ? "checked" : "" ?>
+                onchange="this.form.submit()"
+            >
+
+            <span>
+                All Ratings
+            </span>
+
+        </label>
+
+    </form>
+
+</div>
+
+
+
+        <!-- AVAILABILITY -->
 
         <div class="filter-section">
 
@@ -492,7 +702,8 @@ function money($amount)
         </div>
 
 
-        <!-- Clear filters -->
+        <!-- CLEAR FILTERS -->
+
         <a
             href="products.php"
             class="clear-filters"
@@ -511,8 +722,14 @@ function money($amount)
     <section class="products-results">
 
 
-        <!-- Toolbar -->
+        <!-- ==================================================
+             TOOLBAR
+        ================================================== -->
+
         <div class="products-toolbar">
+
+
+            <!-- Product count -->
 
             <div class="product-count">
 
@@ -527,11 +744,13 @@ function money($amount)
             </div>
 
 
-            <!-- Search and sorting -->
+            <!-- Search / Sort -->
+
             <form
                 method="get"
                 class="products-tools"
             >
+
 
                 <?php if ($category !== ""): ?>
 
@@ -554,12 +773,14 @@ function money($amount)
 
                 <select name="sort">
 
+
                     <option
                         value="featured"
                         <?= $sort === "featured" ? "selected" : "" ?>
                     >
                         Featured
                     </option>
+
 
                     <option
                         value="price_low"
@@ -568,12 +789,14 @@ function money($amount)
                         Price: Low to High
                     </option>
 
+
                     <option
                         value="price_high"
                         <?= $sort === "price_high" ? "selected" : "" ?>
                     >
                         Price: High to Low
                     </option>
+
 
                     <option
                         value="rating"
@@ -607,16 +830,19 @@ function money($amount)
 
             <?php if (empty($products)): ?>
 
-                <!-- No results -->
+                <!-- NO PRODUCTS -->
+
                 <div class="no-products">
 
                     <h2>
                         No products found.
                     </h2>
 
+
                     <p>
                         Try another search or clear the filters.
                     </p>
+
 
                     <a
                         href="products.php"
@@ -628,188 +854,261 @@ function money($amount)
                 </div>
 
 
-            <?php endif; ?>
+            <?php else: ?>
 
 
-
-            <?php foreach ($products as $product): ?>
-
-                <article class="product-card">
+                <?php foreach ($products as $product): ?>
 
 
-                    <!-- Product image -->
-                    <div class="product-image">
+                    <?php
 
-                        <span class="category-badge">
-
-                            <?= e(
-                                strtoupper($product["category"])
-                            ) ?>
-
-                        </span>
+                    // Get product image.
+                    $image = trim(
+                        (string)$product["image"]
+                    );
 
 
-                        <?php
+                    // Use fallback image if the
+                    // database image doesn't exist.
+                    if (
+                        $image === "" ||
+                        !file_exists(
+                            __DIR__ . "/" . $image
+                        )
+                    ) {
 
-                        // Use the image saved in the database.
-                        $image = trim(
-                            (string)$product["image"]
-                        );
+                        $image =
+                            "assets/fc1-cooler.svg";
+                    }
 
-
-                        // If the image doesn't exist yet,
-                        // temporarily use the existing FROSTCORE cooler.
-                        if (
-                            $image === "" ||
-                            !file_exists(
-                                __DIR__ . "/" . $image
-                            )
-                        ) {
-
-                            $image =
-                                "assets/fc1-cooler.svg";
-
-                        }
-
-                        ?>
+                    ?>
 
 
-                        <img
-                            src="<?= e($image) ?>"
-                            alt="<?= e($product["name"]) ?>"
-                        >
-
-                    </div>
+                    <article class="product-card">
 
 
+                        <!-- ==========================================
+                             PRODUCT IMAGE
+                        =========================================== -->
 
-                    <!-- Product information -->
-                    <div class="product-info">
-
-                        <h2>
-                            <?= e($product["name"]) ?>
-                        </h2>
+                        <div class="product-image">
 
 
-                        <p class="product-category">
-                            <?= e($product["category"]) ?>
-                        </p>
+                            <span class="category-badge">
 
-
-                        <!-- Rating + stock -->
-                        <div class="product-status">
-
-                            <span class="rating">
-
-                                ★
-
-                                <?= e($product["rating"]) ?>
+                                <?= e(
+                                    strtoupper(
+                                        $product["category"]
+                                    )
+                                ) ?>
 
                             </span>
 
 
+                            <img
+                                src="<?= e($image) ?>"
+                                alt="<?= e($product["name"]) ?>"
+                            >
+
+                        </div>
+
+
+
+                        <!-- ==========================================
+                             PRODUCT INFORMATION
+                        =========================================== -->
+
+                        <div class="product-info">
+
+
+                            <!-- Product name -->
+
+                            <h2>
+
+                                <?= e(
+                                    $product["name"]
+                                ) ?>
+
+                            </h2>
+
+
+                            <!-- Category -->
+
+                            <p class="product-category">
+
+                                <?= e(
+                                    $product["category"]
+                                ) ?>
+
+                            </p>
+
+
+
+                            <!-- Rating / stock -->
+
+                            <div class="product-status">
+
+
+                                <span class="rating">
+
+                                    ★
+
+                                    <?= e(
+                                        $product["rating"]
+                                    ) ?>
+
+                                </span>
+
+
+                                <?php if ((int)$product["stock"] > 0): ?>
+
+                                    <span class="stock">
+
+                                        ● In Stock
+
+                                    </span>
+
+                                <?php else: ?>
+
+                                    <span class="out-stock">
+
+                                        ● Out of Stock
+
+                                    </span>
+
+                                <?php endif; ?>
+
+                            </div>
+
+
+
+                            <!-- Price -->
+
+                            <div class="product-price">
+
+                                <?= money(
+                                    $product["price"]
+                                ) ?>
+
+                            </div>
+
+
+
+                            <!-- Available stock -->
+
                             <?php if ((int)$product["stock"] > 0): ?>
 
-                                <span class="stock">
-                                    ● In Stock
-                                </span>
+                                <small class="available">
 
-                            <?php else: ?>
+                                    <?= (int)$product["stock"] ?>
 
-                                <span class="out-stock">
-                                    ● Out of Stock
-                                </span>
+                                    available
+
+                                </small>
 
                             <?php endif; ?>
 
-                        </div>
 
 
-                        <!-- Price -->
-                        <div class="product-price">
+                            <!-- ==========================================
+                                 BUTTONS
+                            =========================================== -->
 
-                            <?= money(
-                                $product["price"]
-                            ) ?>
-
-                        </div>
+                            <div class="product-buttons">
 
 
-                        <!-- Stock count -->
-                        <?php if ((int)$product["stock"] > 0): ?>
-
-                            <small class="available">
-
-                                <?= (int)$product["stock"] ?>
-
-                                available
-
-                            </small>
-
-                        <?php endif; ?>
-
-
-                        <!-- Buttons -->
-                        <div class="product-buttons">
-
-                            <!-- Details -->
-                            <a
-                                href="product-details.php?id=<?= (int)$product["id"] ?>"
-                                class="view-button"
-                            >
-                                VIEW
-                            </a>
-
-
-                            <!-- Add to cart -->
-                            <?php if ((int)$product["stock"] > 0): ?>
+                                <!-- VIEW DETAILS -->
 
                                 <a
-                                    href="login.php?redirect=products.php"
-                                    class="cart-button"
+                                    href="product-details.php?id=<?= (int)$product["id"] ?>"
+                                    class="view-button"
                                 >
-                                    🛒 ADD TO CART
+                                    VIEW
                                 </a>
 
-                            <?php else: ?>
 
-                                <button
-                                    class="cart-button disabled"
-                                    disabled
-                                >
-                                    OUT OF STOCK
-                                </button>
 
-                            <?php endif; ?>
+                                <!-- ======================================
+                                     ADD TO CART
+                                ======================================= -->
+
+                                <?php if ((int)$product["stock"] <= 0): ?>
+
+                                    <!-- OUT OF STOCK -->
+
+                                    <button
+                                        type="button"
+                                        class="cart-button disabled"
+                                        disabled
+                                    >
+                                        OUT OF STOCK
+                                    </button>
+
+
+                                <?php elseif (!empty($_SESSION["user_id"])): ?>
+
+                                    <!-- LOGGED IN -->
+
+                                    <button
+                                        type="button"
+                                        class="cart-button add-cart-button"
+                                        data-product-id="<?= (int)$product["id"] ?>"
+                                    >
+                                        🛒 ADD TO CART
+                                    </button>
+
+
+                                <?php else: ?>
+
+                                    <!-- NOT LOGGED IN -->
+
+                                    <a
+                                        href="login.php?redirect=products.php"
+                                        class="cart-button"
+                                    >
+                                        🛒 ADD TO CART
+                                    </a>
+
+                                <?php endif; ?>
+
+
+                            </div>
 
                         </div>
 
-                    </div>
+                    </article>
 
-                </article>
 
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+
+
+            <?php endif; ?>
 
         </div>
 
 
-        <!-- Pagination visual -->
+
+        <!-- ==================================================
+             PAGINATION
+        ================================================== -->
+
         <div class="pagination">
 
             <button disabled>
                 ‹
             </button>
 
+
             <span class="current">
                 1
             </span>
+
 
             <button disabled>
                 ›
             </button>
 
         </div>
-
 
     </section>
 
@@ -818,10 +1117,87 @@ function money($amount)
 
 
 <!-- ==================================================
+     ADD TO CART POPUP
+================================================== -->
+
+<div
+    class="cart-popup-overlay"
+    id="cartPopup"
+>
+
+
+    <div class="cart-popup">
+
+
+        <!-- Close button -->
+
+        <button
+            type="button"
+            class="cart-popup-close"
+            id="cartPopupClose"
+        >
+            ×
+        </button>
+
+
+        <!-- Success icon -->
+
+        <div class="cart-popup-icon">
+            ✓
+        </div>
+
+
+        <!-- Popup title -->
+
+        <h2>
+            ADDED TO CART
+        </h2>
+
+
+        <!-- Popup message -->
+
+        <p id="cartPopupMessage">
+            Product added to your cart.
+        </p>
+
+
+        <!-- Popup buttons -->
+
+        <div class="cart-popup-actions">
+
+
+            <button
+                type="button"
+                class="cart-continue"
+                id="cartContinue"
+            >
+                CONTINUE SHOPPING
+            </button>
+
+
+            <a
+                href="cart.php"
+                class="cart-view"
+            >
+                VIEW CART
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ==================================================
      FOOTER
 ================================================== -->
 
 <footer class="products-footer">
+
+
+    <!-- BRAND -->
 
     <div class="footer-column footer-brand">
 
@@ -846,15 +1222,30 @@ function money($amount)
 
 
         <div class="socials">
-            <span>f</span>
-            <span>◎</span>
-            <span>♪</span>
-            <span>▶</span>
+
+            <span>
+                f
+            </span>
+
+            <span>
+                ◎
+            </span>
+
+            <span>
+                ♪
+            </span>
+
+            <span>
+                ▶
+            </span>
+
         </div>
 
     </div>
 
 
+
+    <!-- SHOP -->
 
     <div class="footer-column">
 
@@ -862,17 +1253,21 @@ function money($amount)
             SHOP
         </h3>
 
+
         <a href="products.php">
             All Products
         </a>
+
 
         <a href="products.php?category=Phone+Cooler">
             Phone Coolers
         </a>
 
+
         <a href="products.php?category=Laptop+Cooler">
             Laptop Coolers
         </a>
+
 
         <a href="products.php?category=Bundle">
             Bundles
@@ -882,23 +1277,29 @@ function money($amount)
 
 
 
+    <!-- SUPPORT -->
+
     <div class="footer-column">
 
         <h3>
             SUPPORT
         </h3>
 
+
         <a href="#">
             Warranty
         </a>
+
 
         <a href="#">
             Shipping &amp; Delivery
         </a>
 
+
         <a href="#">
             Returns
         </a>
+
 
         <a href="#">
             FAQs
@@ -908,23 +1309,29 @@ function money($amount)
 
 
 
+    <!-- COMPANY -->
+
     <div class="footer-column">
 
         <h3>
             COMPANY
         </h3>
 
+
         <a href="index.php#why">
             About Us
         </a>
+
 
         <a href="index.php#reviews">
             Contact Us
         </a>
 
+
         <a href="#">
             Privacy Policy
         </a>
+
 
         <a href="#">
             Terms of Service
@@ -934,11 +1341,14 @@ function money($amount)
 
 
 
+    <!-- NEWSLETTER -->
+
     <div class="footer-column">
 
         <h3>
             NEWSLETTER
         </h3>
+
 
         <p>
             Stay updated with our latest products
@@ -953,6 +1363,7 @@ function money($amount)
                 placeholder="Enter your email"
             >
 
+
             <button type="button">
                 ➤
             </button>
@@ -962,12 +1373,16 @@ function money($amount)
     </div>
 
 
+
+    <!-- COPYRIGHT -->
+
     <div class="footer-copy">
 
         © <?= date("Y") ?>
 
         FROSTCORE.
         All rights reserved.
+
 
         <span>
             STAY COOL. PLAY BETTER.
@@ -977,5 +1392,15 @@ function money($amount)
 
 </footer>
 
+
+
+<!-- ==================================================
+     JAVASCRIPT
+================================================== -->
+<?php require_once "logout-popup.php"; ?>
+<script src="script.js"></script>
+
+
 </body>
+
 </html>
