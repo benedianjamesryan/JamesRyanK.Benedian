@@ -1,16 +1,58 @@
 <?php
 
-// Start the current session
+// ==================================================
+// FROSTCORE LOGOUT
+// ==================================================
+
 session_start();
 
-// Remove all session data
+
+// ==================================================
+// CLEAR SESSION DATA
+// ==================================================
+
 $_SESSION = [];
 
-// Destroy the session
+
+// ==================================================
+// REMOVE SESSION COOKIE
+// ==================================================
+
+if (
+    ini_get("session.use_cookies")
+) {
+
+    $params =
+        session_get_cookie_params();
+
+    setcookie(
+        session_name(),
+        "",
+        time() - 42000,
+        $params["path"],
+        $params["domain"],
+        $params["secure"],
+        $params["httponly"]
+    );
+
+}
+
+
+// ==================================================
+// DESTROY SESSION
+// ==================================================
+
 session_destroy();
 
-// Send the user back to the homepage
-header("Location: index.php");
+
+// ==================================================
+// RETURN HOME
+// ==================================================
+
+header(
+    "Location: index.php"
+);
+
 exit;
 
 ?>

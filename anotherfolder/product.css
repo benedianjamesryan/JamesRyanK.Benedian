@@ -245,12 +245,17 @@ select {
 .header-icon {
 
     color:
-        var(--text);
+        var(--muted);
 
-    font-size: 22px;
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 0;
+
+    text-decoration: none;
 
 }
-
 
 .header-icon:hover {
 

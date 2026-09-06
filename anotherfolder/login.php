@@ -1,147 +1,208 @@
 <?php
 
-// Start the session so we can keep the user logged in.
+// ==================================================
+// FROSTCORE LOGIN
+// ==================================================
+
 session_start();
 
-
-// Connect to the FROSTCORE database.
 require_once "database/config.php";
 
 
-// Store an error message if login fails.
+// ==================================================
+// DEFAULT VALUES
+// ==================================================
+
 $error = "";
 
-
-// Keep the email after a failed login attempt.
 $email = "";
 
+$redirect =
+    $_GET["redirect"] ??
+    $_POST["redirect"] ??
+    "products.php";
 
-// Allow the user to return to the page they originally wanted.
-$redirect = $_GET["redirect"] ?? $_POST["redirect"] ?? "products.php";
 
+// ==================================================
+// SAFE REDIRECT
+// ==================================================
 
-// Only allow internal website pages as redirects.
 if (
     $redirect === "" ||
     str_contains($redirect, "://") ||
-    str_starts_with($redirect, "//")
+    str_starts_with($redirect, "//") ||
+    str_starts_with($redirect, "../")
 ) {
+
     $redirect = "index.php";
+
 }
 
 
-// Check whether the login form was submitted.
+// ==================================================
+// HANDLE LOGIN
+// ==================================================
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    // Get the submitted email.
-    $email = trim($_POST["email"] ?? "");
+    $email =
+        trim($_POST["email"] ?? "");
 
-    // Get the submitted password.
-    $password = $_POST["password"] ?? "";
+    $password =
+        $_POST["password"] ?? "";
 
 
-    // -----------------------------
-    // 1. VALIDATE THE INPUT
-    // -----------------------------
+    // --------------------------------------------------
+    // VALIDATION
+    // --------------------------------------------------
 
-    if ($email === "" || $password === "") {
+    if (
+        $email === "" ||
+        $password === ""
+    ) {
 
-        $error = "Please enter your email and password.";
+        $error =
+            "Please enter your email and password.";
 
     }
 
-    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    elseif (
+        !filter_var(
+            $email,
+            FILTER_VALIDATE_EMAIL
+        )
+    ) {
 
-        $error = "Please enter a valid email address.";
+        $error =
+            "Please enter a valid email address.";
 
     }
 
     else {
 
-        // --------------------------------
-        // 2. FIND THE USER IN THE DATABASE
-        // --------------------------------
+        // --------------------------------------------------
+        // FIND USER
+        // --------------------------------------------------
 
-        // Prepared statements help protect against SQL injection.
-        $stmt = $pdo->prepare(
-            "SELECT id, full_name, email, password, role
-             FROM users
-             WHERE email = ?
-             LIMIT 1"
-        );
+        $stmt = $pdo->prepare("
+            SELECT
+                id,
+                full_name,
+                email,
+                password,
+                role
+            FROM users
+            WHERE email = ?
+            LIMIT 1
+        ");
 
-        $stmt->execute([$email]);
+        $stmt->execute([
+            $email
+        ]);
 
-        // Get the matching user.
-        $user = $stmt->fetch();
+        $user =
+            $stmt->fetch(
+                PDO::FETCH_ASSOC
+            );
 
 
-        // --------------------------------
-        // 3. VERIFY THE PASSWORD
-        // --------------------------------
+        // --------------------------------------------------
+        // VERIFY PASSWORD
+        // --------------------------------------------------
 
-        // The database stores a password hash,
-        // so we use password_verify() instead of comparing text.
         if (
             !$user ||
-            !password_verify($password, $user["password"])
+            !password_verify(
+                $password,
+                $user["password"]
+            )
         ) {
 
-            $error = "Invalid email or password.";
+            $error =
+                "Invalid email or password.";
 
         }
 
         else {
 
-            // --------------------------------
-            // 4. REGENERATE SESSION ID
-            // --------------------------------
+            // ==================================================
+            // IMPORTANT SESSION RESET
+            // ==================================================
+            //
+            // Remove the previous account's session data
+            // BEFORE creating the new authenticated session.
+            //
 
-            // Helps protect against session fixation.
+            $_SESSION = [];
+
+
+            // Generate a completely new session ID.
             session_regenerate_id(true);
 
 
-            // --------------------------------
-            // 5. SAVE USER INFORMATION
-            // --------------------------------
+            // --------------------------------------------------
+            // SAVE ONLY THE NEW USER
+            // --------------------------------------------------
 
-            $_SESSION["user_id"] = $user["id"];
+            $_SESSION["user_id"] =
+                (int)$user["id"];
 
-            $_SESSION["username"] = $user["full_name"];
+            $_SESSION["username"] =
+                (string)$user["full_name"];
 
-            $_SESSION["email"] = $user["email"];
+            $_SESSION["email"] =
+                (string)$user["email"];
 
-            $_SESSION["role"] = $user["role"];
+            $_SESSION["role"] =
+                (string)$user["role"];
 
 
-            // --------------------------------
-            // 6. GO TO THE NEXT PAGE
-            // --------------------------------
+            // --------------------------------------------------
+            // REDIRECT
+            // --------------------------------------------------
 
-            header("Location: " . $redirect);
+            header(
+                "Location: " . $redirect
+            );
 
             exit;
+
         }
+
     }
+
 }
 
 
-// Get the current year for the footer.
+// ==================================================
+// YEAR
+// ==================================================
+
 $year = date("Y");
 
 ?>
 
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>FROSTCORE — Login</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="style.css">
+    <title>
+        FROSTCORE — Login
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
 </head>
 
@@ -149,171 +210,187 @@ $year = date("Y");
 <body class="login-page">
 
 
-    <!-- Header -->
-    <header class="site-header">
-
-        <a class="brand" href="index.php">
-
-            <img
-                class="brand-logo"
-                src="assets/frostcore_logo.png"
-                alt="FROSTCORE logo"
-            >
-
-            <span>
-                FROSTCORE
-            </span>
-
-        </a>
+<header class="site-header">
 
 
-        <a
-            class="btn btn-small"
-            href="index.php"
+    <a
+        class="brand"
+        href="index.php"
+    >
+
+        <img
+            class="brand-logo"
+            src="assets/frostcore_logo.png"
+            alt="FROSTCORE logo"
         >
-            BACK HOME
-        </a>
 
-    </header>
+        <span>
+            FROSTCORE
+        </span>
 
-
-
-    <!-- Main Login Section -->
-    <main class="login-page-main">
-
-        <div class="login-card">
+    </a>
 
 
-            <!-- Logo -->
-            <img
-                class="login-logo"
-                src="assets/frostcore_logo.png"
-                alt="FROSTCORE logo"
+    <a
+        class="btn btn-small"
+        href="index.php"
+    >
+        BACK HOME
+    </a>
+
+
+</header>
+
+
+
+<main class="login-page-main">
+
+
+    <div class="login-card">
+
+
+        <img
+            class="login-logo"
+            src="assets/frostcore_logo.png"
+            alt="FROSTCORE logo"
+        >
+
+
+        <h1>
+            WELCOME BACK
+        </h1>
+
+
+        <p class="login-subtitle">
+            Sign in to your FROSTCORE experience.
+        </p>
+
+
+
+        <?php if ($error !== ""): ?>
+
+            <div class="form-error">
+
+                <?= htmlspecialchars(
+                    $error,
+                    ENT_QUOTES,
+                    "UTF-8"
+                ) ?>
+
+            </div>
+
+        <?php endif; ?>
+
+
+
+        <form
+            action="login.php"
+            method="post"
+        >
+
+
+            <input
+                type="hidden"
+                name="redirect"
+                value="<?= htmlspecialchars(
+                    $redirect,
+                    ENT_QUOTES,
+                    "UTF-8"
+                ) ?>"
             >
 
 
-            <!-- Heading -->
-            <h1>
-                WELCOME BACK
-            </h1>
+            <label for="page-email">
+                EMAIL
+            </label>
 
 
-            <p class="login-subtitle">
-                Sign in to your FROSTCORE experience.
-            </p>
-
-
-
-            <!-- ERROR MESSAGE -->
-            <?php if ($error !== ""): ?>
-
-                <div class="form-error">
-
-                    <?= htmlspecialchars($error) ?>
-
-                </div>
-
-            <?php endif; ?>
-
-
-
-            <!-- Login Form -->
-            <form
-                action="login.php"
-                method="post"
+            <input
+                id="page-email"
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                value="<?= htmlspecialchars(
+                    $email,
+                    ENT_QUOTES,
+                    "UTF-8"
+                ) ?>"
+                required
+                autocomplete="username"
             >
 
-                <!-- Keep the original destination -->
-                <input
-                    type="hidden"
-                    name="redirect"
-                    value="<?= htmlspecialchars($redirect) ?>"
-                >
 
 
-                <!-- EMAIL -->
-                <label for="page-email">
-                    EMAIL
-                </label>
+            <label for="page-password">
+                PASSWORD
+            </label>
 
 
-                <input
-                    id="page-email"
-                    name="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value="<?= htmlspecialchars($email) ?>"
-                    required
-                >
+            <input
+                id="page-password"
+                name="password"
+                type="password"
+                placeholder="Enter your password"
+                required
+                autocomplete="current-password"
+            >
 
 
 
-                <!-- PASSWORD -->
-                <label for="page-password">
-                    PASSWORD
-                </label>
+            <button
+                class="btn login-submit"
+                type="submit"
+            >
+                SIGN IN →
+            </button>
 
 
-                <input
-                    id="page-password"
-                    name="password"
-                    type="password"
-                    placeholder="Enter your password"
-                    required
-                >
+        </form>
 
 
 
-                <!-- SIGN IN -->
-                <button
-                    class="btn login-submit"
-                    type="submit"
-                >
-                    SIGN IN →
-                </button>
+        <p class="create">
 
-            </form>
+            Don't have an account?
 
+            <a
+                href="register.php?redirect=<?= urlencode($redirect) ?>"
+            >
+                CREATE ACCOUNT
+            </a>
 
-
-            <!-- Create Account -->
-            <p class="create">
-
-                Don't have an account?
-
-                <a
-                    href="register.php?redirect=<?= urlencode($redirect) ?>"
-                >
-                    CREATE ACCOUNT
-                </a>
-
-            </p>
+        </p>
 
 
-        </div>
+    </div>
 
-    </main>
+</main>
 
 
 
-    <!-- Footer -->
-    <footer class="footer-bottom login-footer">
-
-        <span>
-
-            © <?= htmlspecialchars($year) ?>
-            FROSTCORE. All rights reserved.
-
-        </span>
+<footer class="footer-bottom login-footer">
 
 
-        <span>
+    <span>
 
-            STAY COOL. PLAY BETTER.
+        © <?= htmlspecialchars(
+            $year,
+            ENT_QUOTES,
+            "UTF-8"
+        ) ?>
 
-        </span>
+        FROSTCORE.
+        All rights reserved.
 
-    </footer>
+    </span>
+
+
+    <span>
+        STAY COOL. PLAY BETTER.
+    </span>
+
+
+</footer>
 
 
 </body>
