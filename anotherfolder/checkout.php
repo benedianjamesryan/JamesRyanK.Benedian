@@ -724,7 +724,6 @@ unset($item);
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="header.css">
 
     <meta charset="UTF-8">
 
