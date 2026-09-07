@@ -1,0 +1,961 @@
+/* ==================================================
+   FROSTCORE — ABOUT US
+   PAGE-SPECIFIC CSS
+================================================== */
+
+
+/* ==================================================
+   GLOBAL
+================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+
+    margin: 0;
+
+    background: #050A16;
+
+    color: #F4F7FF;
+
+    font-family:
+        Inter,
+        Arial,
+        sans-serif;
+
+}
+
+
+a {
+
+    color: inherit;
+
+    text-decoration: none;
+
+}
+
+
+/* ==================================================
+   HEADER
+================================================== */
+
+.products-header {
+
+    width: 100%;
+
+    height: 72px;
+
+    padding:
+        0 5.5%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+    border-bottom:
+        1px solid #263452;
+
+    background:
+        rgba(
+            5,
+            10,
+            22,
+            0.96
+        );
+
+    position:
+        sticky;
+
+    top:
+        0;
+
+    z-index:
+        9999;
+
+    backdrop-filter:
+        blur(12px);
+
+}
+
+
+/* ==================================================
+   BRAND
+================================================== */
+
+.brand {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    flex-shrink:
+        0;
+
+    font-family:
+        Orbitron,
+        Arial,
+        sans-serif;
+
+    font-weight:
+        700;
+
+    font-size:
+        18px;
+
+}
+
+
+.brand-logo {
+
+    width:
+        40px;
+
+    height:
+        40px;
+
+    object-fit:
+        contain;
+
+}
+
+
+/* ==================================================
+   NAVIGATION
+================================================== */
+
+.products-nav {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        45px;
+
+}
+
+
+.products-nav a {
+
+    color:
+        #F4F7FF;
+
+    font-size:
+        11px;
+
+    font-weight:
+        600;
+
+    transition:
+        color 0.2s ease;
+
+}
+
+
+.products-nav a:hover,
+
+.products-nav a.active {
+
+    color:
+        #4DBCF4;
+
+}
+
+
+/* ==================================================
+   HEADER ACTIONS
+================================================== */
+
+.header-actions {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        20px;
+
+    flex-shrink:
+        0;
+
+}
+
+
+.header-actions a {
+
+    text-decoration:
+        none;
+
+}
+
+
+/* ==================================================
+   LOGIN / LOGOUT
+================================================== */
+
+.login-link {
+
+    color:
+        #AAB5CA;
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0;
+
+    text-decoration:
+        none;
+
+    cursor:
+        pointer;
+
+}
+
+
+.login-link:hover {
+
+    color:
+        #4DBCF4;
+
+}
+
+
+/* ==================================================
+   ADMIN
+================================================== */
+
+.admin-link {
+
+    padding:
+        7px 10px;
+
+    color:
+        #4DBCF4 !important;
+
+    border:
+        1px solid #4DBCF4;
+
+    font-size:
+        8px !important;
+
+    font-weight:
+        800 !important;
+
+}
+
+
+.admin-link:hover {
+
+    background:
+        rgba(
+            77,
+            188,
+            244,
+            0.08
+        );
+
+}
+
+
+/* ==================================================
+   CART
+================================================== */
+
+.cart-link {
+
+    position:
+        relative;
+
+    color:
+        #F4F7FF;
+
+    font-size:
+        20px;
+
+    font-weight:
+        700;
+
+}
+
+
+.cart-link:hover {
+
+    color:
+        #4DBCF4;
+
+}
+
+
+.cart-count {
+
+    position:
+        absolute;
+
+    top:
+        -9px;
+
+    right:
+        -10px;
+
+    width:
+        18px;
+
+    height:
+        18px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        #4DBCF4;
+
+    color:
+        #050A16;
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+}
+
+
+/* ==================================================
+   MAIN
+================================================== */
+
+.about-page {
+
+    width:
+        82%;
+
+    max-width:
+        1120px;
+
+    margin:
+        0 auto;
+
+    padding:
+        75px 0 90px;
+
+}
+
+
+/* ==================================================
+   HERO
+================================================== */
+
+.about-hero {
+
+    margin-bottom:
+        45px;
+
+}
+
+
+.about-eyebrow {
+
+    color:
+        #4DBCF4;
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        2px;
+
+}
+
+
+.about-hero h1 {
+
+    margin:
+        12px 0 15px;
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        clamp(
+            42px,
+            5vw,
+            62px
+        );
+
+    line-height:
+        1;
+
+}
+
+
+.about-hero p {
+
+    max-width:
+        760px;
+
+    margin:
+        0;
+
+    color:
+        #AAB5CA;
+
+    font-size:
+        11px;
+
+    line-height:
+        1.8;
+
+}
+
+
+/* ==================================================
+   MISSION / VISION
+================================================== */
+
+.about-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            1fr
+        );
+
+    gap:
+        18px;
+
+}
+
+
+.about-card {
+
+    padding:
+        28px;
+
+    background:
+        #111A31;
+
+    border:
+        1px solid #263452;
+
+}
+
+
+.about-card h2 {
+
+    margin:
+        0 0 14px;
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        16px;
+
+}
+
+
+.about-card p {
+
+    margin:
+        0;
+
+    color:
+        #AAB5CA;
+
+    font-size:
+        10px;
+
+    line-height:
+        1.8;
+
+}
+
+
+/* ==================================================
+   VALUES
+================================================== */
+
+.values-section {
+
+    margin-top:
+        18px;
+
+    padding:
+        28px;
+
+    background:
+        #111A31;
+
+    border:
+        1px solid #263452;
+
+}
+
+
+.values-section h2 {
+
+    margin:
+        0 0 20px;
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        16px;
+
+}
+
+
+.values-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            1fr
+        );
+
+    gap:
+        14px;
+
+}
+
+
+.value-card {
+
+    padding:
+        20px;
+
+    background:
+        #081225;
+
+    border:
+        1px solid #263452;
+
+}
+
+
+.value-card strong {
+
+    display:
+        block;
+
+    margin-bottom:
+        8px;
+
+    color:
+        #4DBCF4;
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        11px;
+
+}
+
+
+.value-card p {
+
+    margin:
+        0;
+
+    color:
+        #AAB5CA;
+
+    font-size:
+        9px;
+
+    line-height:
+        1.7;
+
+}
+
+
+/* ==================================================
+   CTA
+================================================== */
+
+.about-cta {
+
+    margin-top:
+        22px;
+
+    padding:
+        25px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+    background:
+        #111A31;
+
+    border:
+        1px solid #263452;
+
+}
+
+
+.about-cta p {
+
+    margin:
+        0;
+
+    color:
+        #AAB5CA;
+
+    font-size:
+        10px;
+
+}
+
+
+.about-cta a {
+
+    display:
+        inline-block;
+
+    padding:
+        11px 17px;
+
+    background:
+        #4DBCF4;
+
+    color:
+        #050A16;
+
+    font-size:
+        8px;
+
+    font-weight:
+        900;
+
+}
+
+
+/* ==================================================
+   FOOTER
+================================================== */
+
+.about-footer {
+
+    margin-top:
+        0;
+
+    padding:
+        45px 7% 25px;
+
+    background:
+        #081225;
+
+    border-top:
+        1px solid #263452;
+
+}
+
+
+.about-footer-top {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        2fr 1fr 1fr 1fr;
+
+    gap:
+        45px;
+
+}
+
+
+.about-footer h3 {
+
+    margin:
+        0 0 15px;
+
+    font-family:
+        Orbitron,
+        sans-serif;
+
+    font-size:
+        10px;
+
+}
+
+
+.about-footer p {
+
+    color:
+        #AAB5CA;
+
+    font-size:
+        9px;
+
+    line-height:
+        1.7;
+
+}
+
+
+.about-footer a {
+
+    display:
+        block;
+
+    margin:
+        8px 0;
+
+    color:
+        #AAB5CA;
+
+    font-size:
+        9px;
+
+}
+
+
+.about-footer a:hover {
+
+    color:
+        #4DBCF4;
+
+}
+
+
+.footer-copy {
+
+    margin-top:
+        30px;
+
+    padding-top:
+        20px;
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+
+    border-top:
+        1px solid #263452;
+
+    color:
+        #68758D;
+
+    font-size:
+        8px;
+
+}
+
+
+.footer-copy span {
+
+    color:
+        #4DBCF4;
+
+}
+
+
+/* ==================================================
+   RESPONSIVE
+================================================== */
+
+@media (max-width: 900px) {
+
+    .products-header {
+
+        padding:
+            0 4%;
+
+    }
+
+
+    .products-nav {
+
+        gap:
+            20px;
+
+    }
+
+
+    .about-page {
+
+        width:
+            90%;
+
+    }
+
+
+    .about-footer-top {
+
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+    .products-nav {
+
+        display:
+            none;
+
+    }
+
+
+    .about-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .values-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .about-cta {
+
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+
+    }
+
+
+    .about-footer-top {
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+
+    .footer-copy {
+
+        flex-direction:
+            column;
+
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .products-header {
+
+        height:
+            65px;
+
+    }
+
+
+    .brand {
+
+        font-size:
+            14px;
+
+    }
+
+
+    .brand-logo {
+
+        width:
+            34px;
+
+        height:
+            34px;
+
+    }
+
+
+    .about-page {
+
+        padding:
+            50px 0 65px;
+
+    }
+
+
+    .about-footer-top {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+}

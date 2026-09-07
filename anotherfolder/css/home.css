@@ -1,0 +1,1654 @@
+/* =========================================================
+   FROSTCORE — HOME PAGE
+   ========================================================= */
+
+
+/* =========================================================
+   HOME HEADER ACTIONS
+   ========================================================= */
+
+.home-header-actions {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        16px;
+
+}
+
+
+.home-header-actions .logout-button {
+
+    color:
+        #AAB5CA;
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+
+    text-decoration:
+        none;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.home-header-actions .logout-button:hover {
+
+    color:
+        var(--blue);
+
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero {
+
+    min-height:
+        650px;
+
+    padding:
+        70px 9%;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    grid-template-rows:
+        auto auto;
+
+    gap:
+        0 40px;
+
+    align-items:
+        center;
+
+}
+
+
+.hero-copy {
+
+    max-width:
+        650px;
+
+    grid-column:
+        1;
+
+    grid-row:
+        1;
+
+}
+
+
+/* =========================================================
+   EYEBROW
+   ========================================================= */
+
+.eyebrow {
+
+    display:
+        inline-block;
+
+    margin-bottom:
+        18px;
+
+    color:
+        var(--cyan);
+
+    font-family:
+        "Orbitron",
+        sans-serif;
+
+    font-size:
+        10px;
+
+    letter-spacing:
+        0.14em;
+
+}
+
+
+.hero .eyebrow {
+
+    padding:
+        8px 13px;
+
+    border:
+        1px solid
+        var(--line-light);
+
+}
+
+
+/* =========================================================
+   HERO HEADING
+   ========================================================= */
+
+.hero h1 span {
+
+    color:
+        var(--blue);
+
+}
+
+
+/* =========================================================
+   HERO TEXT
+   ========================================================= */
+
+.lead {
+
+    max-width:
+        620px;
+
+    color:
+        #e0e6f2;
+
+    font-size:
+        15px;
+
+}
+
+
+/* =========================================================
+   HERO STATISTICS
+   ========================================================= */
+
+.hero-stats {
+
+    display:
+        flex;
+
+    gap:
+        44px;
+
+    margin-top:
+        0;
+
+    padding-top:
+        20px;
+
+    border-top:
+        1px solid
+        var(--blue);
+
+    grid-column:
+        1;
+
+    grid-row:
+        2;
+
+}
+
+
+.hero-stats strong,
+.specs strong {
+
+    display:
+        block;
+
+    color:
+        var(--blue);
+
+    font-family:
+        "Orbitron",
+        sans-serif;
+
+    font-size:
+        23px;
+
+}
+
+
+.hero-stats small,
+.specs small {
+
+    display:
+        block;
+
+    margin-top:
+        6px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        9px;
+
+}
+
+
+/* =========================================================
+   HERO ART
+   ========================================================= */
+
+.hero-art {
+
+    position:
+        relative;
+
+    min-height:
+        500px;
+
+    height:
+        100%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    grid-column:
+        2;
+
+    grid-row:
+        1 / span 2;
+
+}
+
+
+.hex-logo {
+
+    width:
+        390px;
+
+    height:
+        390px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    filter:
+        drop-shadow(
+            0 0 35px
+            rgba(
+                77,
+                188,
+                244,
+                0.22
+            )
+        );
+
+}
+
+
+.hex-logo img {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        contain;
+
+}
+
+
+/* =========================================================
+   TEMPERATURE CARD
+   ========================================================= */
+
+.temp-card {
+
+    position:
+        absolute;
+
+    right:
+        7%;
+
+    bottom:
+        40px;
+
+    padding:
+        10px 13px;
+
+    background:
+        #101b34;
+
+    border:
+        1px solid
+        var(--line-light);
+
+}
+
+
+.temp-card small {
+
+    display:
+        block;
+
+    color:
+        var(--muted);
+
+    font-size:
+        8px;
+
+}
+
+
+.temp-card strong {
+
+    color:
+        var(--blue);
+
+    font-family:
+        "Orbitron",
+        sans-serif;
+
+    font-size:
+        19px;
+
+}
+
+
+/* =========================================================
+   GENERAL SECTIONS
+   ========================================================= */
+
+.section {
+
+    padding:
+        75px 9%;
+
+}
+
+
+.container {
+
+    max-width:
+        1120px;
+
+    margin:
+        auto;
+
+}
+
+
+/* =========================================================
+   WHY COOLING
+   ========================================================= */
+
+.problem {
+
+    background:
+        var(--panel);
+
+}
+
+
+.section-intro {
+
+    max-width:
+        850px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        12px;
+
+}
+
+
+.problem-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            1fr
+        );
+
+    margin-top:
+        35px;
+
+    border:
+        1px solid
+        var(--line);
+
+}
+
+
+.problem-grid article {
+
+    padding:
+        22px;
+
+    border-right:
+        1px solid
+        var(--line);
+
+}
+
+
+.problem-grid article:last-child {
+
+    border-right:
+        none;
+
+}
+
+
+.icon {
+
+    color:
+        var(--cyan);
+
+    font-size:
+        20px;
+
+}
+
+
+.problem-grid h3 {
+
+    margin:
+        14px 0 8px;
+
+    font-size:
+        13px;
+
+}
+
+
+.problem-grid p {
+
+    margin:
+        0;
+
+    color:
+        var(--muted);
+
+    font-size:
+        10px;
+
+}
+
+
+/* =========================================================
+   PRODUCT SECTION
+   ========================================================= */
+
+.product {
+
+    background:
+        var(--bg);
+
+}
+
+
+.product-layout {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        320px 1fr;
+
+    gap:
+        60px;
+
+    margin-top:
+        30px;
+
+    align-items:
+        center;
+
+}
+
+
+.product-image-card {
+
+    min-height:
+        330px;
+
+    padding:
+        15px;
+
+    background:
+        var(--panel);
+
+    border:
+        1px solid
+        var(--line);
+
+}
+
+
+.product-image-card > span {
+
+    display:
+        block;
+
+    margin-bottom:
+        4px;
+
+    color:
+        #cdd6e6;
+
+    font-family:
+        "Orbitron",
+        sans-serif;
+
+    font-size:
+        10px;
+
+}
+
+
+.product-image-card img {
+
+    width:
+        100%;
+
+    height:
+        285px;
+
+    object-fit:
+        contain;
+
+}
+
+
+/* =========================================================
+   PRODUCT FEATURES
+   ========================================================= */
+
+.features {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        22px;
+
+}
+
+
+.feature {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        38px 1fr;
+
+    gap:
+        14px;
+
+}
+
+
+.feature > b {
+
+    width:
+        27px;
+
+    height:
+        27px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    color:
+        var(--cyan);
+
+    border:
+        1px solid
+        var(--line-light);
+
+    font-family:
+        "Orbitron",
+        sans-serif;
+
+    font-size:
+        9px;
+
+}
+
+
+.feature h3 {
+
+    margin:
+        0 0 4px;
+
+    font-size:
+        13px;
+
+}
+
+
+.feature p {
+
+    margin:
+        0;
+
+    color:
+        var(--muted);
+
+    font-size:
+        10px;
+
+}
+
+
+/* =========================================================
+   SPECS
+   ========================================================= */
+
+.specs {
+
+    padding:
+        65px 9%;
+
+    background:
+        var(--panel);
+
+}
+
+
+.specs-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            5,
+            1fr
+        );
+
+    text-align:
+        center;
+
+}
+
+
+.specs strong {
+
+    font-size:
+        22px;
+
+}
+
+
+.specs small {
+
+    font-size:
+        8px;
+
+}
+
+
+/* =========================================================
+   REVIEWS
+   ========================================================= */
+
+.reviews {
+
+    background:
+        var(--bg);
+
+}
+
+
+.review-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            1fr
+        );
+
+    gap:
+        35px;
+
+    margin-top:
+        40px;
+
+}
+
+
+.review {
+
+    min-height:
+        190px;
+
+    padding:
+        24px;
+
+    background:
+        var(--panel-2);
+
+    border:
+        1px solid
+        var(--line);
+
+}
+
+
+.stars {
+
+    color:
+        var(--blue);
+
+    letter-spacing:
+        4px;
+
+    font-size:
+        11px;
+
+}
+
+
+.review p {
+
+    min-height:
+        75px;
+
+    font-size:
+        11px;
+
+}
+
+
+.person {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        12px;
+
+}
+
+
+.avatar {
+
+    width:
+        30px;
+
+    height:
+        30px;
+
+    border-radius:
+        50%;
+
+    background:
+        var(--blue);
+
+}
+
+
+.person b,
+.person small {
+
+    display:
+        block;
+
+}
+
+
+.person b {
+
+    font-size:
+        10px;
+
+}
+
+
+.person small {
+
+    color:
+        var(--muted);
+
+    font-size:
+        8px;
+
+}
+
+
+/* =========================================================
+   CALL TO ACTION
+   ========================================================= */
+
+.cta {
+
+    padding:
+        65px 20px 70px;
+
+    text-align:
+        center;
+
+    background:
+        #111a2e;
+
+}
+
+
+.cta-logo img {
+
+    width:
+        75px;
+
+    height:
+        75px;
+
+    margin:
+        0 auto 15px;
+
+    object-fit:
+        contain;
+
+}
+
+
+.cta h2 {
+
+    margin-bottom:
+        12px;
+
+    font-size:
+        36px;
+
+}
+
+
+.cta p {
+
+    margin-bottom:
+        22px;
+
+    font-size:
+        11px;
+
+}
+
+
+/* =========================================================
+   HOME FOOTER
+   ========================================================= */
+
+.footer {
+
+    padding:
+        55px 9% 25px;
+
+    background:
+        var(--bg);
+
+}
+
+
+.footer-grid {
+
+    max-width:
+        1120px;
+
+    margin:
+        auto;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        2fr 1fr 1fr 1fr;
+
+    gap:
+        45px;
+
+}
+
+
+.footer h3 {
+
+    font-size:
+        11px;
+
+}
+
+
+.footer p,
+.footer a {
+
+    display:
+        block;
+
+    color:
+        var(--muted);
+
+    font-size:
+        9px;
+
+    line-height:
+        2;
+
+}
+
+
+.footer a:hover {
+
+    color:
+        var(--blue);
+
+}
+
+
+.footer-bottom {
+
+    max-width:
+        1120px;
+
+    margin:
+        35px auto 0;
+
+    padding-top:
+        18px;
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    color:
+        #68758d;
+
+    border-top:
+        1px solid
+        var(--line);
+
+    font-family:
+        "Orbitron",
+        sans-serif;
+
+    font-size:
+        8px;
+
+}
+
+
+/* =========================================================
+   LOGIN POPUP
+   ========================================================= */
+
+.login-overlay {
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        20px;
+
+    background:
+        rgba(
+            1,
+            5,
+            14,
+            0.78
+        );
+
+    backdrop-filter:
+        blur(8px);
+
+    opacity:
+        0;
+
+    visibility:
+        hidden;
+
+    transition:
+        0.22s ease;
+
+    z-index:
+        100;
+
+}
+
+
+.login-overlay.show {
+
+    opacity:
+        1;
+
+    visibility:
+        visible;
+
+}
+
+
+.login-modal {
+
+    position:
+        relative;
+
+    width:
+        min(
+            420px,
+            100%
+        );
+
+    padding:
+        35px;
+
+    background:
+        var(--panel);
+
+    border:
+        1px solid
+        #2d4568;
+
+    border-radius:
+        8px;
+
+    box-shadow:
+        0 25px 80px
+        rgba(
+            0,
+            0,
+            0,
+            0.55
+        );
+
+    text-align:
+        left;
+
+}
+
+
+.close-login {
+
+    position:
+        absolute;
+
+    top:
+        8px;
+
+    right:
+        13px;
+
+    background:
+        transparent;
+
+    border:
+        none;
+
+    color:
+        var(--muted);
+
+    font-size:
+        27px;
+
+    cursor:
+        pointer;
+
+}
+
+
+.close-login:hover {
+
+    color:
+        var(--blue);
+
+}
+
+
+.login-logo {
+
+    width:
+        70px;
+
+    height:
+        70px;
+
+    margin:
+        0 auto 10px;
+
+    object-fit:
+        contain;
+
+}
+
+
+.login-modal h2 {
+
+    margin:
+        0 0 5px;
+
+    text-align:
+        center;
+
+    font-size:
+        27px;
+
+}
+
+
+.login-subtitle {
+
+    margin:
+        0 0 25px;
+
+    color:
+        #71809b;
+
+    text-align:
+        center;
+
+    font-size:
+        11px;
+
+}
+
+
+.login-modal label {
+
+    display:
+        block;
+
+    margin:
+        13px 0 6px;
+
+    font-size:
+        9px;
+
+    font-weight:
+        700;
+
+}
+
+
+.login-modal input {
+
+    width:
+        100%;
+
+    height:
+        42px;
+
+    padding:
+        0 12px;
+
+    background:
+        var(--input-bg);
+
+    border:
+        1px solid
+        #2a4263;
+
+    border-radius:
+        4px;
+
+    color:
+        white;
+
+    outline:
+        none;
+
+    font-size:
+        11px;
+
+}
+
+
+.login-modal input::placeholder {
+
+    color:
+        #596a85;
+
+}
+
+
+.login-modal input:focus {
+
+    border-color:
+        var(--blue);
+
+}
+
+
+.password-wrap {
+
+    position:
+        relative;
+
+}
+
+
+.password-wrap input {
+
+    padding-right:
+        60px;
+
+}
+
+
+.password-wrap button {
+
+    position:
+        absolute;
+
+    top:
+        0;
+
+    right:
+        8px;
+
+    height:
+        42px;
+
+    background:
+        transparent;
+
+    border:
+        none;
+
+    color:
+        var(--blue);
+
+    font-size:
+        9px;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+}
+
+
+.login-submit {
+
+    width:
+        100%;
+
+    margin-top:
+        20px;
+
+}
+
+
+.forgot {
+
+    margin:
+        8px 0 0;
+
+    color:
+        var(--blue);
+
+    text-align:
+        right;
+
+    font-size:
+        9px;
+
+}
+
+
+.create {
+
+    margin-top:
+        18px;
+
+    color:
+        #71809b;
+
+    text-align:
+        center;
+
+    font-size:
+        10px;
+
+}
+
+
+.create a {
+
+    color:
+        var(--blue);
+
+    font-weight:
+        700;
+
+}
+
+
+.create a:hover {
+
+    text-decoration:
+        underline;
+
+}
+
+
+/* =========================================================
+   HOME RESPONSIVE — TABLET
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .hero {
+
+        grid-template-columns:
+            1fr;
+
+        grid-template-rows:
+            auto;
+
+        padding:
+            60px 7%;
+
+    }
+
+
+    .hero-copy {
+
+        grid-column:
+            1;
+
+        grid-row:
+            auto;
+
+    }
+
+
+    .hero-stats {
+
+        grid-column:
+            1;
+
+        grid-row:
+            auto;
+
+    }
+
+
+    .hero-art {
+
+        grid-column:
+            1;
+
+        grid-row:
+            auto;
+
+        min-height:
+            310px;
+
+        height:
+            310px;
+
+    }
+
+
+    .hex-logo {
+
+        width:
+            300px;
+
+        height:
+            300px;
+
+    }
+
+
+    .hero h1 {
+
+        font-size:
+            48px;
+
+    }
+
+
+    .problem-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .problem-grid article {
+
+        border-right:
+            none;
+
+        border-bottom:
+            1px solid
+            var(--line);
+
+    }
+
+
+    .problem-grid article:last-child {
+
+        border-bottom:
+            none;
+
+    }
+
+
+    .product-layout {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            35px;
+
+    }
+
+
+    .review-grid {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            18px;
+
+    }
+
+
+    .specs-grid {
+
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+
+        gap:
+            30px;
+
+    }
+
+
+    .footer-grid {
+
+        grid-template-columns:
+            1fr 1fr;
+
+        gap:
+            30px;
+
+    }
+
+}
+
+
+/* =========================================================
+   HOME RESPONSIVE — MOBILE
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+    .home-header-actions {
+
+        gap:
+            10px;
+
+    }
+
+
+    .hero {
+
+        padding:
+            45px 6%;
+
+    }
+
+
+    .hero h1 {
+
+        font-size:
+            40px;
+
+    }
+
+
+    .cta h2 {
+
+        font-size:
+            27px;
+
+    }
+
+
+    .actions {
+
+        flex-direction:
+            column;
+
+    }
+
+
+    .actions .btn {
+
+        width:
+            100%;
+
+    }
+
+
+    .hero-stats {
+
+        gap:
+            16px;
+
+        justify-content:
+            space-between;
+
+    }
+
+
+    .hero-stats strong {
+
+        font-size:
+            17px;
+
+    }
+
+
+    .section {
+
+        padding:
+            60px 6%;
+
+    }
+
+
+    .specs {
+
+        padding:
+            50px 6%;
+
+    }
+
+
+    .footer {
+
+        padding:
+            45px 6% 20px;
+
+    }
+
+
+    .footer-grid {
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+
+    .footer-bottom {
+
+        flex-direction:
+            column;
+
+        gap:
+            10px;
+
+    }
+
+
+    .login-modal {
+
+        padding:
+            28px 22px;
+
+    }
+
+}

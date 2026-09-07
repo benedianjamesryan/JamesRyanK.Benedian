@@ -46,7 +46,9 @@ if (
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $email =
-        trim($_POST["email"] ?? "");
+        trim(
+            $_POST["email"] ?? ""
+        );
 
     $password =
         $_POST["password"] ?? "";
@@ -79,6 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     else {
+
 
         // --------------------------------------------------
         // FIND USER
@@ -125,23 +128,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         else {
 
+
             // ==================================================
-            // IMPORTANT SESSION RESET
+            // RESET PREVIOUS SESSION
             // ==================================================
-            //
-            // Remove the previous account's session data
-            // BEFORE creating the new authenticated session.
-            //
 
             $_SESSION = [];
 
 
-            // Generate a completely new session ID.
+            // Generate a new session ID.
             session_regenerate_id(true);
 
 
             // --------------------------------------------------
-            // SAVE ONLY THE NEW USER
+            // SAVE USER SESSION
             // --------------------------------------------------
 
             $_SESSION["user_id"] =
@@ -178,7 +178,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 // YEAR
 // ==================================================
 
-$year = date("Y");
+$year =
+    date("Y");
 
 ?>
 
@@ -190,18 +191,35 @@ $year = date("Y");
 
     <meta charset="UTF-8">
 
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
 
+
     <title>
         FROSTCORE — Login
     </title>
 
+
+    <!-- ==================================================
+         SHARED CSS
+    ================================================== -->
+
     <link
         rel="stylesheet"
         href="css/style.css"
+    >
+
+
+    <!-- ==================================================
+         LOGIN PAGE CSS
+    ================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="css/login.css"
     >
 
 </head>
@@ -210,8 +228,14 @@ $year = date("Y");
 <body class="login-page">
 
 
+<!-- ==================================================
+     HEADER
+================================================== -->
+
 <header class="site-header">
 
+
+    <!-- BRAND -->
 
     <a
         class="brand"
@@ -224,6 +248,7 @@ $year = date("Y");
             alt="FROSTCORE logo"
         >
 
+
         <span>
             FROSTCORE
         </span>
@@ -231,11 +256,15 @@ $year = date("Y");
     </a>
 
 
+    <!-- BACK HOME -->
+
     <a
         class="btn btn-small"
         href="index.php"
     >
+
         BACK HOME
+
     </a>
 
 
@@ -243,11 +272,17 @@ $year = date("Y");
 
 
 
+<!-- ==================================================
+     LOGIN MAIN
+================================================== -->
+
 <main class="login-page-main">
 
 
     <div class="login-card">
 
+
+        <!-- LOGO -->
 
         <img
             class="login-logo"
@@ -256,16 +291,24 @@ $year = date("Y");
         >
 
 
+        <!-- TITLE -->
+
         <h1>
             WELCOME BACK
         </h1>
 
 
         <p class="login-subtitle">
+
             Sign in to your FROSTCORE experience.
+
         </p>
 
 
+
+        <!-- ==================================================
+             ERROR MESSAGE
+        ================================================== -->
 
         <?php if ($error !== ""): ?>
 
@@ -283,11 +326,17 @@ $year = date("Y");
 
 
 
+        <!-- ==================================================
+             LOGIN FORM
+        ================================================== -->
+
         <form
             action="login.php"
             method="post"
         >
 
+
+            <!-- PRESERVE REDIRECT -->
 
             <input
                 type="hidden"
@@ -300,8 +349,12 @@ $year = date("Y");
             >
 
 
+            <!-- EMAIL -->
+
             <label for="page-email">
+
                 EMAIL
+
             </label>
 
 
@@ -321,8 +374,12 @@ $year = date("Y");
 
 
 
+            <!-- PASSWORD -->
+
             <label for="page-password">
+
                 PASSWORD
+
             </label>
 
 
@@ -337,11 +394,15 @@ $year = date("Y");
 
 
 
+            <!-- LOGIN BUTTON -->
+
             <button
                 class="btn login-submit"
                 type="submit"
             >
+
                 SIGN IN →
+
             </button>
 
 
@@ -349,14 +410,20 @@ $year = date("Y");
 
 
 
+        <!-- CREATE ACCOUNT -->
+
         <p class="create">
 
             Don't have an account?
 
             <a
-                href="register.php?redirect=<?= urlencode($redirect) ?>"
+                href="register.php?redirect=<?= urlencode(
+                    $redirect
+                ) ?>"
             >
+
                 CREATE ACCOUNT
+
             </a>
 
         </p>
@@ -364,9 +431,14 @@ $year = date("Y");
 
     </div>
 
+
 </main>
 
 
+
+<!-- ==================================================
+     FOOTER
+================================================== -->
 
 <footer class="footer-bottom login-footer">
 
@@ -386,7 +458,9 @@ $year = date("Y");
 
 
     <span>
+
         STAY COOL. PLAY BETTER.
+
     </span>
 
 

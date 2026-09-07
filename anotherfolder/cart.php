@@ -32,6 +32,7 @@ function e($value)
     );
 }
 
+
 function money($amount)
 {
     return "₱" . number_format(
@@ -318,6 +319,7 @@ $total = $subtotal + $shipping;
 ?>
 
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -329,358 +331,39 @@ $total = $subtotal + $shipping;
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>FROSTCORE — Cart</title>
+    <title>
+        FROSTCORE — Cart
+    </title>
 
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/products.css">
 
-    <style>
+    <!-- GLOBAL CSS -->
 
-        /* ==================================================
-           CART PAGE
-        ================================================== */
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
 
-        .cart-page {
-            width: 82%;
-            max-width: 1120px;
-            margin: 0 auto;
-            padding: 70px 0 90px;
-        }
 
+    <!-- SHARED PRODUCT / HEADER CSS -->
 
-        .cart-title {
-            margin-bottom: 40px;
-        }
+    <link
+        rel="stylesheet"
+        href="css/products.css"
+    >
 
 
-        .cart-title h1 {
-            margin: 0 0 8px;
-            color: var(--text);
-            font-family: "Orbitron", sans-serif;
-            font-size: 42px;
-        }
+    <!-- CART PAGE CSS -->
 
-
-        .cart-title p {
-            margin: 0;
-            color: var(--muted);
-            font-size: 12px;
-        }
-
-
-        .cart-layout {
-            display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 30px;
-        }
-
-
-        .cart-items {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-
-        .cart-item {
-            display: grid;
-            grid-template-columns: 130px 1fr auto;
-            gap: 20px;
-            align-items: center;
-
-            padding: 20px;
-
-            background: var(--panel);
-            border: 1px solid var(--border);
-        }
-
-
-        .cart-item-image {
-            width: 130px;
-            height: 120px;
-
-            display: grid;
-            place-items: center;
-
-            background: var(--dark-blue);
-            border: 1px solid var(--border);
-        }
-
-
-        .cart-item-image img {
-            width: 90%;
-            height: 90%;
-            object-fit: contain;
-        }
-
-
-        .cart-item-info h2 {
-            margin: 0 0 6px;
-
-            font-family: "Orbitron", sans-serif;
-            font-size: 15px;
-        }
-
-
-        .cart-item-category {
-            margin: 0 0 10px;
-
-            color: var(--muted);
-            font-size: 10px;
-        }
-
-
-        .cart-item-price {
-            color: var(--blue);
-            font-family: "Orbitron", sans-serif;
-            font-size: 17px;
-            font-weight: 700;
-        }
-
-
-        .cart-item-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-
-        .quantity-form {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-
-        .quantity-form input {
-            width: 55px;
-            height: 34px;
-
-            text-align: center;
-
-            background: var(--dark-blue);
-            color: var(--text);
-
-            border: 1px solid var(--border);
-
-            font-size: 11px;
-        }
-
-
-        .quantity-form button,
-        .remove-button {
-            height: 34px;
-
-            padding: 0 10px;
-
-            background: transparent;
-            color: var(--muted);
-
-            border: 1px solid var(--border);
-
-            cursor: pointer;
-        }
-
-
-        .quantity-form button:hover,
-        .remove-button:hover {
-            color: var(--blue);
-            border-color: var(--blue);
-        }
-
-
-        .cart-summary {
-            height: fit-content;
-
-            padding: 25px;
-
-            background: var(--panel);
-            border: 1px solid var(--border);
-        }
-
-
-        .cart-summary h2 {
-            margin: 0 0 25px;
-
-            font-family: "Orbitron", sans-serif;
-            font-size: 17px;
-        }
-
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-
-            margin-bottom: 15px;
-
-            color: var(--muted);
-            font-size: 11px;
-        }
-
-
-        .summary-total {
-            display: flex;
-            justify-content: space-between;
-
-            padding-top: 18px;
-            margin-top: 18px;
-
-            border-top: 1px solid var(--border);
-
-            color: var(--text);
-            font-family: "Orbitron", sans-serif;
-            font-size: 16px;
-        }
-
-
-        .checkout-button {
-            display: block;
-
-            width: 100%;
-
-            margin-top: 25px;
-            padding: 13px 15px;
-
-            text-align: center;
-
-            background: var(--blue);
-            color: var(--bg);
-
-            border: 1px solid var(--blue);
-
-            font-size: 10px;
-            font-weight: 800;
-
-            cursor: pointer;
-        }
-
-
-        .checkout-button:hover {
-            filter: brightness(1.08);
-        }
-
-
-        .clear-cart-form {
-            margin-top: 10px;
-        }
-
-
-        .clear-cart-button {
-            width: 100%;
-
-            padding: 10px;
-
-            background: transparent;
-            color: var(--muted);
-
-            border: 1px solid var(--border);
-
-            cursor: pointer;
-
-            font-size: 9px;
-        }
-
-
-        .clear-cart-button:hover {
-            color: #ff7f8f;
-            border-color: #ff7f8f;
-        }
-
-
-        .empty-cart {
-            padding: 70px 30px;
-
-            text-align: center;
-
-            background: var(--panel);
-            border: 1px solid var(--border);
-        }
-
-
-        .empty-cart h2 {
-            margin-bottom: 10px;
-
-            font-family: "Orbitron", sans-serif;
-            font-size: 22px;
-        }
-
-
-        .empty-cart p {
-            margin-bottom: 25px;
-
-            color: var(--muted);
-            font-size: 11px;
-        }
-
-
-        .continue-shopping {
-            display: inline-block;
-
-            padding: 12px 20px;
-
-            background: var(--blue);
-            color: var(--bg);
-
-            font-size: 9px;
-            font-weight: 800;
-        }
-
-
-        @media (max-width: 800px) {
-
-            .cart-page {
-                width: 90%;
-                padding: 50px 0 70px;
-            }
-
-
-            .cart-layout {
-                grid-template-columns: 1fr;
-            }
-
-
-            .cart-item {
-                grid-template-columns: 100px 1fr;
-            }
-
-
-            .cart-item-actions {
-                grid-column: 1 / -1;
-            }
-
-
-            .cart-item-image {
-                width: 100px;
-                height: 100px;
-            }
-
-        }
-
-
-        @media (max-width: 520px) {
-
-            .cart-title h1 {
-                font-size: 32px;
-            }
-
-
-            .cart-item {
-                grid-template-columns: 1fr;
-            }
-
-
-            .cart-item-image {
-                width: 100%;
-            }
-
-        }
-
-    </style>
+    <link
+        rel="stylesheet"
+        href="css/cart.css"
+    >
 
 </head>
 
 
 <body>
+
 
 <!-- ==================================================
      HEADER
@@ -688,7 +371,10 @@ $total = $subtotal + $shipping;
 
 <header class="products-header">
 
-    <a href="index.php" class="brand">
+    <a
+        href="index.php"
+        class="brand"
+    >
 
         <img
             src="assets/logo/frostcore_logo.png"
@@ -696,7 +382,9 @@ $total = $subtotal + $shipping;
             class="brand-logo"
         >
 
-        <span>FROSTCORE</span>
+        <span>
+            FROSTCORE
+        </span>
 
     </a>
 
@@ -723,15 +411,17 @@ $total = $subtotal + $shipping;
 
 
     <div class="header-actions">
+
         <?php if (!empty($_SESSION["user_id"])): ?>
 
-        <a
-            href="#"
-            class="header-icon logout-button"
-            title="Logout"
-        >
-            ♙
-        </a>
+            <a
+                href="#"
+                class="header-icon logout-button"
+                title="Logout"
+            >
+                ♙
+            </a>
+
         <?php else: ?>
 
             <a
@@ -741,6 +431,7 @@ $total = $subtotal + $shipping;
             >
                 ♙
             </a>
+
         <?php endif; ?>
 
 
@@ -748,11 +439,13 @@ $total = $subtotal + $shipping;
             href="cart.php"
             class="cart-link"
         >
+
             🛒
 
             <span class="cart-number">
                 <?= $cartCount ?>
             </span>
+
         </a>
 
     </div>
@@ -766,6 +459,7 @@ $total = $subtotal + $shipping;
 
 <main class="cart-page">
 
+
     <div class="cart-title">
 
         <h1>
@@ -773,7 +467,8 @@ $total = $subtotal + $shipping;
         </h1>
 
         <p>
-            <?= $cartCount ?> item<?= $cartCount === 1 ? "" : "s" ?>
+            <?= $cartCount ?>
+            item<?= $cartCount === 1 ? "" : "s" ?>
             in your FROSTCORE cart.
         </p>
 
@@ -781,6 +476,7 @@ $total = $subtotal + $shipping;
 
 
     <?php if (empty($cartItems)): ?>
+
 
         <div class="empty-cart">
 
@@ -801,7 +497,9 @@ $total = $subtotal + $shipping;
 
         </div>
 
+
     <?php else: ?>
+
 
         <div class="cart-layout">
 
@@ -834,7 +532,9 @@ $total = $subtotal + $shipping;
 
                     ?>
 
+
                     <article class="cart-item">
+
 
                         <div class="cart-item-image">
 
@@ -853,11 +553,19 @@ $total = $subtotal + $shipping;
                             </h2>
 
                             <p class="cart-item-category">
-                                <?= e($item["category"]) ?>
+
+                                <?= e(
+                                    $item["category"]
+                                ) ?>
+
                             </p>
 
                             <div class="cart-item-price">
-                                <?= money($item["price"]) ?>
+
+                                <?= money(
+                                    $item["price"]
+                                ) ?>
+
                             </div>
 
                         </div>
@@ -865,7 +573,9 @@ $total = $subtotal + $shipping;
 
                         <div class="cart-item-actions">
 
-                            <!-- Update quantity -->
+
+                            <!-- UPDATE QUANTITY -->
+
                             <form
                                 method="post"
                                 class="quantity-form"
@@ -895,7 +605,8 @@ $total = $subtotal + $shipping;
                             </form>
 
 
-                            <!-- Remove -->
+                            <!-- REMOVE -->
+
                             <form method="post">
 
                                 <input
@@ -914,6 +625,7 @@ $total = $subtotal + $shipping;
 
                             </form>
 
+
                         </div>
 
                     </article>
@@ -921,7 +633,8 @@ $total = $subtotal + $shipping;
                 <?php endforeach; ?>
 
 
-                <!-- Clear cart -->
+                <!-- CLEAR CART -->
+
                 <form
                     method="post"
                     class="clear-cart-form"
@@ -937,6 +650,7 @@ $total = $subtotal + $shipping;
 
                 </form>
 
+
             </section>
 
 
@@ -945,6 +659,7 @@ $total = $subtotal + $shipping;
             =============================== -->
 
             <aside class="cart-summary">
+
 
                 <h2>
                     ORDER SUMMARY
@@ -958,7 +673,11 @@ $total = $subtotal + $shipping;
                     </span>
 
                     <strong>
-                        <?= money($subtotal) ?>
+
+                        <?= money(
+                            $subtotal
+                        ) ?>
+
                     </strong>
 
                 </div>
@@ -984,13 +703,16 @@ $total = $subtotal + $shipping;
                     </span>
 
                     <strong>
-                        <?= money($total) ?>
+
+                        <?= money(
+                            $total
+                        ) ?>
+
                     </strong>
 
                 </div>
 
 
-                <!-- Checkout will be built later -->
                 <a
                     href="checkout.php"
                     class="checkout-button"
@@ -998,16 +720,34 @@ $total = $subtotal + $shipping;
                     PROCEED TO CHECKOUT →
                 </a>
 
+
             </aside>
+
 
         </div>
 
+
     <?php endif; ?>
 
+
 </main>
+
+
+
+<!-- ==================================================
+     LOGOUT POPUP
+================================================== -->
+
 <?php require_once "includes/logout-popup.php"; ?>
+
+
+<!-- ==================================================
+     JAVASCRIPT
+================================================== -->
 
 <script src="js/script.js"></script>
 
+
 </body>
+
 </html>

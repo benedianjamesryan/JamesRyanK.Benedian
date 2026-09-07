@@ -4,7 +4,6 @@
 // FROSTCORE — HOME PAGE
 // ==================================================
 
-// Start session so the page knows whether a user is logged in.
 session_start();
 
 
@@ -26,6 +25,7 @@ $year =
     date("Y");
 
 ?>
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -44,9 +44,19 @@ $year =
     </title>
 
 
+    <!-- SHARED CSS -->
+
     <link
         rel="stylesheet"
         href="css/style.css"
+    >
+
+
+    <!-- HOME PAGE CSS -->
+
+    <link
+        rel="stylesheet"
+        href="css/home.css"
     >
 
 </head>
@@ -116,14 +126,7 @@ $year =
              HEADER ACTIONS
         ================================================== -->
 
-        <div
-            class="home-header-actions"
-            style="
-                display:flex;
-                align-items:center;
-                gap:16px;
-            "
-        >
+        <div class="home-header-actions">
 
 
             <?php if ($loggedIn): ?>
@@ -148,13 +151,6 @@ $year =
                     class="logout-button"
                     id="logoutButton"
                     title="Logout"
-                    style="
-                        color:#AAB5CA;
-                        font-size:9px;
-                        font-weight:800;
-                        text-decoration:none;
-                        white-space:nowrap;
-                    "
                 >
 
                     LOGOUT
@@ -1145,17 +1141,29 @@ $year =
                 </h3>
 
 
-                <a href="https://www.instagram.com/FrostCoreCoolers" target="_blank">
+                <a
+                    href="https://www.instagram.com/FrostCoreCoolers"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
                     Instagram
                 </a>
 
 
-                <a href="https://www.tiktok.com/@FrostCoreCoolers" target="_blank">
+                <a
+                    href="https://www.tiktok.com/@FrostCoreCoolers"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
                     TikTok
                 </a>
 
 
-                <a href="https://www.facebook.com/FrostCoreCoolers" target="_blank">
+                <a
+                    href="https://www.facebook.com/FrostCoreCoolers"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
                     Facebook
                 </a>
 
@@ -1172,7 +1180,11 @@ $year =
 
             <span>
 
-                © <?= htmlspecialchars($year) ?>
+                © <?= htmlspecialchars(
+                    $year,
+                    ENT_QUOTES,
+                    "UTF-8"
+                ) ?>
 
                 FROSTCORE.
                 All rights reserved.

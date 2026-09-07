@@ -194,7 +194,8 @@ if (
 // CART COUNT
 // ==================================================
 
-$cart_count = 0;
+$cart_count =
+    0;
 
 
 if ($isLoggedIn) {
@@ -526,11 +527,14 @@ $reviewAverage =
 // CURRENT USER REVIEW STATUS
 // ==================================================
 
-$hasReviewed = false;
+$hasReviewed =
+    false;
 
-$canReview = false;
+$canReview =
+    false;
 
-$completedPurchase = false;
+$completedPurchase =
+    false;
 
 
 if (
@@ -657,7 +661,6 @@ $reviews =
 <html lang="en">
 
 <head>
-    
 
     <meta charset="UTF-8">
 
@@ -671,459 +674,12 @@ $reviews =
     </title>
 
 
+    <!-- PRODUCT DETAILS CSS -->
+
     <link
         rel="stylesheet"
         href="css/product-details.css"
     >
-
-
-    <style>
-
-        /* ==================================================
-           REVIEW SUMMARY
-        ================================================== */
-
-        .review-summary {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 15px;
-
-            margin-bottom: 25px;
-
-            padding: 15px;
-
-            background: #081225;
-
-            border: 1px solid #263452;
-
-        }
-
-
-        .review-summary-rating {
-
-            color: #FFD166;
-
-            font-size: 16px;
-
-            font-weight: 800;
-
-        }
-
-
-        .review-summary-text {
-
-            color: #68758D;
-
-            font-size: 9px;
-
-        }
-
-
-        /* ==================================================
-           REVIEW FORM
-        ================================================== */
-
-        .review-form {
-
-            margin-bottom: 30px;
-
-            padding: 22px;
-
-            background: #111A31;
-
-            border: 1px solid #263452;
-
-        }
-
-
-        .review-form h3 {
-
-            margin: 0 0 18px;
-
-            font-family:
-                Orbitron,
-                sans-serif;
-
-            font-size: 14px;
-
-        }
-
-
-        .review-message {
-
-            margin-bottom: 18px;
-
-            padding: 12px 14px;
-
-            font-size: 9px;
-
-        }
-
-
-        .review-success {
-
-            color: #72E38A;
-
-            background:
-                rgba(
-                    114,
-                    227,
-                    138,
-                    0.07
-                );
-
-            border:
-                1px solid
-                rgba(
-                    114,
-                    227,
-                    138,
-                    0.35
-                );
-
-        }
-
-
-        .review-error {
-
-            color: #FF7F8F;
-
-            background:
-                rgba(
-                    255,
-                    127,
-                    143,
-                    0.07
-                );
-
-            border:
-                1px solid
-                rgba(
-                    255,
-                    127,
-                    143,
-                    0.35
-                );
-
-        }
-
-
-        /* ==================================================
-           STAR INPUT
-        ================================================== */
-
-        .rating-label {
-
-            display: block;
-
-            margin-bottom: 8px;
-
-            color: #AAB5CA;
-
-            font-size: 8px;
-
-            font-weight: 800;
-
-        }
-
-
-        .star-selector {
-
-            display: flex;
-
-            flex-direction: row-reverse;
-
-            justify-content: flex-end;
-
-            width: max-content;
-
-            margin-bottom: 20px;
-
-        }
-
-
-        .star-selector input {
-
-            position: absolute;
-
-            opacity: 0;
-
-        }
-
-
-        .star-selector label {
-
-            padding-right: 5px;
-
-            color: #263452;
-
-            font-size: 30px;
-
-            line-height: 1;
-
-            cursor: pointer;
-
-            transition:
-                color .15s ease;
-
-        }
-
-
-        .star-selector label:hover,
-
-        .star-selector label:hover ~ label,
-
-        .star-selector input:checked ~ label {
-
-            color: #FFD166;
-
-        }
-
-
-        /* ==================================================
-           TEXTAREA
-        ================================================== */
-
-        .review-textarea-label {
-
-            display: block;
-
-            margin-bottom: 8px;
-
-            color: #AAB5CA;
-
-            font-size: 8px;
-
-            font-weight: 800;
-
-        }
-
-
-        .review-textarea {
-
-            width: 100%;
-
-            min-height: 120px;
-
-            padding: 12px;
-
-            resize: vertical;
-
-            background: #081225;
-
-            color: #F4F7FF;
-
-            border: 1px solid #263452;
-
-            outline: none;
-
-            font-family:
-                Inter,
-                Arial,
-                sans-serif;
-
-            font-size: 10px;
-
-            line-height: 1.5;
-
-        }
-
-
-        .review-textarea:focus {
-
-            border-color: #4DBCF4;
-
-        }
-
-
-        .review-submit {
-
-            margin-top: 12px;
-
-            padding: 11px 18px;
-
-            color: #050A16;
-
-            background: #4DBCF4;
-
-            border: 1px solid #4DBCF4;
-
-            font-size: 8px;
-
-            font-weight: 800;
-
-            cursor: pointer;
-
-        }
-
-
-        /* ==================================================
-           REVIEW NOTICE
-        ================================================== */
-
-        .review-notice {
-
-            margin-bottom: 25px;
-
-            padding: 16px;
-
-            color: #AAB5CA;
-
-            background: #081225;
-
-            border: 1px solid #263452;
-
-            font-size: 9px;
-
-            line-height: 1.6;
-
-        }
-
-
-        .review-notice a {
-
-            color: #4DBCF4;
-
-            font-weight: 800;
-
-        }
-
-
-        /* ==================================================
-           REVIEW LIST
-        ================================================== */
-
-        .review-list {
-
-            display: grid;
-
-            gap: 15px;
-
-        }
-
-
-        .review-card {
-
-            padding: 20px;
-
-            background: #081225;
-
-            border: 1px solid #263452;
-
-        }
-
-
-        .review-card-header {
-
-            display: flex;
-
-            align-items: flex-start;
-
-            justify-content: space-between;
-
-            gap: 15px;
-
-            margin-bottom: 12px;
-
-        }
-
-
-        .reviewer-name {
-
-            color: #F4F7FF;
-
-            font-size: 10px;
-
-            font-weight: 800;
-
-        }
-
-
-        .review-date {
-
-            margin-top: 4px;
-
-            color: #68758D;
-
-            font-size: 8px;
-
-        }
-
-
-        .review-stars {
-
-            color: #FFD166;
-
-            font-size: 13px;
-
-            letter-spacing: 1px;
-
-        }
-
-
-        .review-content {
-
-            margin: 0;
-
-            color: #AAB5CA;
-
-            font-size: 10px;
-
-            line-height: 1.7;
-
-            word-break: break-word;
-
-        }
-
-
-        .review-empty {
-
-            padding: 30px 20px;
-
-            text-align: center;
-
-            color: #68758D;
-
-            background: #081225;
-
-            border: 1px solid #263452;
-
-            font-size: 9px;
-
-        }
-
-
-        @media (
-            max-width: 600px
-        ) {
-
-            .review-summary {
-
-                flex-direction:
-                    column;
-
-                align-items:
-                    flex-start;
-
-            }
-
-
-            .review-card-header {
-
-                flex-direction:
-                    column;
-
-                align-items:
-                    flex-start;
-
-            }
-
-        }
-
-    </style>
 
 </head>
 
@@ -1177,14 +733,10 @@ $reviews =
         <?php endif; ?>
 
 
-        <!-- BOTH CUSTOMER AND ADMIN -->
-
         <a href="about.php">
             ABOUT US
         </a>
 
-
-        <!-- BOTH CUSTOMER AND ADMIN -->
 
         <a href="contact.php">
             CONTACT
@@ -1208,14 +760,7 @@ $reviews =
 
             <a
                 href="admin/dashboard.php"
-                class="login-link"
-                style="
-                    color:#4DBCF4;
-                    border:1px solid #4DBCF4;
-                    padding:7px 10px;
-                    font-size:8px;
-                    font-weight:800;
-                "
+                class="login-link admin-header-link"
             >
                 ADMIN
             </a>
@@ -1228,8 +773,10 @@ $reviews =
         <?php if ($isLoggedIn): ?>
 
             <a
-                href="logout.php"
-                class="login-link"
+                href="#"
+                class="login-link logout-button"
+                id="logoutButton"
+                title="Logout"
             >
                 LOGOUT
             </a>
@@ -1280,7 +827,9 @@ $reviews =
     <div class="product-back">
 
         <a href="products.php">
+
             ← BACK TO PRODUCTS
+
         </a>
 
     </div>
@@ -1393,7 +942,9 @@ $reviews =
                     <span
                         class="stock-available"
                     >
+
                         IN STOCK
+
                     </span>
 
 
@@ -1408,6 +959,7 @@ $reviews =
 
                 <?php else: ?>
 
+
                     <span
                         class="stock-out"
                     >
@@ -1415,6 +967,7 @@ $reviews =
                         OUT OF STOCK
 
                     </span>
+
 
                 <?php endif; ?>
 
@@ -1429,7 +982,9 @@ $reviews =
             >
 
                 <h3>
+
                     PRODUCT DESCRIPTION
+
                 </h3>
 
 
@@ -1471,10 +1026,13 @@ $reviews =
                         class="quantity-box"
                     >
 
+
                         <label
                             for="quantity"
                         >
+
                             QUANTITY
+
                         </label>
 
 
@@ -1487,6 +1045,7 @@ $reviews =
                             max="<?= $product_stock ?>"
                         >
 
+
                     </div>
 
 
@@ -1495,7 +1054,9 @@ $reviews =
                         name="add_to_cart"
                         class="add-cart-button"
                     >
+
                         ADD TO CART
+
                     </button>
 
 
@@ -1539,7 +1100,9 @@ $reviews =
 
 
         <h2>
+
             PRODUCT SPECIFICATIONS
+
         </h2>
 
 
@@ -1564,6 +1127,7 @@ $reviews =
             </div>
 
 
+
             <div class="spec-item">
 
                 <span>
@@ -1580,6 +1144,7 @@ $reviews =
                 </strong>
 
             </div>
+
 
 
             <div class="spec-item">
@@ -1601,6 +1166,7 @@ $reviews =
                 </strong>
 
             </div>
+
 
 
             <div class="spec-item">
@@ -1649,7 +1215,9 @@ $reviews =
 
 
         <h2>
+
             CUSTOMER REVIEWS
+
         </h2>
 
 
@@ -1721,10 +1289,12 @@ $reviews =
 
                 <?= $reviewCount ?>
 
+
                 <?= $reviewCount === 1
                     ? "customer review"
                     : "customer reviews"
                 ?>
+
 
             </div>
 
@@ -1798,7 +1368,9 @@ $reviews =
 
 
                 <h3>
+
                     WRITE A REVIEW
+
                 </h3>
 
 
@@ -2209,8 +1781,10 @@ $reviews =
 
 
         <p>
+
             Advanced cooling solutions
             for gamers.
+
         </p>
 
     </div>
@@ -2268,8 +1842,16 @@ $reviews =
 
 
 
+<!-- ==================================================
+     SHARED LOGOUT POPUP
+================================================== -->
+
 <?php require_once "includes/logout-popup.php"; ?>
 
+
+<!-- ==================================================
+     JAVASCRIPT
+================================================== -->
 
 <script src="js/script.js"></script>
 

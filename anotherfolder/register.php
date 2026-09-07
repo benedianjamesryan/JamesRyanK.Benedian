@@ -1,121 +1,184 @@
 <?php
 
+// ==================================================
+// FROSTCORE — REGISTER
+// ==================================================
+
 // Start the PHP session.
 // We need this so the user can stay logged in after registering.
 session_start();
 
-// Connect to the FROSTCORE MySQL database.
+
+// ==================================================
+// DATABASE CONNECTION
+// ==================================================
+
 require_once "database/config.php";
 
-// Store error messages here if something goes wrong.
+
+// ==================================================
+// DEFAULT VALUES
+// ==================================================
+
 $error = "";
 
-// Store the submitted values so we can keep them in the form
-// when there is an error.
 $fullname = "";
+
 $email = "";
 
 
-// Check if the registration form was submitted.
+// ==================================================
+// HANDLE REGISTRATION
+// ==================================================
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    // Get the values submitted by the user.
-    $fullname = trim($_POST["fullname"] ?? "");
-    $email = trim($_POST["email"] ?? "");
-    $password = $_POST["password"] ?? "";
-    $confirmPassword = $_POST["confirm_password"] ?? "";
+    // Get submitted values.
+    $fullname =
+        trim(
+            $_POST["fullname"] ?? ""
+        );
 
-    // Check whether the Terms & Conditions checkbox was checked.
-    $terms = isset($_POST["terms"]);
+    $email =
+        trim(
+            $_POST["email"] ?? ""
+        );
+
+    $password =
+        $_POST["password"] ?? "";
+
+    $confirmPassword =
+        $_POST["confirm_password"] ?? "";
+
+    // Check Terms & Conditions.
+    $terms =
+        isset($_POST["terms"]);
 
 
-    // -------------------------------
-    // 1. CHECK REQUIRED INFORMATION
-    // -------------------------------
+    // ==================================================
+    // VALIDATION
+    // ==================================================
 
-    if ($fullname === "" || $email === "" || $password === "" || $confirmPassword === "") {
+    if (
+        $fullname === "" ||
+        $email === "" ||
+        $password === "" ||
+        $confirmPassword === ""
+    ) {
 
-        $error = "Please complete all required fields.";
-
-    }
-
-    // Check if the email address is valid.
-    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-
-        $error = "Please enter a valid email address.";
-
-    }
-
-    // Require a stronger password.
-    elseif (strlen($password) < 8) {
-
-        $error = "Password must be at least 8 characters.";
-
-    }
-
-    // Make sure both password fields match.
-    elseif ($password !== $confirmPassword) {
-
-        $error = "Passwords do not match.";
+        $error =
+            "Please complete all required fields.";
 
     }
 
-    // Make sure the user accepted the terms.
+    elseif (
+        !filter_var(
+            $email,
+            FILTER_VALIDATE_EMAIL
+        )
+    ) {
+
+        $error =
+            "Please enter a valid email address.";
+
+    }
+
+    elseif (
+        strlen($password) < 8
+    ) {
+
+        $error =
+            "Password must be at least 8 characters.";
+
+    }
+
+    elseif (
+        $password !== $confirmPassword
+    ) {
+
+        $error =
+            "Passwords do not match.";
+
+    }
+
     elseif (!$terms) {
 
-        $error = "Please agree to the Terms & Conditions.";
+        $error =
+            "Please agree to the Terms & Conditions.";
 
     }
 
     else {
 
-        // --------------------------------
-        // 2. CHECK IF EMAIL ALREADY EXISTS
-        // --------------------------------
 
-        // Prepared statements protect the database from SQL injection.
-        $checkUser = $pdo->prepare(
-            "SELECT id FROM users WHERE email = ? LIMIT 1"
-        );
+        // ==================================================
+        // CHECK EXISTING EMAIL
+        // ==================================================
 
-        $checkUser->execute([$email]);
+        $checkUser =
+            $pdo->prepare(
+                "SELECT id
+                 FROM users
+                 WHERE email = ?
+                 LIMIT 1"
+            );
 
-        $existingUser = $checkUser->fetch();
+
+        $checkUser->execute([
+            $email
+        ]);
+
+
+        $existingUser =
+            $checkUser->fetch();
 
 
         if ($existingUser) {
 
-            $error = "An account with this email already exists.";
+            $error =
+                "An account with this email already exists.";
 
         }
 
         else {
 
-            // -------------------------------
-            // 3. HASH THE PASSWORD
-            // -------------------------------
 
-            // NEVER save plain-text passwords in the database.
-            $hashedPassword = password_hash(
-                $password,
-                PASSWORD_DEFAULT
-            );
+            // ==================================================
+            // HASH PASSWORD
+            // ==================================================
+
+            $hashedPassword =
+                password_hash(
+                    $password,
+                    PASSWORD_DEFAULT
+                );
 
 
-            // -------------------------------
-            // 4. SAVE THE USER TO DATABASE
-            // -------------------------------
+            // ==================================================
+            // SAVE USER
+            // ==================================================
 
             try {
 
-                // Prepared statement for inserting the new account.
-                $stmt = $pdo->prepare(
-                    "INSERT INTO users
-                    (full_name, email, password, role)
-                    VALUES (?, ?, ?, 'customer')"
-                );
+                $stmt =
+                    $pdo->prepare(
+                        "INSERT INTO users
+                        (
+                            full_name,
+                            email,
+                            password,
+                            role
+                        )
+                        VALUES
+                        (
+                            ?,
+                            ?,
+                            ?,
+                            'customer'
+                        )"
+                    );
 
-                // Send the values safely to MySQL.
+
                 $stmt->execute([
                     $fullname,
                     $email,
@@ -123,64 +186,117 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 ]);
 
 
-                // --------------------------------
-                // 5. LOG THE USER IN AUTOMATICALLY
-                // --------------------------------
+                // ==================================================
+                // LOGIN USER AUTOMATICALLY
+                // ==================================================
 
-                // Generate a new session ID after authentication.
                 session_regenerate_id(true);
 
-                // Store the user's information in the session.
-                $_SESSION["user_id"] = $pdo->lastInsertId();
-                $_SESSION["username"] = $fullname;
-                $_SESSION["email"] = $email;
-                $_SESSION["role"] = "customer";
+
+                $_SESSION["user_id"] =
+                    $pdo->lastInsertId();
+
+                $_SESSION["username"] =
+                    $fullname;
+
+                $_SESSION["email"] =
+                    $email;
+
+                $_SESSION["role"] =
+                    "customer";
 
 
-                // --------------------------------
-                // 6. SEND USER TO PRODUCTS PAGE
-                // --------------------------------
+                // ==================================================
+                // REDIRECT
+                // ==================================================
 
-                header("Location: index.php");
+                header(
+                    "Location: index.php"
+                );
+
                 exit;
 
 
-            } catch (PDOException $e) {
+            }
 
-                // Show a simple error instead of exposing database details.
-                $error = "Registration failed. Please try again.";
+            catch (PDOException $e) {
+
+                $error =
+                    "Registration failed. Please try again.";
 
             }
+
         }
+
     }
+
 }
 
-$year = date("Y");
+
+// ==================================================
+// YEAR
+// ==================================================
+
+$year =
+    date("Y");
 
 ?>
+
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>FROSTCORE — Create Account</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="css/style.css">
+    <title>
+        FROSTCORE — Create Account
+    </title>
+
+
+    <!-- SHARED CSS -->
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+
+    <!-- REGISTER PAGE CSS -->
+
+    <link
+        rel="stylesheet"
+        href="css/register.css"
+    >
 
 </head>
+
 
 <body class="register-page">
 
 
+    <!-- ==================================================
+         MAIN
+    ================================================== -->
+
     <main class="register-main">
+
 
         <div class="register-card">
 
 
-            <!-- LOGO -->
+            <!-- ==================================================
+                 LOGO
+            ================================================== -->
+
             <div class="register-brand">
+
 
                 <img
                     src="assets/logo/frostcore_logo.png"
@@ -188,32 +304,59 @@ $year = date("Y");
                     class="register-logo"
                 >
 
+
                 <div class="register-brand-name">
+
                     FROSTCORE
+
                 </div>
+
 
             </div>
 
 
-            <!-- TITLE -->
-            <h1>CREATE YOUR ACCOUNT</h1>
+
+            <!-- ==================================================
+                 TITLE
+            ================================================== -->
+
+            <h1>
+                CREATE YOUR ACCOUNT
+            </h1>
+
 
             <p class="register-subtitle">
+
                 Join the FROSTCORE experience.
+
             </p>
 
 
-            <!-- SHOW ERROR MESSAGE -->
+
+            <!-- ==================================================
+                 ERROR
+            ================================================== -->
+
             <?php if ($error !== ""): ?>
 
                 <div class="form-error">
-                    <?= htmlspecialchars($error) ?>
+
+                    <?= htmlspecialchars(
+                        $error,
+                        ENT_QUOTES,
+                        "UTF-8"
+                    ) ?>
+
                 </div>
 
             <?php endif; ?>
 
 
-            <!-- REGISTER FORM -->
+
+            <!-- ==================================================
+                 REGISTER FORM
+            ================================================== -->
+
             <form
                 action="register.php"
                 method="post"
@@ -222,51 +365,79 @@ $year = date("Y");
 
 
                 <!-- FULL NAME -->
+
                 <div class="form-group">
 
+
                     <label for="fullname">
+
                         FULL NAME
+
                     </label>
+
 
                     <input
                         type="text"
                         id="fullname"
                         name="fullname"
                         placeholder="Enter your full name"
-                        value="<?= htmlspecialchars($fullname) ?>"
+                        value="<?= htmlspecialchars(
+                            $fullname,
+                            ENT_QUOTES,
+                            "UTF-8"
+                        ) ?>"
                         required
                     >
+
 
                 </div>
 
 
+
                 <!-- EMAIL -->
+
                 <div class="form-group">
 
+
                     <label for="register-email">
+
                         EMAIL
+
                     </label>
+
 
                     <input
                         type="email"
                         id="register-email"
                         name="email"
                         placeholder="Enter your email"
-                        value="<?= htmlspecialchars($email) ?>"
+                        value="<?= htmlspecialchars(
+                            $email,
+                            ENT_QUOTES,
+                            "UTF-8"
+                        ) ?>"
                         required
                     >
+
 
                 </div>
 
 
+
                 <!-- PASSWORD -->
+
                 <div class="form-group">
 
+
                     <label for="register-password">
+
                         PASSWORD
+
                     </label>
 
+
                     <div class="register-password">
+
 
                         <input
                             type="password"
@@ -277,6 +448,7 @@ $year = date("Y");
                             required
                         >
 
+
                         <button
                             type="button"
                             class="password-toggle"
@@ -285,22 +457,33 @@ $year = date("Y");
                                 this
                             )"
                         >
+
                             SHOW
+
                         </button>
 
+
                     </div>
+
 
                 </div>
 
 
+
                 <!-- CONFIRM PASSWORD -->
+
                 <div class="form-group">
 
+
                     <label for="confirm-password">
+
                         CONFIRM PASSWORD
+
                     </label>
 
+
                     <div class="register-password">
+
 
                         <input
                             type="password"
@@ -311,6 +494,7 @@ $year = date("Y");
                             required
                         >
 
+
                         <button
                             type="button"
                             class="password-toggle"
@@ -319,16 +503,23 @@ $year = date("Y");
                                 this
                             )"
                         >
+
                             SHOW
+
                         </button>
 
+
                     </div>
+
 
                 </div>
 
 
+
                 <!-- TERMS -->
+
                 <label class="terms">
+
 
                     <input
                         type="checkbox"
@@ -336,33 +527,52 @@ $year = date("Y");
                         required
                     >
 
+
                     <span>
+
                         I agree to the
-                        <a href="#">Terms &amp; Conditions</a>.
+
+                        <a href="#">
+
+                            Terms &amp; Conditions
+
+                        </a>.
+
                     </span>
+
 
                 </label>
 
 
+
                 <!-- CREATE ACCOUNT -->
+
                 <button
                     type="submit"
                     class="btn register-button"
                 >
+
                     CREATE ACCOUNT →
+
                 </button>
 
 
             </form>
 
 
-            <!-- LOGIN LINK -->
+
+            <!-- ==================================================
+                 LOGIN LINK
+            ================================================== -->
+
             <p class="register-login">
 
                 Already have an account?
 
                 <a href="login.php">
+
                     SIGN IN
+
                 </a>
 
             </p>
@@ -370,38 +580,75 @@ $year = date("Y");
 
         </div>
 
+
     </main>
 
 
-    <!-- FOOTER -->
+
+    <!-- ==================================================
+         FOOTER
+    ================================================== -->
+
     <footer class="register-footer">
 
-        © <?= htmlspecialchars($year) ?>
-        FROSTCORE. All rights reserved.
+
+        © <?= htmlspecialchars(
+            $year,
+            ENT_QUOTES,
+            "UTF-8"
+        ) ?>
+
+        FROSTCORE.
+        All rights reserved.
+
 
         <span>
+
             STAY COOL. PLAY BETTER.
+
         </span>
+
 
     </footer>
 
 
+
+    <!-- ==================================================
+         PASSWORD TOGGLE
+    ================================================== -->
+
     <script>
 
-        // Show or hide the password.
-        function togglePassword(inputId, button) {
+        function togglePassword(
+            inputId,
+            button
+        ) {
 
-            const input = document.getElementById(inputId);
+            const input =
+                document.getElementById(
+                    inputId
+                );
 
-            if (input.type === "password") {
 
-                input.type = "text";
-                button.textContent = "HIDE";
+            if (
+                input.type === "password"
+            ) {
 
-            } else {
+                input.type =
+                    "text";
 
-                input.type = "password";
-                button.textContent = "SHOW";
+                button.textContent =
+                    "HIDE";
+
+            }
+
+            else {
+
+                input.type =
+                    "password";
+
+                button.textContent =
+                    "SHOW";
 
             }
 
@@ -409,5 +656,7 @@ $year = date("Y");
 
     </script>
 
+
 </body>
+
 </html>

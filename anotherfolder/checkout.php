@@ -36,6 +36,7 @@ if (empty($_SESSION["csrf_token"])) {
 
     $_SESSION["csrf_token"] =
         bin2hex(random_bytes(32));
+
 }
 
 
@@ -91,6 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (
         empty($submittedToken) ||
+        empty($_SESSION["csrf_token"]) ||
         !hash_equals(
             $_SESSION["csrf_token"],
             $submittedToken
@@ -98,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     ) {
 
         $errors[] =
-            "Invalid form request. Please refresh the page and try again.";
+            "Invalid form request. Please refresh the page.";
 
     }
 
@@ -282,7 +284,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         try {
 
-            // Start database transaction.
             $pdo->beginTransaction();
 
 
@@ -319,7 +320,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     );
 
 
-                // Product was removed.
                 if (!$product) {
 
                     throw new Exception(
@@ -390,6 +390,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     "subtotal" =>
                         $itemSubtotal
                 ];
+
             }
 
 
@@ -524,8 +525,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             foreach ($lockedItems as $item) {
 
-
-                // Save order item.
                 $orderItemStmt->execute([
                     $orderId,
                     $item["product_id"],
@@ -536,7 +535,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 ]);
 
 
-                // Decrease inventory.
                 $stockUpdateStmt->execute([
                     $item["quantity"],
                     $item["product_id"],
@@ -544,7 +542,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 ]);
 
 
-                // Make sure stock was actually reduced.
                 if (
                     $stockUpdateStmt->rowCount() !== 1
                 ) {
@@ -579,7 +576,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $pdo->commit();
 
 
-            // Mark order as successful.
             $orderPlaced = true;
 
             $orderTotal =
@@ -587,14 +583,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
             // Generate a new CSRF token
-            // after a successful state-changing request.
+            // after successful state change.
             $_SESSION["csrf_token"] =
                 bin2hex(random_bytes(32));
 
 
         } catch (Throwable $e) {
 
-            // Roll back everything.
             if (
                 $pdo->inTransaction()
             ) {
@@ -645,7 +640,7 @@ $cartItems =
 
 
 // ==================================================
-// IF ORDER WAS PLACED
+// CALCULATE CART TOTALS
 // ==================================================
 
 $subtotal = 0;
@@ -666,6 +661,7 @@ foreach ($cartItems as $item) {
 
     $cartCount +=
         $quantity;
+
 }
 
 
@@ -694,7 +690,9 @@ $total =
 foreach ($cartItems as &$item) {
 
     $image =
-        trim((string)$item["image"]);
+        trim(
+            (string)$item["image"]
+        );
 
 
     if (
@@ -737,10 +735,15 @@ unset($item);
     </title>
 
 
+    <!-- GLOBAL CSS -->
+
     <link
         rel="stylesheet"
         href="css/style.css"
     >
+
+
+    <!-- SHARED HEADER / PRODUCT CSS -->
 
     <link
         rel="stylesheet"
@@ -748,722 +751,12 @@ unset($item);
     >
 
 
-    <style>
-
-        /* ==================================================
-           CHECKOUT
-        ================================================== */
-
-        .checkout-page {
-
-            width: 82%;
-
-            max-width: 1120px;
-
-            margin: 0 auto;
-
-            padding: 65px 0 90px;
-
-        }
-
-
-        .checkout-title {
-
-            margin-bottom: 40px;
-
-        }
-
-
-        .checkout-title h1 {
-
-            margin: 0 0 8px;
-
-            color: var(--text);
-
-            font-family:
-                "Orbitron",
-                sans-serif;
-
-            font-size: 42px;
-
-        }
-
-
-        .checkout-title p {
-
-            margin: 0;
-
-            color: var(--muted);
-
-            font-size: 12px;
-
-        }
-
-
-        /* ==================================================
-           ERRORS
-        ================================================== */
-
-        .checkout-errors {
-
-            margin-bottom: 20px;
-
-            padding: 15px 18px;
-
-            background:
-                rgba(255, 95, 95, 0.08);
-
-            border:
-                1px solid #ff5f5f;
-
-            color: #ff9a9a;
-
-            font-size: 10px;
-
-        }
-
-
-        .checkout-errors p {
-
-            margin: 5px 0;
-
-        }
-
-
-        /* ==================================================
-           LAYOUT
-        ================================================== */
-
-        .checkout-layout {
-
-            display: grid;
-
-            grid-template-columns:
-                1fr 350px;
-
-            gap: 30px;
-
-        }
-
-
-        .checkout-section {
-
-            margin-bottom: 20px;
-
-            padding: 25px;
-
-            background:
-                var(--panel);
-
-            border:
-                1px solid var(--border);
-
-        }
-
-
-        .checkout-section h2 {
-
-            margin: 0 0 22px;
-
-            color: var(--text);
-
-            font-family:
-                "Orbitron",
-                sans-serif;
-
-            font-size: 17px;
-
-        }
-
-
-        /* ==================================================
-           FORM GRID
-        ================================================== */
-
-        .checkout-form-grid {
-
-            display: grid;
-
-            grid-template-columns:
-                1fr 1fr;
-
-            gap: 15px;
-
-        }
-
-
-        .checkout-field {
-
-            display: flex;
-
-            flex-direction: column;
-
-            gap: 7px;
-
-        }
-
-
-        .checkout-field.full {
-
-            grid-column:
-                1 / -1;
-
-        }
-
-
-        .checkout-field label {
-
-            color: var(--muted);
-
-            font-size: 10px;
-
-            font-weight: 700;
-
-        }
-
-
-        .checkout-field input,
-        .checkout-field textarea {
-
-            width: 100%;
-
-            box-sizing: border-box;
-
-            padding: 11px;
-
-            background:
-                var(--dark-blue);
-
-            color: var(--text);
-
-            border:
-                1px solid var(--border);
-
-            outline: none;
-
-            font-family:
-                Inter,
-                Arial,
-                sans-serif;
-
-            font-size: 10px;
-
-        }
-
-
-        .checkout-field input {
-
-            height: 40px;
-
-        }
-
-
-        .checkout-field textarea {
-
-            min-height: 90px;
-
-            resize: vertical;
-
-        }
-
-
-        .checkout-field input:focus,
-        .checkout-field textarea:focus {
-
-            border-color:
-                var(--blue);
-
-        }
-
-
-        /* ==================================================
-           PAYMENT
-        ================================================== */
-
-        .payment-options {
-
-            display: grid;
-
-            gap: 10px;
-
-        }
-
-
-        .payment-option {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 10px;
-
-            padding: 13px;
-
-            background:
-                var(--dark-blue);
-
-            border:
-                1px solid var(--border);
-
-            color: var(--text);
-
-            font-size: 10px;
-
-            cursor: pointer;
-
-        }
-
-
-        .payment-option input {
-
-            accent-color:
-                var(--blue);
-
-        }
-
-
-        /* ==================================================
-           ORDER ITEMS
-        ================================================== */
-
-        .checkout-item {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 15px;
-
-            padding: 12px 0;
-
-            border-bottom:
-                1px solid var(--border);
-
-        }
-
-
-        .checkout-item:last-child {
-
-            border-bottom:
-                none;
-
-        }
-
-
-        .checkout-item-image {
-
-            width: 70px;
-
-            height: 70px;
-
-            display: grid;
-
-            place-items: center;
-
-            flex-shrink: 0;
-
-            background:
-                var(--dark-blue);
-
-            border:
-                1px solid var(--border);
-
-        }
-
-
-        .checkout-item-image img {
-
-            width: 90%;
-
-            height: 90%;
-
-            object-fit: contain;
-
-        }
-
-
-        .checkout-item-info {
-
-            flex: 1;
-
-        }
-
-
-        .checkout-item-info h3 {
-
-            margin: 0 0 4px;
-
-            color: var(--text);
-
-            font-family:
-                "Orbitron",
-                sans-serif;
-
-            font-size: 11px;
-
-        }
-
-
-        .checkout-item-info p {
-
-            margin: 0;
-
-            color: var(--muted);
-
-            font-size: 9px;
-
-        }
-
-
-        .checkout-item-price {
-
-            color: var(--blue);
-
-            font-family:
-                "Orbitron",
-                sans-serif;
-
-            font-size: 11px;
-
-            font-weight: 700;
-
-            white-space: nowrap;
-
-        }
-
-
-        /* ==================================================
-           SUMMARY
-        ================================================== */
-
-        .checkout-summary {
-
-            height: fit-content;
-
-            padding: 25px;
-
-            background:
-                var(--panel);
-
-            border:
-                1px solid var(--border);
-
-            position: sticky;
-
-            top: 95px;
-
-        }
-
-
-        .checkout-summary h2 {
-
-            margin: 0 0 25px;
-
-            font-family:
-                "Orbitron",
-                sans-serif;
-
-            font-size: 17px;
-
-        }
-
-
-        .summary-row {
-
-            display: flex;
-
-            justify-content: space-between;
-
-            margin-bottom: 15px;
-
-            color: var(--muted);
-
-            font-size: 11px;
-
-        }
-
-
-        .summary-total {
-
-            display: flex;
-
-            justify-content: space-between;
-
-            padding-top: 18px;
-
-            margin-top: 18px;
-
-            border-top:
-                1px solid var(--border);
-
-            color: var(--text);
-
-            font-family:
-                "Orbitron",
-                sans-serif;
-
-            font-size: 17px;
-
-        }
-
-
-        .place-order-button {
-
-            width: 100%;
-
-            margin-top: 25px;
-
-            padding: 14px;
-
-            background: var(--blue);
-
-            color: var(--bg);
-
-            border:
-                1px solid var(--blue);
-
-            font-size: 10px;
-
-            font-weight: 800;
-
-            cursor: pointer;
-
-        }
-
-
-        .place-order-button:hover {
-
-            filter:
-                brightness(1.08);
-
-        }
-
-
-        .back-cart {
-
-            display: inline-block;
-
-            margin-top: 12px;
-
-            color: var(--muted);
-
-            font-size: 9px;
-
-        }
-
-
-        .back-cart:hover {
-
-            color: var(--blue);
-
-        }
-
-
-        /* ==================================================
-           SUCCESS POPUP
-        ================================================== */
-
-        .order-success-overlay {
-
-            position: fixed;
-
-            inset: 0;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            padding: 20px;
-
-            background:
-                rgba(0, 0, 0, 0.80);
-
-            z-index: 99999;
-
-        }
-
-
-        .order-success-modal {
-
-            width: 100%;
-
-            max-width: 450px;
-
-            padding: 38px 30px;
-
-            background:
-                #101820;
-
-            border:
-                1px solid var(--blue);
-
-            border-radius: 12px;
-
-            text-align: center;
-
-            box-shadow:
-                0 0 35px
-                rgba(77, 188, 244, 0.20);
-
-        }
-
-
-        .order-success-icon {
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            width: 60px;
-
-            height: 60px;
-
-            margin: 0 auto 18px;
-
-            border:
-                2px solid var(--blue);
-
-            border-radius: 50%;
-
-            color: var(--blue);
-
-            font-size: 28px;
-
-        }
-
-
-        .order-success-modal h2 {
-
-            margin: 0 0 10px;
-
-            color:
-                var(--text);
-
-            font-family:
-                "Orbitron",
-                sans-serif;
-
-            font-size: 22px;
-
-        }
-
-
-        .order-success-modal p {
-
-            margin: 8px 0;
-
-            color:
-                var(--muted);
-
-            font-size: 12px;
-
-        }
-
-
-        .order-success-total {
-
-            color:
-                var(--blue) !important;
-
-            font-family:
-                "Orbitron",
-                sans-serif;
-
-            font-size: 18px !important;
-
-            font-weight: 800;
-
-        }
-
-
-        .order-success-button {
-
-            display: inline-block;
-
-            margin-top: 20px;
-
-            padding: 12px 20px;
-
-            background:
-                var(--blue);
-
-            color:
-                var(--bg);
-
-            font-size: 10px;
-
-            font-weight: 800;
-
-            text-decoration: none;
-
-        }
-
-
-        /* ==================================================
-           RESPONSIVE
-        ================================================== */
-
-        @media (max-width: 800px) {
-
-            .checkout-page {
-
-                width: 90%;
-
-                padding:
-                    50px 0 70px;
-
-            }
-
-
-            .checkout-layout {
-
-                grid-template-columns:
-                    1fr;
-
-            }
-
-
-            .checkout-summary {
-
-                position:
-                    static;
-
-            }
-
-        }
-
-
-        @media (max-width: 520px) {
-
-            .checkout-title h1 {
-
-                font-size: 32px;
-
-            }
-
-
-            .checkout-form-grid {
-
-                grid-template-columns:
-                    1fr;
-
-            }
-
-
-            .checkout-field.full {
-
-                grid-column:
-                    auto;
-
-            }
-
-        }
-
-    </style>
+    <!-- CHECKOUT CSS -->
+
+    <link
+        rel="stylesheet"
+        href="css/checkout.css"
+    >
 
 </head>
 
@@ -1781,6 +1074,7 @@ unset($item);
 
                             </div>
 
+
                         </div>
 
                     </div>
@@ -1805,7 +1099,11 @@ unset($item);
                                     type="radio"
                                     name="payment_method"
                                     value="COD"
-                                    <?= ($_POST["payment_method"] ?? "COD") === "COD" ? "checked" : "" ?>
+                                    <?= (
+                                        $_POST["payment_method"] ?? "COD"
+                                    ) === "COD"
+                                        ? "checked"
+                                        : "" ?>
                                     required
                                 >
 
@@ -1822,7 +1120,11 @@ unset($item);
                                     type="radio"
                                     name="payment_method"
                                     value="GCash"
-                                    <?= ($_POST["payment_method"] ?? "") === "GCash" ? "checked" : "" ?>
+                                    <?= (
+                                        $_POST["payment_method"] ?? ""
+                                    ) === "GCash"
+                                        ? "checked"
+                                        : "" ?>
                                 >
 
                                 <span>
@@ -1838,7 +1140,11 @@ unset($item);
                                     type="radio"
                                     name="payment_method"
                                     value="Card"
-                                    <?= ($_POST["payment_method"] ?? "") === "Card" ? "checked" : "" ?>
+                                    <?= (
+                                        $_POST["payment_method"] ?? ""
+                                    ) === "Card"
+                                        ? "checked"
+                                        : "" ?>
                                 >
 
                                 <span>
@@ -1846,6 +1152,7 @@ unset($item);
                                 </span>
 
                             </label>
+
 
                         </div>
 
@@ -1880,16 +1187,11 @@ unset($item);
 
                                     <img
                                         src="<?= e(
-                                            (
-                                                !empty($item["image"]) &&
-                                                file_exists(
-                                                    __DIR__ . "/" . $item["image"]
-                                                )
-                                            )
-                                                ? $item["image"]
-                                                : "assets/products/fc1-cooler.svg"
+                                            $item["display_image"]
                                         ) ?>"
-                                        alt="<?= e($item["name"]) ?>"
+                                        alt="<?= e(
+                                            $item["name"]
+                                        ) ?>"
                                     >
 
                                 </div>
@@ -1929,11 +1231,15 @@ unset($item);
 
                                 </div>
 
+
                             </div>
+
 
                         <?php endforeach; ?>
 
+
                     </div>
+
 
                 </section>
 
@@ -1971,9 +1277,11 @@ unset($item);
                         </span>
 
                         <strong>
+
                             <?= money(
                                 $subtotal
                             ) ?>
+
                         </strong>
 
                     </div>
@@ -1999,9 +1307,11 @@ unset($item);
                         </span>
 
                         <strong>
+
                             <?= money(
                                 $total
                             ) ?>
+
                         </strong>
 
                     </div>
@@ -2022,9 +1332,12 @@ unset($item);
                         ← BACK TO CART
                     </a>
 
+
                 </aside>
 
+
             </div>
+
 
         </form>
 
@@ -2036,20 +1349,17 @@ unset($item);
              EMPTY CART
         ================================================== -->
 
-        <div class="checkout-section">
+        <div class="checkout-section empty-checkout">
 
             <h2>
                 YOUR CART IS EMPTY
             </h2>
 
 
-            <p
-                style="
-                    color: var(--muted);
-                    font-size: 11px;
-                "
-            >
+            <p class="empty-checkout-message">
+
                 Add products to your cart before checking out.
+
             </p>
 
 
@@ -2062,7 +1372,9 @@ unset($item);
 
         </div>
 
+
     <?php endif; ?>
+
 
 </main>
 
@@ -2074,31 +1386,46 @@ unset($item);
 
 <?php if ($orderPlaced): ?>
 
+
     <div class="order-success-overlay">
+
 
         <div class="order-success-modal">
 
 
             <div class="order-success-icon">
+
                 ✓
+
             </div>
 
 
             <h2>
+
                 ORDER CONFIRMED
+
             </h2>
 
 
             <p>
+
                 Thank you for your FROSTCORE order.
+
             </p>
 
 
             <p>
+
                 Order Number:
+
                 <strong>
-                    <?= e($orderNumber) ?>
+
+                    <?= e(
+                        $orderNumber
+                    ) ?>
+
                 </strong>
+
             </p>
 
 
@@ -2115,12 +1442,17 @@ unset($item);
                 href="products.php"
                 class="order-success-button"
             >
+
                 CONTINUE SHOPPING
+
             </a>
+
 
         </div>
 
+
     </div>
+
 
 <?php endif; ?>
 
@@ -2133,8 +1465,13 @@ unset($item);
 <?php require_once "includes/logout-popup.php"; ?>
 
 
+<!-- ==================================================
+     JAVASCRIPT
+================================================== -->
+
 <script src="js/script.js"></script>
 
 
 </body>
+
 </html>
