@@ -167,7 +167,7 @@ $year = date("Y");
 
     <title>FROSTCORE — Create Account</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 
 </head>
 
@@ -183,7 +183,7 @@ $year = date("Y");
             <div class="register-brand">
 
                 <img
-                    src="assets/frostcore_logo.png"
+                    src="assets/logo/frostcore_logo.png"
                     alt="FROSTCORE Logo"
                     class="register-logo"
                 >

@@ -462,7 +462,7 @@ function filterUrl($changes = [])
 
     <link
         rel="stylesheet"
-        href="product.css"
+        href="css/products.css"
     >
 
 </head>
@@ -486,7 +486,7 @@ function filterUrl($changes = [])
     >
 
         <img
-            src="assets/frostcore_logo.png"
+            src="assets/logo/frostcore_logo.png"
             alt="FROSTCORE Logo"
             class="brand-logo"
         >
@@ -1358,7 +1358,7 @@ function filterUrl($changes = [])
                     ) {
 
                         $image =
-                            "assets/fc1-cooler.svg";
+                            "assets/products/fc1-cooler.svg";
 
                     }
 
@@ -1659,7 +1659,7 @@ function filterUrl($changes = [])
         <div class="footer-brand-name">
 
             <img
-                src="assets/frostcore_logo.png"
+                src="assets/logo/frostcore_logo.png"
                 alt="FROSTCORE Logo"
             >
 
@@ -1853,7 +1853,7 @@ function filterUrl($changes = [])
      LOGOUT POPUP
 ================================================== -->
 
-<?php require_once "logout-popup.php"; ?>
+<?php require_once "includes/logout-popup.php"; ?>
 
 
 
@@ -1861,7 +1861,7 @@ function filterUrl($changes = [])
      JAVASCRIPT
 ================================================== -->
 
-<script src="script.js"></script>
+<script src="js/script.js"></script>
 
 
 </body>

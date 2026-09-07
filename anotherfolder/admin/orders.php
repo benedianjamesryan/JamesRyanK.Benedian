@@ -29,7 +29,7 @@ if (
 function e($value)
 {
     return htmlspecialchars(
-        (string) $value,
+        (string)$value,
         ENT_QUOTES,
         "UTF-8"
     );
@@ -39,7 +39,7 @@ function e($value)
 function money($amount)
 {
     return "₱" . number_format(
-        (float) $amount,
+        (float)$amount,
         2
     );
 }
@@ -74,7 +74,6 @@ $allowedStatuses = [
 // ==================================================
 
 $successMessage = "";
-
 $errorMessage = "";
 
 
@@ -104,7 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
     // --------------------------------------------------
-    // CSRF
+    // CSRF CHECK
     // --------------------------------------------------
 
     if (
@@ -123,7 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
     // --------------------------------------------------
-    // ACTION
+    // ACTION CHECK
     // --------------------------------------------------
 
     elseif ($action !== "update_status") {
@@ -135,7 +134,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
     // --------------------------------------------------
-    // ORDER ID
+    // ORDER ID CHECK
     // --------------------------------------------------
 
     elseif (
@@ -150,7 +149,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
     // --------------------------------------------------
-    // STATUS
+    // STATUS CHECK
     // --------------------------------------------------
 
     elseif (
@@ -168,7 +167,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
     // --------------------------------------------------
-    // UPDATE DATABASE
+    // UPDATE
     // --------------------------------------------------
 
     else {
@@ -188,7 +187,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             "Order status updated successfully.";
 
 
-        // Create a new CSRF token.
+        // Regenerate CSRF token.
         $_SESSION["admin_csrf_token"] =
             bin2hex(random_bytes(32));
 
@@ -303,14 +302,14 @@ $viewId =
     );
 
 
+// --------------------------------------------------
+// GET SELECTED ORDER
+// --------------------------------------------------
+
 if (
     $viewId &&
     $viewId > 0
 ) {
-
-    // --------------------------------------------------
-    // GET ORDER
-    // --------------------------------------------------
 
     $orderStmt = $pdo->prepare("
         SELECT
@@ -346,7 +345,7 @@ if (
 
 
     // --------------------------------------------------
-    // GET ORDER ITEMS
+    // GET ITEMS ONLY IF ORDER EXISTS
     // --------------------------------------------------
 
     if ($selectedOrder) {
@@ -408,14 +407,23 @@ $adminName =
 
     <link
         rel="stylesheet"
-        href="../product.css"
+        href="../css/products.css"
     >
 
 
     <style>
 
+        /* ==================================================
+           BASE
+        ================================================== */
+
         * {
             box-sizing: border-box;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
         }
 
 
@@ -462,6 +470,12 @@ $adminName =
 
             border-bottom:
                 1px solid #263452;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 100;
 
         }
 
@@ -531,6 +545,21 @@ $adminName =
 
             font-weight: 800;
 
+            cursor: pointer;
+
+        }
+
+
+        .admin-logout:hover {
+
+            background:
+                rgba(
+                    77,
+                    188,
+                    244,
+                    0.08
+                );
+
         }
 
 
@@ -542,10 +571,13 @@ $adminName =
 
             display: grid;
 
-            grid-template-columns: 220px 1fr;
+            grid-template-columns:
+                220px 1fr;
 
             min-height:
-                calc(100vh - 72px);
+                calc(
+                    100vh - 72px
+                );
 
         }
 
@@ -556,9 +588,11 @@ $adminName =
 
         .admin-sidebar {
 
-            padding: 25px 15px;
+            padding:
+                25px 15px;
 
-            background: #0A1223;
+            background:
+                #0A1223;
 
             border-right:
                 1px solid #263452;
@@ -571,30 +605,38 @@ $adminName =
             margin:
                 0 10px 15px;
 
-            color: #68758D;
+            color:
+                #68758D;
 
             font-family:
                 Orbitron,
                 sans-serif;
 
-            font-size: 8px;
+            font-size:
+                8px;
 
-            letter-spacing: 1.5px;
+            letter-spacing:
+                1.5px;
 
         }
 
 
         .admin-sidebar a {
 
-            display: block;
+            display:
+                block;
 
-            padding: 11px 12px;
+            padding:
+                11px 12px;
 
-            margin-bottom: 5px;
+            margin-bottom:
+                5px;
 
-            color: #AAB5CA;
+            color:
+                #AAB5CA;
 
-            font-size: 10px;
+            font-size:
+                10px;
 
             border:
                 1px solid transparent;
@@ -603,13 +645,17 @@ $adminName =
 
 
         .admin-sidebar a:hover,
+
         .admin-sidebar a.active {
 
-            color: #4DBCF4;
+            color:
+                #4DBCF4;
 
-            background: #111A31;
+            background:
+                #111A31;
 
-            border-color: #263452;
+            border-color:
+                #263452;
 
         }
 
@@ -620,16 +666,19 @@ $adminName =
 
         .admin-main {
 
-            padding: 40px;
+            padding:
+                40px;
 
-            overflow-x: auto;
+            overflow-x:
+                auto;
 
         }
 
 
         .page-title {
 
-            margin-bottom: 25px;
+            margin-bottom:
+                25px;
 
         }
 
@@ -644,18 +693,25 @@ $adminName =
                 sans-serif;
 
             font-size:
-                clamp(26px, 3vw, 40px);
+                clamp(
+                    26px,
+                    3vw,
+                    40px
+                );
 
         }
 
 
         .page-title p {
 
-            margin: 0;
+            margin:
+                0;
 
-            color: #AAB5CA;
+            color:
+                #AAB5CA;
 
-            font-size: 11px;
+            font-size:
+                11px;
 
         }
 
@@ -666,39 +722,64 @@ $adminName =
 
         .message {
 
-            margin-bottom: 20px;
+            margin-bottom:
+                20px;
 
-            padding: 13px 15px;
+            padding:
+                13px 15px;
 
-            font-size: 10px;
+            font-size:
+                10px;
 
         }
 
 
         .message.success {
 
-            color: #72E38A;
+            color:
+                #72E38A;
 
             background:
-                rgba(114,227,138,0.08);
+                rgba(
+                    114,
+                    227,
+                    138,
+                    0.08
+                );
 
             border:
                 1px solid
-                rgba(114,227,138,0.35);
+                rgba(
+                    114,
+                    227,
+                    138,
+                    0.35
+                );
 
         }
 
 
         .message.error {
 
-            color: #FF9A9A;
+            color:
+                #FF9A9A;
 
             background:
-                rgba(255,95,95,0.08);
+                rgba(
+                    255,
+                    95,
+                    95,
+                    0.08
+                );
 
             border:
                 1px solid
-                rgba(255,95,95,0.35);
+                rgba(
+                    255,
+                    95,
+                    95,
+                    0.35
+                );
 
         }
 
@@ -709,43 +790,56 @@ $adminName =
 
         .filter-bar {
 
-            display: flex;
+            display:
+                flex;
 
-            flex-wrap: wrap;
+            flex-wrap:
+                wrap;
 
-            gap: 8px;
+            gap:
+                8px;
 
-            margin-bottom: 20px;
+            margin-bottom:
+                20px;
 
         }
 
 
         .filter-bar a {
 
-            padding: 9px 13px;
+            padding:
+                9px 13px;
 
-            color: #AAB5CA;
+            color:
+                #AAB5CA;
 
-            background: #081225;
+            background:
+                #081225;
 
             border:
                 1px solid #263452;
 
-            font-size: 9px;
+            font-size:
+                9px;
 
-            font-weight: 700;
+            font-weight:
+                700;
 
         }
 
 
         .filter-bar a:hover,
+
         .filter-bar a.active {
 
-            color: #050A16;
+            color:
+                #050A16;
 
-            background: #4DBCF4;
+            background:
+                #4DBCF4;
 
-            border-color: #4DBCF4;
+            border-color:
+                #4DBCF4;
 
         }
 
@@ -756,7 +850,8 @@ $adminName =
 
         .orders-card {
 
-            background: #111A31;
+            background:
+                #111A31;
 
             border:
                 1px solid #263452;
@@ -766,18 +861,22 @@ $adminName =
 
         .table-wrap {
 
-            width: 100%;
+            width:
+                100%;
 
-            overflow-x: auto;
+            overflow-x:
+                auto;
 
         }
 
 
         .orders-table {
 
-            width: 100%;
+            width:
+                100%;
 
-            min-width: 900px;
+            min-width:
+                900px;
 
             border-collapse:
                 collapse;
@@ -787,17 +886,21 @@ $adminName =
 
         .orders-table th {
 
-            padding: 14px 12px;
+            padding:
+                14px 12px;
 
-            text-align: left;
+            text-align:
+                left;
 
-            color: #68758D;
+            color:
+                #68758D;
 
             font-family:
                 Orbitron,
                 sans-serif;
 
-            font-size: 8px;
+            font-size:
+                8px;
 
             border-bottom:
                 1px solid #263452;
@@ -807,42 +910,56 @@ $adminName =
 
         .orders-table td {
 
-            padding: 14px 12px;
+            padding:
+                14px 12px;
 
-            color: #AAB5CA;
+            color:
+                #AAB5CA;
 
-            font-size: 9px;
+            font-size:
+                9px;
 
             border-bottom:
                 1px solid
-                rgba(38,52,82,0.7);
+                rgba(
+                    38,
+                    52,
+                    82,
+                    0.7
+                );
 
-            vertical-align: middle;
+            vertical-align:
+                middle;
 
         }
 
 
         .orders-table tr:last-child td {
 
-            border-bottom: none;
+            border-bottom:
+                none;
 
         }
 
 
         .order-number {
 
-            color: #4DBCF4;
+            color:
+                #4DBCF4;
 
-            font-weight: 800;
+            font-weight:
+                800;
 
         }
 
 
         .order-total {
 
-            color: #F4F7FF;
+            color:
+                #F4F7FF;
 
-            font-weight: 700;
+            font-weight:
+                700;
 
         }
 
@@ -853,164 +970,221 @@ $adminName =
 
         .status {
 
-            display: inline-block;
+            display:
+                inline-block;
 
-            padding: 5px 8px;
+            padding:
+                5px 8px;
 
-            font-size: 7px;
+            font-size:
+                7px;
 
-            font-weight: 800;
+            font-weight:
+                800;
 
-            border: 1px solid;
+            border:
+                1px solid;
 
         }
 
 
         .status-pending {
 
-            color: #FFD166;
+            color:
+                #FFD166;
 
             border-color:
-                rgba(255,209,102,0.4);
+                rgba(
+                    255,
+                    209,
+                    102,
+                    0.4
+                );
 
         }
 
 
         .status-processing {
 
-            color: #4DBCF4;
+            color:
+                #4DBCF4;
 
             border-color:
-                rgba(77,188,244,0.4);
+                rgba(
+                    77,
+                    188,
+                    244,
+                    0.4
+                );
 
         }
 
 
         .status-shipped {
 
-            color: #9B8CFF;
+            color:
+                #9B8CFF;
 
             border-color:
-                rgba(155,140,255,0.4);
+                rgba(
+                    155,
+                    140,
+                    255,
+                    0.4
+                );
 
         }
 
 
         .status-completed {
 
-            color: #72E38A;
+            color:
+                #72E38A;
 
             border-color:
-                rgba(114,227,138,0.4);
+                rgba(
+                    114,
+                    227,
+                    138,
+                    0.4
+                );
 
         }
 
 
         .status-default {
 
-            color: #AAB5CA;
+            color:
+                #AAB5CA;
 
-            border-color: #263452;
+            border-color:
+                #263452;
 
         }
 
 
         /* ==================================================
-           ACTIONS
+           ACTION AREA
         ================================================== */
 
         .action-area {
 
-            display: flex;
+            display:
+                flex;
 
-            flex-direction: column;
+            flex-direction:
+                column;
 
-            gap: 6px;
+            gap:
+                6px;
 
         }
 
 
         .view-button {
 
-            display: inline-block;
+            display:
+                inline-block;
 
-            padding: 7px 10px;
+            padding:
+                7px 10px;
 
-            text-align: center;
+            text-align:
+                center;
 
-            color: #AAB5CA;
+            color:
+                #AAB5CA;
 
             border:
                 1px solid #263452;
 
-            font-size: 8px;
+            font-size:
+                8px;
 
-            font-weight: 700;
+            font-weight:
+                700;
 
         }
 
 
         .view-button:hover {
 
-            color: #4DBCF4;
+            color:
+                #4DBCF4;
 
-            border-color: #4DBCF4;
+            border-color:
+                #4DBCF4;
 
         }
 
 
         .status-form {
 
-            display: flex;
+            display:
+                flex;
 
-            gap: 5px;
+            gap:
+                5px;
 
         }
 
 
         .status-form select {
 
-            height: 32px;
+            height:
+                32px;
 
-            background: #081225;
+            background:
+                #081225;
 
-            color: #F4F7FF;
+            color:
+                #F4F7FF;
 
             border:
                 1px solid #263452;
 
-            font-size: 8px;
+            font-size:
+                8px;
 
-            outline: none;
+            outline:
+                none;
 
         }
 
 
         .status-form select:focus {
 
-            border-color: #4DBCF4;
+            border-color:
+                #4DBCF4;
 
         }
 
 
         .status-form button {
 
-            height: 32px;
+            height:
+                32px;
 
-            padding: 0 8px;
+            padding:
+                0 8px;
 
-            color: #050A16;
+            color:
+                #050A16;
 
-            background: #4DBCF4;
+            background:
+                #4DBCF4;
 
             border:
                 1px solid #4DBCF4;
 
-            font-size: 8px;
+            font-size:
+                8px;
 
-            font-weight: 800;
+            font-weight:
+                800;
 
-            cursor: pointer;
+            cursor:
+                pointer;
 
         }
 
@@ -1021,29 +1195,40 @@ $adminName =
 
         .details-card {
 
-            margin-top: 20px;
+            margin-top:
+                20px;
 
-            padding: 25px;
+            padding:
+                25px;
 
-            background: #111A31;
+            background:
+                #111A31;
 
             border:
                 1px solid #263452;
+
+            scroll-margin-top:
+                95px;
 
         }
 
 
         .details-header {
 
-            display: flex;
+            display:
+                flex;
 
-            align-items: flex-start;
+            align-items:
+                flex-start;
 
-            justify-content: space-between;
+            justify-content:
+                space-between;
 
-            gap: 20px;
+            gap:
+                20px;
 
-            margin-bottom: 25px;
+            margin-bottom:
+                25px;
 
         }
 
@@ -1057,41 +1242,53 @@ $adminName =
                 Orbitron,
                 sans-serif;
 
-            font-size: 17px;
+            font-size:
+                17px;
 
         }
 
 
         .details-header p {
 
-            margin: 0;
+            margin:
+                0;
 
-            color: #68758D;
+            color:
+                #68758D;
 
-            font-size: 9px;
+            font-size:
+                9px;
 
         }
 
 
         .details-grid {
 
-            display: grid;
+            display:
+                grid;
 
             grid-template-columns:
-                repeat(2, 1fr);
+                repeat(
+                    2,
+                    1fr
+                );
 
-            gap: 12px;
+            gap:
+                12px;
 
-            margin-bottom: 25px;
+            margin-bottom:
+                25px;
 
         }
 
 
         .detail-box {
 
-            padding: 14px;
+            padding:
+                14px;
 
-            background: #081225;
+            background:
+                #081225;
 
             border:
                 1px solid #263452;
@@ -1101,26 +1298,37 @@ $adminName =
 
         .detail-box span {
 
-            display: block;
+            display:
+                block;
 
-            margin-bottom: 6px;
+            margin-bottom:
+                6px;
 
-            color: #68758D;
+            color:
+                #68758D;
 
-            font-size: 8px;
+            font-size:
+                8px;
 
-            font-weight: 700;
+            font-weight:
+                700;
 
         }
 
 
         .detail-box strong {
 
-            color: #F4F7FF;
+            color:
+                #F4F7FF;
 
-            font-size: 10px;
+            font-size:
+                10px;
 
-            word-break: break-word;
+            word-break:
+                break-word;
+
+            line-height:
+                1.5;
 
         }
 
@@ -1134,30 +1342,39 @@ $adminName =
                 Orbitron,
                 sans-serif;
 
-            font-size: 13px;
+            font-size:
+                13px;
 
         }
 
 
         .items-table {
 
-            width: 100%;
+            width:
+                100%;
 
             border-collapse:
                 collapse;
+
+            min-width:
+                600px;
 
         }
 
 
         .items-table th {
 
-            padding: 10px;
+            padding:
+                10px;
 
-            color: #68758D;
+            color:
+                #68758D;
 
-            text-align: left;
+            text-align:
+                left;
 
-            font-size: 8px;
+            font-size:
+                8px;
 
             border-bottom:
                 1px solid #263452;
@@ -1167,42 +1384,114 @@ $adminName =
 
         .items-table td {
 
-            padding: 10px;
+            padding:
+                10px;
 
-            color: #AAB5CA;
+            color:
+                #AAB5CA;
 
-            font-size: 9px;
+            font-size:
+                9px;
 
             border-bottom:
                 1px solid
-                rgba(38,52,82,0.7);
+                rgba(
+                    38,
+                    52,
+                    82,
+                    0.7
+                );
+
+        }
+
+
+        .items-table tr:last-child td {
+
+            border-bottom:
+                none;
+
+        }
+
+
+        .item-total {
+
+            color:
+                #4DBCF4;
+
+            font-weight:
+                700;
+
+        }
+
+
+        .details-summary {
+
+            margin-top:
+                20px;
+
+            padding-top:
+                20px;
+
+            border-top:
+                1px solid #263452;
+
+            display:
+                flex;
+
+            justify-content:
+                flex-end;
+
+        }
+
+
+        .details-summary-total {
+
+            color:
+                #4DBCF4;
+
+            font-family:
+                Orbitron,
+                sans-serif;
+
+            font-size:
+                18px;
+
+            font-weight:
+                800;
 
         }
 
 
         .close-button {
 
-            display: inline-block;
+            display:
+                inline-block;
 
-            margin-top: 20px;
+            margin-top:
+                20px;
 
-            padding: 9px 13px;
+            padding:
+                9px 13px;
 
-            color: #AAB5CA;
+            color:
+                #AAB5CA;
 
             border:
                 1px solid #263452;
 
-            font-size: 9px;
+            font-size:
+                9px;
 
         }
 
 
         .close-button:hover {
 
-            color: #4DBCF4;
+            color:
+                #4DBCF4;
 
-            border-color: #4DBCF4;
+            border-color:
+                #4DBCF4;
 
         }
 
@@ -1213,13 +1502,17 @@ $adminName =
 
         .empty {
 
-            padding: 50px 20px;
+            padding:
+                50px 20px;
 
-            text-align: center;
+            text-align:
+                center;
 
-            color: #68758D;
+            color:
+                #68758D;
 
-            font-size: 10px;
+            font-size:
+                10px;
 
         }
 
@@ -1232,14 +1525,16 @@ $adminName =
 
             .admin-layout {
 
-                grid-template-columns: 1fr;
+                grid-template-columns:
+                    1fr;
 
             }
 
 
             .admin-sidebar {
 
-                border-right: none;
+                border-right:
+                    none;
 
                 border-bottom:
                     1px solid #263452;
@@ -1249,16 +1544,19 @@ $adminName =
 
             .admin-sidebar a {
 
-                display: inline-block;
+                display:
+                    inline-block;
 
-                margin: 2px;
+                margin:
+                    2px;
 
             }
 
 
             .admin-main {
 
-                padding: 25px;
+                padding:
+                    25px;
 
             }
 
@@ -1267,9 +1565,37 @@ $adminName =
 
         @media (max-width: 600px) {
 
+            .admin-header {
+
+                padding:
+                    0 4%;
+
+            }
+
+
             .admin-name {
 
-                display: none;
+                display:
+                    none;
+
+            }
+
+
+            .admin-brand {
+
+                font-size:
+                    14px;
+
+            }
+
+
+            .admin-brand img {
+
+                width:
+                    34px;
+
+                height:
+                    34px;
 
             }
 
@@ -1278,6 +1604,14 @@ $adminName =
 
                 grid-template-columns:
                     1fr;
+
+            }
+
+
+            .details-header {
+
+                flex-direction:
+                    column;
 
             }
 
@@ -1292,11 +1626,10 @@ $adminName =
 
 
 <!-- ==================================================
-     HEADER
+     ADMIN HEADER
 ================================================== -->
 
 <header class="admin-header">
-
 
     <a
         href="dashboard.php"
@@ -1304,7 +1637,7 @@ $adminName =
     >
 
         <img
-            src="../assets/frostcore_logo.png"
+            src="../assets/logo/frostcore_logo.png"
             alt="FROSTCORE Logo"
         >
 
@@ -1328,6 +1661,7 @@ $adminName =
         <a
             href="../logout.php"
             class="admin-logout"
+            onclick="return confirm('Are you sure you want to log out of your FROSTCORE administrator account?');"
         >
             LOGOUT
         </a>
@@ -1415,7 +1749,6 @@ $adminName =
             <h1>
                 ORDERS
             </h1>
-
 
             <p>
                 View customer orders and manage order status.
@@ -1511,7 +1844,6 @@ $adminName =
 
             <?php if (!empty($orders)): ?>
 
-
                 <div class="table-wrap">
 
                     <table class="orders-table">
@@ -1566,7 +1898,8 @@ $adminName =
                                     (string)$order["status"];
 
 
-                                $statusClass = "";
+                                $statusClass =
+                                    "";
 
 
                                 if ($status === "Pending") {
@@ -1629,9 +1962,7 @@ $adminName =
                                             $order["full_name"]
                                         ) ?>
 
-
                                         <br>
-
 
                                         <small
                                             style="
@@ -1674,9 +2005,7 @@ $adminName =
                                     <td>
 
                                         <span
-                                            class="status <?= e(
-                                                $statusClass
-                                            ) ?>"
+                                            class="status <?= e($statusClass) ?>"
                                         >
 
                                             <?= e(
@@ -1699,9 +2028,7 @@ $adminName =
                                             )
                                         ) ?>
 
-
                                         <br>
-
 
                                         <small
                                             style="
@@ -1729,8 +2056,13 @@ $adminName =
                                         <div class="action-area">
 
 
+                                            <!-- IMPORTANT:
+                                                 #order-details makes the
+                                                 browser jump to the details.
+                                            -->
+
                                             <a
-                                                href="orders.php?view=<?= (int)$order["id"] ?>"
+                                                href="orders.php?view=<?= (int)$order["id"] ?>#order-details"
                                                 class="view-button"
                                             >
                                                 VIEW
@@ -1741,7 +2073,6 @@ $adminName =
                                                 method="POST"
                                                 class="status-form"
                                             >
-
 
                                                 <input
                                                     type="hidden"
@@ -1766,8 +2097,9 @@ $adminName =
                                                 >
 
 
-                                                <select name="status">
-
+                                                <select
+                                                    name="status"
+                                                >
 
                                                     <?php foreach (
                                                         $allowedStatuses
@@ -1787,7 +2119,6 @@ $adminName =
 
                                                     <?php endforeach; ?>
 
-
                                                 </select>
 
 
@@ -1797,8 +2128,8 @@ $adminName =
                                                     SAVE
                                                 </button>
 
-
                                             </form>
+
 
                                         </div>
 
@@ -1842,7 +2173,10 @@ $adminName =
         <?php if ($selectedOrder): ?>
 
 
-            <section class="details-card">
+            <section
+                class="details-card"
+                id="order-details"
+            >
 
 
                 <div class="details-header">
@@ -1883,7 +2217,10 @@ $adminName =
                     $selectedStatus =
                         (string)$selectedOrder["status"];
 
-                    $selectedStatusClass = "";
+
+                    $selectedStatusClass =
+                        "status-default";
+
 
                     if ($selectedStatus === "Pending") {
 
@@ -1913,13 +2250,6 @@ $adminName =
 
                     }
 
-                    else {
-
-                        $selectedStatusClass =
-                            "status-default";
-
-                    }
-
                     ?>
 
 
@@ -1939,7 +2269,9 @@ $adminName =
 
 
 
-                <!-- CUSTOMER -->
+                <!-- ==================================================
+                     CUSTOMER DETAILS
+                ================================================== -->
 
                 <div class="details-grid">
 
@@ -2100,6 +2432,33 @@ $adminName =
                     <div class="detail-box">
 
                         <span>
+                            SHIPPING
+                        </span>
+
+                        <strong>
+
+                            <?php if (
+                                (float)$selectedOrder["shipping_fee"] > 0
+                            ): ?>
+
+                                <?= money(
+                                    $selectedOrder["shipping_fee"]
+                                ) ?>
+
+                            <?php else: ?>
+
+                                FREE
+
+                            <?php endif; ?>
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-box">
+
+                        <span>
                             TOTAL
                         </span>
 
@@ -2118,10 +2477,14 @@ $adminName =
 
 
 
-                <!-- ORDER ITEMS -->
+                <!-- ==================================================
+                     ORDER ITEMS
+                ================================================== -->
 
                 <h3 class="items-title">
+
                     ORDER ITEMS
+
                 </h3>
 
 
@@ -2169,6 +2532,7 @@ $adminName =
 
                                     <tr>
 
+
                                         <td>
 
                                             <?= e(
@@ -2194,13 +2558,14 @@ $adminName =
                                         </td>
 
 
-                                        <td>
+                                        <td class="item-total">
 
                                             <?= money(
                                                 $item["subtotal"]
                                             ) ?>
 
                                         </td>
+
 
                                     </tr>
 
@@ -2228,11 +2593,34 @@ $adminName =
                 <?php endif; ?>
 
 
+
+                <!-- TOTAL -->
+
+                <div class="details-summary">
+
+                    <div class="details-summary-total">
+
+                        TOTAL:
+
+                        <?= money(
+                            $selectedOrder["total"]
+                        ) ?>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CLOSE -->
+
                 <a
                     href="orders.php"
                     class="close-button"
                 >
+
                     CLOSE DETAILS
+
                 </a>
 
 
@@ -2242,11 +2630,34 @@ $adminName =
         <?php elseif ($viewId): ?>
 
 
-            <section class="details-card">
+            <section
+                class="details-card"
+                id="order-details"
+            >
 
                 <div class="empty">
 
-                    Order not found.
+                    <h2
+                        style="
+                            margin:0 0 10px;
+                            color:#F4F7FF;
+                            font-family:Orbitron,sans-serif;
+                            font-size:18px;
+                        "
+                    >
+
+                        ORDER NOT FOUND
+
+                    </h2>
+
+
+                    <p>
+
+                        Order #<?= (int)$viewId ?>
+
+                        does not exist.
+
+                    </p>
 
                 </div>
 
@@ -2255,10 +2666,13 @@ $adminName =
                     href="orders.php"
                     class="close-button"
                 >
+
                     BACK TO ORDERS
+
                 </a>
 
             </section>
+
 
         <?php endif; ?>
 
@@ -2266,6 +2680,7 @@ $adminName =
     </main>
 
 </div>
+
 
 
 </body>

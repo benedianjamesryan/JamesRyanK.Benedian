@@ -185,7 +185,7 @@ if (
 ) {
 
     $product_image =
-        "assets/fc1-cooler.svg";
+        "assets/products/fc1-cooler.svg";
 
 }
 
@@ -673,7 +673,7 @@ $reviews =
 
     <link
         rel="stylesheet"
-        href="product-details.css"
+        href="css/product-details.css"
     >
 
 
@@ -2268,10 +2268,10 @@ $reviews =
 
 
 
-<?php require_once "logout-popup.php"; ?>
+<?php require_once "includes/logout-popup.php"; ?>
 
 
-<script src="script.js"></script>
+<script src="js/script.js"></script>
 
 
 </body>

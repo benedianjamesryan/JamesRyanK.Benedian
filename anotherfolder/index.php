@@ -46,7 +46,7 @@ $year =
 
     <link
         rel="stylesheet"
-        href="style.css"
+        href="css/style.css"
     >
 
 </head>
@@ -71,7 +71,7 @@ $year =
 
             <img
                 class="brand-logo"
-                src="assets/frostcore_logo.png"
+                src="assets/logo/frostcore_logo.png"
                 alt="FROSTCORE logo"
             >
 
@@ -345,7 +345,7 @@ $year =
                 <div class="hex-logo">
 
                     <img
-                        src="assets/frostcore_logo.png"
+                        src="assets/logo/frostcore_logo.png"
                         alt="FROSTCORE logo"
                     >
 
@@ -524,7 +524,7 @@ $year =
 
 
                         <img
-                            src="assets/fc1-cooler.svg"
+                            src="assets/products/fc1-cooler.svg"
                             alt="FROSTCORE FC-1 clip cooler"
                         >
 
@@ -944,7 +944,7 @@ $year =
             <div class="cta-logo">
 
                 <img
-                    src="assets/frostcore_logo.png"
+                    src="assets/logo/frostcore_logo.png"
                     alt="FROSTCORE logo"
                 >
 
@@ -1227,7 +1227,7 @@ $year =
 
             <img
                 class="login-logo"
-                src="assets/frostcore_logo.png"
+                src="assets/logo/frostcore_logo.png"
                 alt="FROSTCORE logo"
             >
 
@@ -1348,7 +1348,7 @@ $year =
          LOGOUT POPUP
     ================================================== -->
 
-    <?php require_once "logout-popup.php"; ?>
+    <?php require_once "includes/logout-popup.php"; ?>
 
 
 
@@ -1356,7 +1356,7 @@ $year =
          JAVASCRIPT
     ================================================== -->
 
-    <script src="script.js"></script>
+    <script src="js/script.js"></script>
 
 
 </body>

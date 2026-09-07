@@ -245,7 +245,7 @@
 
 
             <a
-                href="logout.php"
+                href="<?= htmlspecialchars((basename(dirname($_SERVER["SCRIPT_NAME"])) === "admin") ? "../logout.php" : "logout.php", ENT_QUOTES, "UTF-8") ?>"
                 class="logout-confirm"
             >
                 LOG OUT

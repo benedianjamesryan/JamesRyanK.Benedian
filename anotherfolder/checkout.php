@@ -705,7 +705,7 @@ foreach ($cartItems as &$item) {
     ) {
 
         $image =
-            "assets/fc1-cooler.svg";
+            "assets/products/fc1-cooler.svg";
 
     }
 
@@ -739,12 +739,12 @@ unset($item);
 
     <link
         rel="stylesheet"
-        href="style.css"
+        href="css/style.css"
     >
 
     <link
         rel="stylesheet"
-        href="product.css"
+        href="css/products.css"
     >
 
 
@@ -1484,7 +1484,7 @@ unset($item);
     >
 
         <img
-            src="assets/frostcore_logo.png"
+            src="assets/logo/frostcore_logo.png"
             alt="FROSTCORE Logo"
             class="brand-logo"
         >
@@ -1887,7 +1887,7 @@ unset($item);
                                                 )
                                             )
                                                 ? $item["image"]
-                                                : "assets/fc1-cooler.svg"
+                                                : "assets/products/fc1-cooler.svg"
                                         ) ?>"
                                         alt="<?= e($item["name"]) ?>"
                                     >
@@ -2130,10 +2130,10 @@ unset($item);
      SHARED LOGOUT POPUP
 ================================================== -->
 
-<?php require_once "logout-popup.php"; ?>
+<?php require_once "includes/logout-popup.php"; ?>
 
 
-<script src="script.js"></script>
+<script src="js/script.js"></script>
 
 
 </body>

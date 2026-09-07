@@ -241,7 +241,7 @@ document.addEventListener(
 
 
                         fetch(
-                            "add-to-cart.php",
+                            "actions/add-to-cart.php",
                             {
                                 method: "POST",
                                 body: formData

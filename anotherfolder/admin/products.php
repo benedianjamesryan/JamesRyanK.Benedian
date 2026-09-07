@@ -816,7 +816,7 @@ if (
 
     <link
         rel="stylesheet"
-        href="../product.css"
+        href="../css/products.css"
     >
 
 
@@ -2060,7 +2060,7 @@ if (
     >
 
         <img
-            src="../assets/frostcore_logo.png"
+            src="../assets/logo/frostcore_logo.png"
             alt="FROSTCORE Logo"
         >
 
@@ -2082,12 +2082,13 @@ if (
         </span>
 
 
-        <a
-            href="../logout.php"
-            class="admin-logout"
-        >
-            LOGOUT
-        </a>
+      <a
+    href="../logout.php"
+    class="admin-logout"
+    onclick="return confirm('Are you sure you want to log out of your FROSTCORE administrator account?');"
+>
+    LOGOUT
+</a>
 
 
     </div>
@@ -2539,7 +2540,7 @@ if (
                                 $editProduct["image"]
                             ) ?>"
                             maxlength="255"
-                            placeholder="assets/product-image.png"
+                            placeholder="../assets/products/product-image.png"
                         >
 
                     </div>
@@ -2778,7 +2779,7 @@ if (
                             type="text"
                             name="image"
                             maxlength="255"
-                            placeholder="assets/product-image.png"
+                            placeholder="../assets/products/product-image.png"
                         >
 
                     </div>
@@ -2952,7 +2953,7 @@ if (
                                         ) {
 
                                             $imagePath =
-                                                "../assets/fc1-cooler.svg";
+                                                "../assets/products/fc1-cooler.svg";
 
                                         }
 
@@ -2987,7 +2988,7 @@ if (
                                                 $product["name"]
                                             ) ?>"
                                             class="product-thumb"
-                                            onerror="this.src='../assets/fc1-cooler.svg';"
+                                            onerror="this.src='../assets/products/fc1-cooler.svg';"
                                         >
 
 
@@ -3188,7 +3189,6 @@ if (
     </main>
 
 </div>
-
 
 </body>
 

@@ -232,7 +232,7 @@ $orders =
 
     <link
         rel="stylesheet"
-        href="product.css"
+        href="css/products.css"
     >
 
 
@@ -1369,7 +1369,7 @@ $orders =
     >
 
         <img
-            src="assets/frostcore_logo.png"
+            src="assets/logo/frostcore_logo.png"
             alt="FROSTCORE Logo"
         >
 
@@ -2247,7 +2247,7 @@ $orders =
 
 <?php
 
-$logoutPopupFile = "logout-popup.php";
+$logoutPopupFile = "includes/logout-popup.php";
 
 if (file_exists(__DIR__ . "/" . $logoutPopupFile)) {
 
@@ -2258,7 +2258,7 @@ if (file_exists(__DIR__ . "/" . $logoutPopupFile)) {
 ?>
 
 
-<script src="script.js"></script>
+<script src="js/script.js"></script>
 
 
 </body>

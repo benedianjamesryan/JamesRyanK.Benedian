@@ -201,7 +201,7 @@ $year = date("Y");
 
     <link
         rel="stylesheet"
-        href="style.css"
+        href="css/style.css"
     >
 
 </head>
@@ -220,7 +220,7 @@ $year = date("Y");
 
         <img
             class="brand-logo"
-            src="assets/frostcore_logo.png"
+            src="assets/logo/frostcore_logo.png"
             alt="FROSTCORE logo"
         >
 
@@ -251,7 +251,7 @@ $year = date("Y");
 
         <img
             class="login-logo"
-            src="assets/frostcore_logo.png"
+            src="assets/logo/frostcore_logo.png"
             alt="FROSTCORE logo"
         >
 

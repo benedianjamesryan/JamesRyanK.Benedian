@@ -331,8 +331,8 @@ $total = $subtotal + $shipping;
 
     <title>FROSTCORE — Cart</title>
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="product.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/products.css">
 
     <style>
 
@@ -691,7 +691,7 @@ $total = $subtotal + $shipping;
     <a href="index.php" class="brand">
 
         <img
-            src="assets/frostcore_logo.png"
+            src="assets/logo/frostcore_logo.png"
             alt="FROSTCORE Logo"
             class="brand-logo"
         >
@@ -828,7 +828,7 @@ $total = $subtotal + $shipping;
                     ) {
 
                         $image =
-                            "assets/fc1-cooler.svg";
+                            "assets/products/fc1-cooler.svg";
 
                     }
 
@@ -1005,9 +1005,9 @@ $total = $subtotal + $shipping;
     <?php endif; ?>
 
 </main>
-<?php require_once "logout-popup.php"; ?>
+<?php require_once "includes/logout-popup.php"; ?>
 
-<script src="script.js"></script>
+<script src="js/script.js"></script>
 
 </body>
 </html>

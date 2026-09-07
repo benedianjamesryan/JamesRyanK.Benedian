@@ -212,7 +212,7 @@ function e($value)
 
     <link
         rel="stylesheet"
-        href="../product.css"
+        href="../css/products.css"
     >
 
 
@@ -472,7 +472,7 @@ function e($value)
     <div class="admin-brand">
 
         <img
-            src="../assets/frostcore_logo.png"
+            src="../assets/logo/frostcore_logo.png"
             alt="FROSTCORE Logo"
         >
 
