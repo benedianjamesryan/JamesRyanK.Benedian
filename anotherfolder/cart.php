@@ -1,153 +1,87 @@
 <?php
-
 session_start();
-
 require_once "database/config.php";
 
-
-// --------------------------------------------------
-// CHECK LOGIN
-// --------------------------------------------------
-
 if (empty($_SESSION["user_id"])) {
-
     header("Location: login.php?redirect=cart.php");
     exit;
-
 }
 
 $userId = (int)$_SESSION["user_id"];
-
-
-// --------------------------------------------------
-// HELPER FUNCTIONS
-// --------------------------------------------------
+$isAdmin = ($_SESSION["role"] ?? "") === "admin";
 
 function e($value)
 {
-    return htmlspecialchars(
-        (string)$value,
-        ENT_QUOTES,
-        "UTF-8"
-    );
+    return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
 }
-
 
 function money($amount)
 {
-    return "₱" . number_format(
-        (float)$amount,
-        2
-    );
+    return "₱" . number_format((float)$amount, 2);
 }
-
-
-// --------------------------------------------------
-// ADD PRODUCT TO CART
-// --------------------------------------------------
 
 if (
     isset($_GET["add"]) &&
     filter_var($_GET["add"], FILTER_VALIDATE_INT)
 ) {
-
     $productId = (int)$_GET["add"];
 
-    // Check that the product exists and get its stock.
     $productStmt = $pdo->prepare("
         SELECT id, stock
         FROM products
         WHERE id = ?
         LIMIT 1
     ");
-
-    $productStmt->execute([
-        $productId
-    ]);
-
+    $productStmt->execute([$productId]);
     $product = $productStmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($product) {
+    if ($product && (int)$product["stock"] > 0) {
+        $cartStmt = $pdo->prepare("
+            SELECT id, quantity
+            FROM cart_items
+            WHERE user_id = ?
+            AND product_id = ?
+            LIMIT 1
+        ");
+        $cartStmt->execute([$userId, $productId]);
+        $existing = $cartStmt->fetch(PDO::FETCH_ASSOC);
 
-        $stock = (int)$product["stock"];
+        if ($existing) {
+            $newQuantity = min(
+                (int)$existing["quantity"] + 1,
+                (int)$product["stock"]
+            );
 
-        if ($stock > 0) {
-
-            // Check if product is already in the user's cart.
-            $cartStmt = $pdo->prepare("
-                SELECT id, quantity
-                FROM cart_items
-                WHERE user_id = ?
-                AND product_id = ?
-                LIMIT 1
+            $updateStmt = $pdo->prepare("
+                UPDATE cart_items
+                SET quantity = ?
+                WHERE id = ?
             ");
-
-            $cartStmt->execute([
+            $updateStmt->execute([
+                $newQuantity,
+                $existing["id"]
+            ]);
+        } else {
+            $insertStmt = $pdo->prepare("
+                INSERT INTO cart_items
+                (user_id, product_id, quantity)
+                VALUES (?, ?, 1)
+            ");
+            $insertStmt->execute([
                 $userId,
                 $productId
             ]);
-
-            $existing = $cartStmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($existing) {
-
-                $newQuantity = (int)$existing["quantity"] + 1;
-
-                // Never allow cart quantity to exceed stock.
-                $newQuantity = min(
-                    $newQuantity,
-                    $stock
-                );
-
-                $updateStmt = $pdo->prepare("
-                    UPDATE cart_items
-                    SET quantity = ?
-                    WHERE id = ?
-                ");
-
-                $updateStmt->execute([
-                    $newQuantity,
-                    $existing["id"]
-                ]);
-
-            } else {
-
-                $insertStmt = $pdo->prepare("
-                    INSERT INTO cart_items
-                    (
-                        user_id,
-                        product_id,
-                        quantity
-                    )
-                    VALUES (?, ?, 1)
-                ");
-
-                $insertStmt->execute([
-                    $userId,
-                    $productId
-                ]);
-
-            }
-
         }
-
     }
 
-    // Return to the cart after adding.
     header("Location: cart.php");
     exit;
 }
-
-
-// --------------------------------------------------
-// UPDATE CART QUANTITY
-// --------------------------------------------------
 
 if (
     $_SERVER["REQUEST_METHOD"] === "POST" &&
     isset($_POST["update_cart"])
 ) {
-
     $productId = filter_input(
         INPUT_POST,
         "product_id",
@@ -160,32 +94,18 @@ if (
         FILTER_VALIDATE_INT
     );
 
-    if (
-        $productId &&
-        $quantity &&
-        $quantity > 0
-    ) {
-
-        // Get the product's current stock.
+    if ($productId && $quantity && $quantity > 0) {
         $stockStmt = $pdo->prepare("
             SELECT stock
             FROM products
             WHERE id = ?
             LIMIT 1
         ");
-
-        $stockStmt->execute([
-            $productId
-        ]);
-
+        $stockStmt->execute([$productId]);
         $stock = $stockStmt->fetchColumn();
 
-        if ($stock !== false) {
-
-            $quantity = min(
-                $quantity,
-                (int)$stock
-            );
+        if ($stock !== false && (int)$stock > 0) {
+            $quantity = min($quantity, (int)$stock);
 
             $updateStmt = $pdo->prepare("
                 UPDATE cart_items
@@ -193,31 +113,22 @@ if (
                 WHERE user_id = ?
                 AND product_id = ?
             ");
-
             $updateStmt->execute([
                 $quantity,
                 $userId,
                 $productId
             ]);
-
         }
-
     }
 
     header("Location: cart.php");
     exit;
 }
 
-
-// --------------------------------------------------
-// REMOVE ITEM
-// --------------------------------------------------
-
 if (
     $_SERVER["REQUEST_METHOD"] === "POST" &&
     isset($_POST["remove_item"])
 ) {
-
     $productId = filter_input(
         INPUT_POST,
         "product_id",
@@ -225,51 +136,34 @@ if (
     );
 
     if ($productId) {
-
         $deleteStmt = $pdo->prepare("
             DELETE FROM cart_items
             WHERE user_id = ?
             AND product_id = ?
         ");
-
         $deleteStmt->execute([
             $userId,
             $productId
         ]);
-
     }
 
     header("Location: cart.php");
     exit;
 }
 
-
-// --------------------------------------------------
-// CLEAR CART
-// --------------------------------------------------
-
 if (
     $_SERVER["REQUEST_METHOD"] === "POST" &&
     isset($_POST["clear_cart"])
 ) {
-
     $clearStmt = $pdo->prepare("
         DELETE FROM cart_items
         WHERE user_id = ?
     ");
-
-    $clearStmt->execute([
-        $userId
-    ]);
+    $clearStmt->execute([$userId]);
 
     header("Location: cart.php");
     exit;
 }
-
-
-// --------------------------------------------------
-// GET CART ITEMS
-// --------------------------------------------------
 
 $cartStmt = $pdo->prepare("
     SELECT
@@ -287,22 +181,13 @@ $cartStmt = $pdo->prepare("
     ORDER BY cart_items.id DESC
 ");
 
-$cartStmt->execute([
-    $userId
-]);
-
+$cartStmt->execute([$userId]);
 $cartItems = $cartStmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-// --------------------------------------------------
-// CALCULATE TOTALS
-// --------------------------------------------------
 
 $subtotal = 0;
 $cartCount = 0;
 
 foreach ($cartItems as $item) {
-
     $quantity = (int)$item["quantity"];
     $price = (float)$item["price"];
 
@@ -310,71 +195,32 @@ foreach ($cartItems as $item) {
     $cartCount += $quantity;
 }
 
-
-// For now, shipping is free.
 $shipping = 0;
-
 $total = $subtotal + $shipping;
-
 ?>
 
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>
-        FROSTCORE — Cart
-    </title>
+    <title>FROSTCORE — Cart</title>
 
-
-    <!-- GLOBAL CSS -->
-
-    <link
-        rel="stylesheet"
-        href="css/style.css"
-    >
-
-
-    <!-- SHARED PRODUCT / HEADER CSS -->
-
-    <link
-        rel="stylesheet"
-        href="css/products.css"
-    >
-
-
-    <!-- CART PAGE CSS -->
-
-    <link
-        rel="stylesheet"
-        href="css/cart.css"
-    >
-
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/products.css">
+    <link rel="stylesheet" href="css/cart.css">
 </head>
-
 
 <body>
 
-
-<!-- ==================================================
-     HEADER
-================================================== -->
-
 <header class="products-header">
 
-    <a
-        href="index.php"
-        class="brand"
-    >
+    <a href="index.php" class="brand">
 
         <img
             src="assets/logo/frostcore_logo.png"
@@ -388,7 +234,6 @@ $total = $subtotal + $shipping;
 
     </a>
 
-
     <nav class="products-nav">
 
         <a href="index.php">
@@ -397,6 +242,10 @@ $total = $subtotal + $shipping;
 
         <a href="products.php">
             PRODUCTS
+        </a>
+
+        <a href="my-orders.php">
+            MY ORDERS
         </a>
 
         <a href="about.php">
@@ -409,56 +258,44 @@ $total = $subtotal + $shipping;
 
     </nav>
 
-
     <div class="header-actions">
 
-        <?php if (!empty($_SESSION["user_id"])): ?>
+        <?php if ($isAdmin): ?>
 
             <a
-                href="#"
-                class="header-icon logout-button"
-                title="Logout"
+                href="admin/dashboard.php"
+                class="admin-link"
             >
-                ♙
-            </a>
-
-        <?php else: ?>
-
-            <a
-                href="login.php?redirect=cart.php"
-                class="header-icon"
-                title="Login"
-            >
-                ♙
+                ADMIN
             </a>
 
         <?php endif; ?>
 
+        <a
+            href="#"
+            class="header-icon logout-button"
+            id="logoutButton"
+            title="Logout"
+        >
+            LOGOUT
+        </a>
 
         <a
             href="cart.php"
             class="cart-link"
         >
-
             🛒
 
             <span class="cart-number">
                 <?= $cartCount ?>
             </span>
-
         </a>
 
     </div>
 
 </header>
 
-
-<!-- ==================================================
-     CART
-================================================== -->
-
 <main class="cart-page">
-
 
     <div class="cart-title">
 
@@ -474,9 +311,7 @@ $total = $subtotal + $shipping;
 
     </div>
 
-
     <?php if (empty($cartItems)): ?>
-
 
         <div class="empty-cart">
 
@@ -497,44 +332,26 @@ $total = $subtotal + $shipping;
 
         </div>
 
-
     <?php else: ?>
 
-
         <div class="cart-layout">
-
-
-            <!-- ==============================
-                 CART ITEMS
-            =============================== -->
 
             <section class="cart-items">
 
                 <?php foreach ($cartItems as $item): ?>
 
                     <?php
-
-                    $image = trim(
-                        (string)$item["image"]
-                    );
+                    $image = trim((string)$item["image"]);
 
                     if (
                         $image === "" ||
-                        !file_exists(
-                            __DIR__ . "/" . $image
-                        )
+                        !file_exists(__DIR__ . "/" . $image)
                     ) {
-
-                        $image =
-                            "assets/products/fc1-cooler.svg";
-
+                        $image = "assets/products/fc1-cooler.svg";
                     }
-
                     ?>
 
-
                     <article class="cart-item">
-
 
                         <div class="cart-item-image">
 
@@ -545,7 +362,6 @@ $total = $subtotal + $shipping;
 
                         </div>
 
-
                         <div class="cart-item-info">
 
                             <h2>
@@ -553,28 +369,16 @@ $total = $subtotal + $shipping;
                             </h2>
 
                             <p class="cart-item-category">
-
-                                <?= e(
-                                    $item["category"]
-                                ) ?>
-
+                                <?= e($item["category"]) ?>
                             </p>
 
                             <div class="cart-item-price">
-
-                                <?= money(
-                                    $item["price"]
-                                ) ?>
-
+                                <?= money($item["price"]) ?>
                             </div>
 
                         </div>
 
-
                         <div class="cart-item-actions">
-
-
-                            <!-- UPDATE QUANTITY -->
 
                             <form
                                 method="post"
@@ -604,9 +408,6 @@ $total = $subtotal + $shipping;
 
                             </form>
 
-
-                            <!-- REMOVE -->
-
                             <form method="post">
 
                                 <input
@@ -625,15 +426,11 @@ $total = $subtotal + $shipping;
 
                             </form>
 
-
                         </div>
 
                     </article>
 
                 <?php endforeach; ?>
-
-
-                <!-- CLEAR CART -->
 
                 <form
                     method="post"
@@ -650,21 +447,13 @@ $total = $subtotal + $shipping;
 
                 </form>
 
-
             </section>
 
-
-            <!-- ==============================
-                 SUMMARY
-            =============================== -->
-
             <aside class="cart-summary">
-
 
                 <h2>
                     ORDER SUMMARY
                 </h2>
-
 
                 <div class="summary-row">
 
@@ -673,15 +462,10 @@ $total = $subtotal + $shipping;
                     </span>
 
                     <strong>
-
-                        <?= money(
-                            $subtotal
-                        ) ?>
-
+                        <?= money($subtotal) ?>
                     </strong>
 
                 </div>
-
 
                 <div class="summary-row">
 
@@ -695,7 +479,6 @@ $total = $subtotal + $shipping;
 
                 </div>
 
-
                 <div class="summary-total">
 
                     <span>
@@ -703,15 +486,10 @@ $total = $subtotal + $shipping;
                     </span>
 
                     <strong>
-
-                        <?= money(
-                            $total
-                        ) ?>
-
+                        <?= money($total) ?>
                     </strong>
 
                 </div>
-
 
                 <a
                     href="checkout.php"
@@ -720,34 +498,17 @@ $total = $subtotal + $shipping;
                     PROCEED TO CHECKOUT →
                 </a>
 
-
             </aside>
-
 
         </div>
 
-
     <?php endif; ?>
-
 
 </main>
 
-
-
-<!-- ==================================================
-     LOGOUT POPUP
-================================================== -->
-
 <?php require_once "includes/logout-popup.php"; ?>
-
-
-<!-- ==================================================
-     JAVASCRIPT
-================================================== -->
 
 <script src="js/script.js"></script>
 
-
 </body>
-
 </html>

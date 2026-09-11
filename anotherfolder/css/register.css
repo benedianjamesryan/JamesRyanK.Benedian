@@ -1,572 +1,224 @@
-/* =========================================================
-   FROSTCORE — REGISTER PAGE
-   Page-Specific Styles
-   ========================================================= */
-
-
-/* =========================================================
-   REGISTRATION PAGE
-   ========================================================= */
-
 .register-page {
     min-height: 100vh;
-
     background: var(--bg);
-
     color: var(--text);
-
     display: flex;
-
     flex-direction: column;
 }
 
-
-/* =========================================================
-   MAIN REGISTRATION AREA
-   ========================================================= */
-
 .register-main {
     flex: 1;
-
     display: flex;
-
     justify-content: center;
-
     align-items: center;
-
-    padding:
-        45px 20px;
+    padding: 45px 20px;
 }
-
-
-/* =========================================================
-   REGISTRATION CARD
-   ========================================================= */
 
 .register-card {
-    width:
-        min(460px, 100%);
-
-    background:
-        var(--panel);
-
-    border:
-        1px solid #2d4568;
-
-    border-radius:
-        10px;
-
-    padding:
-        32px 38px;
-
-    box-shadow:
-        0 25px 70px
-        rgba(
-            0,
-            0,
-            0,
-            0.45
-        );
+    width: min(460px, 100%);
+    background: var(--panel);
+    border: 1px solid #2d4568;
+    border-radius: 10px;
+    padding: 32px 38px;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
 }
-
-
-/* =========================================================
-   BRAND
-   ========================================================= */
 
 .register-brand {
-    text-align:
-        center;
-
-    margin-bottom:
-        18px;
+    text-align: center;
+    margin-bottom: 18px;
 }
-
 
 .register-logo {
-    width:
-        62px;
-
-    height:
-        62px;
-
-    object-fit:
-        contain;
-
-    margin:
-        0 auto 8px;
+    width: 62px;
+    height: 62px;
+    object-fit: contain;
+    margin: 0 auto 8px;
 }
-
 
 .register-brand-name {
-    font-family:
-        Orbitron,
-        sans-serif;
-
-    font-size:
-        13px;
-
-    font-weight:
-        700;
-
-    letter-spacing:
-        0.08em;
-
-    color:
-        var(--text);
+    font-family: Orbitron, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text);
 }
-
-
-/* =========================================================
-   HEADING
-   ========================================================= */
 
 .register-card h1 {
-    font-family:
-        Orbitron,
-        sans-serif;
-
-    font-size:
-        25px;
-
-    line-height:
-        1.15;
-
-    text-align:
-        center;
-
-    margin:
-        0 0 6px;
-
-    color:
-        var(--text);
+    font-family: Orbitron, sans-serif;
+    font-size: 25px;
+    line-height: 1.15;
+    text-align: center;
+    margin: 0 0 6px;
+    color: var(--text);
 }
-
-
-/* =========================================================
-   SUBTITLE
-   ========================================================= */
 
 .register-subtitle {
-    text-align:
-        center;
-
-    color:
-        #71809b;
-
-    font-size:
-        10px;
-
-    margin:
-        0 0 22px;
+    text-align: center;
+    color: #71809b;
+    font-size: 10px;
+    margin: 0 0 22px;
 }
-
-
-/* =========================================================
-   ERROR MESSAGE
-   ========================================================= */
 
 .register-card .form-error {
-    margin-bottom:
-        15px;
-
-    padding:
-        10px 12px;
-
-    color:
-        #ff9a9a;
-
-    background:
-        rgba(
-            255,
-            95,
-            95,
-            0.08
-        );
-
-    border:
-        1px solid
-        rgba(
-            255,
-            95,
-            95,
-            0.35
-        );
-
-    font-size:
-        10px;
-
-    line-height:
-        1.5;
+    margin-bottom: 15px;
+    padding: 10px 12px;
+    color: #ff9a9a;
+    background: rgba(255, 95, 95, 0.08);
+    border: 1px solid rgba(255, 95, 95, 0.35);
+    font-size: 10px;
+    line-height: 1.5;
 }
-
-
-/* =========================================================
-   FORM
-   ========================================================= */
 
 .register-form {
-    width:
-        100%;
+    width: 100%;
 }
-
-
-/* =========================================================
-   FORM GROUP
-   ========================================================= */
 
 .form-group {
-    margin-bottom:
-        14px;
+    margin-bottom: 14px;
 }
-
-
-/* =========================================================
-   LABELS
-   ========================================================= */
 
 .form-group label {
-    display:
-        block;
-
-    font-size:
-        9px;
-
-    font-weight:
-        700;
-
-    letter-spacing:
-        0.04em;
-
-    margin-bottom:
-        6px;
-
-    color:
-        #d6ddec;
+    display: block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+    color: #d6ddec;
 }
-
-
-/* =========================================================
-   INPUTS
-   ========================================================= */
 
 .form-group input {
-    width:
-        100%;
-
-    height:
-        42px;
-
-    padding:
-        0 12px;
-
-    background:
-        #081225;
-
-    border:
-        1px solid
-        #2a4263;
-
-    border-radius:
-        4px;
-
-    color:
-        #ffffff;
-
-    font-family:
-        Inter,
-        Arial,
-        sans-serif;
-
-    font-size:
-        10px;
-
-    outline:
-        none;
-
-    transition:
-        0.2s ease;
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    background: #081225;
+    border: 1px solid #2a4263;
+    border-radius: 4px;
+    color: #ffffff;
+    font-family: Inter, Arial, sans-serif;
+    font-size: 10px;
+    outline: none;
+    transition: 0.2s ease;
 }
-
 
 .form-group input::placeholder {
-    color:
-        #5e6d85;
+    color: #5e6d85;
 }
-
 
 .form-group input:focus {
-    border-color:
-        var(--blue);
-
-    box-shadow:
-        0 0 0 1px
-        rgba(
-            77,
-            188,
-            244,
-            0.15
-        );
+    border-color: var(--blue);
+    box-shadow: 0 0 0 1px rgba(77, 188, 244, 0.15);
 }
-
-
-/* =========================================================
-   PASSWORD FIELD
-   ========================================================= */
 
 .register-password {
-    position:
-        relative;
+    position: relative;
 }
-
 
 .register-password input {
-    padding-right:
-        58px;
+    padding-right: 58px;
 }
-
-
-/* =========================================================
-   PASSWORD TOGGLE
-   ========================================================= */
 
 .password-toggle {
-    position:
-        absolute;
-
-    right:
-        7px;
-
-    top:
-        0;
-
-    height:
-        42px;
-
-    padding:
-        0 7px;
-
-    background:
-        transparent;
-
-    border:
-        0;
-
-    color:
-        var(--blue);
-
-    font-family:
-        Orbitron,
-        sans-serif;
-
-    font-size:
-        8px;
-
-    font-weight:
-        700;
-
-    cursor:
-        pointer;
+    position: absolute;
+    right: 7px;
+    top: 0;
+    height: 42px;
+    padding: 0 7px;
+    background: transparent;
+    border: 0;
+    color: var(--blue);
+    font-family: Orbitron, sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+    cursor: pointer;
 }
-
 
 .password-toggle:hover {
-    color:
-        #ffffff;
+    color: #ffffff;
 }
-
-
-/* =========================================================
-   TERMS
-   ========================================================= */
 
 .terms {
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        8px;
-
-    margin:
-        17px 0;
-
-    color:
-        #aab5ca;
-
-    font-size:
-        9px;
-
-    cursor:
-        pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 17px 0;
+    color: #aab5ca;
+    font-size: 9px;
+    cursor: pointer;
 }
-
 
 .terms input {
-    width:
-        13px;
-
-    height:
-        13px;
-
-    accent-color:
-        var(--blue);
-
-    cursor:
-        pointer;
+    width: 13px;
+    height: 13px;
+    accent-color: var(--blue);
+    cursor: pointer;
 }
-
 
 .terms a {
-    color:
-        var(--blue);
+    color: var(--blue);
 }
-
 
 .terms a:hover {
-    text-decoration:
-        underline;
+    text-decoration: underline;
 }
-
-
-/* =========================================================
-   CREATE ACCOUNT BUTTON
-   ========================================================= */
 
 .register-button {
-    width:
-        100%;
-
-    height:
-        42px;
-
-    padding:
-        0;
-
-    font-size:
-        9px;
+    width: 100%;
+    height: 42px;
+    padding: 0;
+    font-size: 9px;
 }
-
-
-/* =========================================================
-   SIGN IN
-   ========================================================= */
 
 .register-login {
-    text-align:
-        center;
-
-    color:
-        #71809b;
-
-    font-size:
-        9px;
-
-    margin:
-        18px 0 0;
+    text-align: center;
+    color: #71809b;
+    font-size: 9px;
+    margin: 18px 0 0;
 }
-
 
 .register-login a {
-    color:
-        var(--blue);
-
-    font-weight:
-        700;
+    color: var(--blue);
+    font-weight: 700;
 }
-
 
 .register-login a:hover {
-    text-decoration:
-        underline;
+    text-decoration: underline;
 }
-
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
 
 .register-footer {
-    width:
-        100%;
-
-    padding:
-        16px 20px;
-
-    border-top:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.04
-        );
-
-    color:
-        #68758d;
-
-    font-family:
-        Orbitron,
-        sans-serif;
-
-    font-size:
-        7px;
-
-    text-align:
-        center;
+    width: 100%;
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    color: #68758d;
+    font-family: Orbitron, sans-serif;
+    font-size: 7px;
+    text-align: center;
 }
-
 
 .register-footer span {
-    margin-left:
-        20px;
-
-    color:
-        #68758d;
+    margin-left: 20px;
+    color: #68758d;
 }
 
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
-
 @media (max-width: 520px) {
-
     .register-main {
-        padding:
-            30px 15px;
+        padding: 30px 15px;
     }
-
 
     .register-card {
-        padding:
-            28px 22px;
+        padding: 28px 22px;
     }
-
 
     .register-logo {
-        width:
-            55px;
-
-        height:
-            55px;
+        width: 55px;
+        height: 55px;
     }
-
 
     .register-card h1 {
-        font-size:
-            21px;
+        font-size: 21px;
     }
-
 
     .register-footer span {
-        display:
-            block;
-
-        margin:
-            5px 0 0;
+        display: block;
+        margin: 5px 0 0;
     }
-
 }

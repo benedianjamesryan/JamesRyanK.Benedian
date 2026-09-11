@@ -1,243 +1,96 @@
 <?php
 
-// ==================================================
-// START SESSION
-// ==================================================
-
 session_start();
-
-
-// ==================================================
-// DATABASE CONNECTION
-// ==================================================
 
 require_once "database/config.php";
 
-
-// ==================================================
-// CHECK LOGIN
-// ==================================================
-
 if (empty($_SESSION["user_id"])) {
-
     header("Location: login.php?redirect=checkout.php");
     exit;
-
 }
 
 $userId = (int)$_SESSION["user_id"];
 
-
-// ==================================================
-// CSRF TOKEN
-// ==================================================
-
 if (empty($_SESSION["csrf_token"])) {
-
-    $_SESSION["csrf_token"] =
-        bin2hex(random_bytes(32));
-
+    $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
 }
-
-
-// ==================================================
-// HELPER FUNCTIONS
-// ==================================================
 
 function e($value)
 {
-    return htmlspecialchars(
-        (string)$value,
-        ENT_QUOTES,
-        "UTF-8"
-    );
+    return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
 }
-
 
 function money($amount)
 {
-    return "₱" . number_format(
-        (float)$amount,
-        2
-    );
+    return "₱" . number_format((float)$amount, 2);
 }
 
-
-// ==================================================
-// DEFAULT VALUES
-// ==================================================
-
 $errors = [];
-
 $orderPlaced = false;
-
 $orderNumber = "";
-
 $orderTotal = 0;
 
-
-// ==================================================
-// PROCESS ORDER
-// ==================================================
-
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
-
-    // --------------------------------------------------
-    // CSRF CHECK
-    // --------------------------------------------------
-
-    $submittedToken =
-        $_POST["csrf_token"] ?? "";
+    $submittedToken = $_POST["csrf_token"] ?? "";
 
     if (
         empty($submittedToken) ||
         empty($_SESSION["csrf_token"]) ||
-        !hash_equals(
-            $_SESSION["csrf_token"],
-            $submittedToken
-        )
+        !hash_equals($_SESSION["csrf_token"], $submittedToken)
     ) {
-
-        $errors[] =
-            "Invalid form request. Please refresh the page.";
-
+        $errors[] = "Invalid form request. Please refresh the page.";
     }
 
-
-    // --------------------------------------------------
-    // GET FORM VALUES
-    // --------------------------------------------------
-
-    $firstName =
-        trim($_POST["first_name"] ?? "");
-
-    $lastName =
-        trim($_POST["last_name"] ?? "");
-
-    $email =
-        trim($_POST["email"] ?? "");
-
-    $phone =
-        trim($_POST["phone"] ?? "");
-
-    $address =
-        trim($_POST["address"] ?? "");
-
-    $city =
-        trim($_POST["city"] ?? "");
-
-    $province =
-        trim($_POST["province"] ?? "");
-
-    $postalCode =
-        trim($_POST["postal_code"] ?? "");
-
-    $paymentMethod =
-        $_POST["payment_method"] ?? "";
-
-
-    // --------------------------------------------------
-    // VALIDATE CUSTOMER INFORMATION
-    // --------------------------------------------------
+    $firstName = trim($_POST["first_name"] ?? "");
+    $lastName = trim($_POST["last_name"] ?? "");
+    $email = trim($_POST["email"] ?? "");
+    $phone = trim($_POST["phone"] ?? "");
+    $address = trim($_POST["address"] ?? "");
+    $city = trim($_POST["city"] ?? "");
+    $province = trim($_POST["province"] ?? "");
+    $postalCode = trim($_POST["postal_code"] ?? "");
+    $paymentMethod = $_POST["payment_method"] ?? "";
 
     if ($firstName === "") {
-
-        $errors[] =
-            "First name is required.";
-
+        $errors[] = "First name is required.";
     }
-
 
     if ($lastName === "") {
-
-        $errors[] =
-            "Last name is required.";
-
+        $errors[] = "Last name is required.";
     }
-
 
     if (
         $email === "" ||
-        !filter_var(
-            $email,
-            FILTER_VALIDATE_EMAIL
-        )
+        !filter_var($email, FILTER_VALIDATE_EMAIL)
     ) {
-
-        $errors[] =
-            "Please enter a valid email address.";
-
+        $errors[] = "Please enter a valid email address.";
     }
-
 
     if ($phone === "") {
-
-        $errors[] =
-            "Phone number is required.";
-
+        $errors[] = "Phone number is required.";
     }
-
 
     if ($address === "") {
-
-        $errors[] =
-            "Complete address is required.";
-
+        $errors[] = "Complete address is required.";
     }
-
 
     if ($city === "") {
-
-        $errors[] =
-            "City/Municipality is required.";
-
+        $errors[] = "City/Municipality is required.";
     }
-
 
     if ($province === "") {
-
-        $errors[] =
-            "Province is required.";
-
+        $errors[] = "Province is required.";
     }
-
 
     if ($postalCode === "") {
-
-        $errors[] =
-            "Postal code is required.";
-
+        $errors[] = "Postal code is required.";
     }
 
+    $allowedPaymentMethods = ["COD", "GCash", "Card"];
 
-    // --------------------------------------------------
-    // VALIDATE PAYMENT METHOD
-    // --------------------------------------------------
-
-    $allowedPaymentMethods = [
-        "COD",
-        "GCash",
-        "Card"
-    ];
-
-    if (
-        !in_array(
-            $paymentMethod,
-            $allowedPaymentMethods,
-            true
-        )
-    ) {
-
-        $errors[] =
-            "Please select a valid payment method.";
-
+    if (!in_array($paymentMethod, $allowedPaymentMethods, true)) {
+        $errors[] = "Please select a valid payment method.";
     }
-
-
-    // --------------------------------------------------
-    // GET CURRENT CART
-    // --------------------------------------------------
 
     $cartStmt = $pdo->prepare("
         SELECT
@@ -254,50 +107,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         ORDER BY cart_items.id ASC
     ");
 
-    $cartStmt->execute([
-        $userId
-    ]);
-
-    $cartItems =
-        $cartStmt->fetchAll(
-            PDO::FETCH_ASSOC
-        );
-
-
-    // --------------------------------------------------
-    // CHECK CART
-    // --------------------------------------------------
+    $cartStmt->execute([$userId]);
+    $cartItems = $cartStmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (empty($cartItems)) {
-
-        $errors[] =
-            "Your cart is empty.";
-
+        $errors[] = "Your cart is empty.";
     }
 
-
-    // --------------------------------------------------
-    // PLACE ORDER
-    // --------------------------------------------------
-
     if (empty($errors)) {
-
         try {
-
             $pdo->beginTransaction();
 
-
-            // --------------------------------------------------
-            // LOCK PRODUCTS AND RE-CHECK STOCK
-            // --------------------------------------------------
-
             $lockedItems = [];
-
             $subtotal = 0;
 
-
             foreach ($cartItems as $item) {
-
                 $productStmt = $pdo->prepare("
                     SELECT
                         id,
@@ -310,51 +134,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     FOR UPDATE
                 ");
 
-                $productStmt->execute([
-                    (int)$item["product_id"]
-                ]);
-
-                $product =
-                    $productStmt->fetch(
-                        PDO::FETCH_ASSOC
-                    );
-
+                $productStmt->execute([(int)$item["product_id"]]);
+                $product = $productStmt->fetch(PDO::FETCH_ASSOC);
 
                 if (!$product) {
-
                     throw new Exception(
                         "One of the products in your cart is no longer available."
                     );
-
                 }
 
-
-                $quantity =
-                    (int)$item["quantity"];
-
-                $stock =
-                    (int)$product["stock"];
-
-                $price =
-                    (float)$product["price"];
-
-
-                // --------------------------------------------------
-                // STOCK CHECK
-                // --------------------------------------------------
+                $quantity = (int)$item["quantity"];
+                $stock = (int)$product["stock"];
+                $price = (float)$product["price"];
 
                 if ($stock <= 0) {
-
                     throw new Exception(
-                        $product["name"] .
-                        " is out of stock."
+                        $product["name"] . " is out of stock."
                     );
-
                 }
 
-
                 if ($quantity > $stock) {
-
                     throw new Exception(
                         "Not enough stock for " .
                         $product["name"] .
@@ -362,77 +161,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         $stock .
                         " unit(s) available."
                     );
-
                 }
 
-
-                $itemSubtotal =
-                    $price * $quantity;
-
-
-                $subtotal +=
-                    $itemSubtotal;
-
+                $itemSubtotal = $price * $quantity;
+                $subtotal += $itemSubtotal;
 
                 $lockedItems[] = [
-                    "product_id" =>
-                        (int)$product["id"],
-
-                    "product_name" =>
-                        $product["name"],
-
-                    "price" =>
-                        $price,
-
-                    "quantity" =>
-                        $quantity,
-
-                    "subtotal" =>
-                        $itemSubtotal
+                    "product_id" => (int)$product["id"],
+                    "product_name" => $product["name"],
+                    "price" => $price,
+                    "quantity" => $quantity,
+                    "subtotal" => $itemSubtotal
                 ];
-
             }
 
-
-            // --------------------------------------------------
-            // SHIPPING
-            // --------------------------------------------------
-
             $shippingFee = 0;
-
-            $total =
-                $subtotal +
-                $shippingFee;
-
-
-            // --------------------------------------------------
-            // CREATE FULL NAME
-            // --------------------------------------------------
-
-            $fullName =
-                $firstName .
-                " " .
-                $lastName;
-
-
-            // --------------------------------------------------
-            // GENERATE ORDER NUMBER
-            // --------------------------------------------------
+            $total = $subtotal + $shippingFee;
+            $fullName = $firstName . " " . $lastName;
 
             $orderNumber =
                 "FC-" .
                 date("Ymd") .
                 "-" .
-                strtoupper(
-                    bin2hex(
-                        random_bytes(3)
-                    )
-                );
-
-
-            // --------------------------------------------------
-            // INSERT ORDER
-            // --------------------------------------------------
+                strtoupper(bin2hex(random_bytes(3)));
 
             $orderStmt = $pdo->prepare("
                 INSERT INTO orders
@@ -471,7 +222,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 )
             ");
 
-
             $orderStmt->execute([
                 $userId,
                 $orderNumber,
@@ -488,14 +238,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $total
             ]);
 
-
-            $orderId =
-                (int)$pdo->lastInsertId();
-
-
-            // --------------------------------------------------
-            // INSERT ORDER ITEMS
-            // --------------------------------------------------
+            $orderId = (int)$pdo->lastInsertId();
 
             $orderItemStmt = $pdo->prepare("
                 INSERT INTO order_items
@@ -510,11 +253,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 VALUES (?, ?, ?, ?, ?, ?)
             ");
 
-
-            // --------------------------------------------------
-            // DECREASE STOCK
-            // --------------------------------------------------
-
             $stockUpdateStmt = $pdo->prepare("
                 UPDATE products
                 SET stock = stock - ?
@@ -522,9 +260,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 AND stock >= ?
             ");
 
-
             foreach ($lockedItems as $item) {
-
                 $orderItemStmt->execute([
                     $orderId,
                     $item["product_id"],
@@ -534,84 +270,40 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     $item["subtotal"]
                 ]);
 
-
                 $stockUpdateStmt->execute([
                     $item["quantity"],
                     $item["product_id"],
                     $item["quantity"]
                 ]);
 
-
-                if (
-                    $stockUpdateStmt->rowCount() !== 1
-                ) {
-
+                if ($stockUpdateStmt->rowCount() !== 1) {
                     throw new Exception(
                         "Stock changed while your order was being processed. Please try again."
                     );
-
                 }
-
             }
-
-
-            // --------------------------------------------------
-            // CLEAR USER CART
-            // --------------------------------------------------
 
             $clearCartStmt = $pdo->prepare("
                 DELETE FROM cart_items
                 WHERE user_id = ?
             ");
 
-            $clearCartStmt->execute([
-                $userId
-            ]);
-
-
-            // --------------------------------------------------
-            // COMMIT
-            // --------------------------------------------------
+            $clearCartStmt->execute([$userId]);
 
             $pdo->commit();
 
-
             $orderPlaced = true;
-
-            $orderTotal =
-                $total;
-
-
-            // Generate a new CSRF token
-            // after successful state change.
-            $_SESSION["csrf_token"] =
-                bin2hex(random_bytes(32));
-
-
+            $orderTotal = $total;
+            $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
         } catch (Throwable $e) {
-
-            if (
-                $pdo->inTransaction()
-            ) {
-
+            if ($pdo->inTransaction()) {
                 $pdo->rollBack();
-
             }
 
-
-            $errors[] =
-                $e->getMessage();
-
+            $errors[] = $e->getMessage();
         }
-
     }
-
 }
-
-
-// ==================================================
-// GET CURRENT CART FOR DISPLAY
-// ==================================================
 
 $cartStmt = $pdo->prepare("
     SELECT
@@ -629,88 +321,39 @@ $cartStmt = $pdo->prepare("
     ORDER BY cart_items.id DESC
 ");
 
-$cartStmt->execute([
-    $userId
-]);
-
-$cartItems =
-    $cartStmt->fetchAll(
-        PDO::FETCH_ASSOC
-    );
-
-
-// ==================================================
-// CALCULATE CART TOTALS
-// ==================================================
+$cartStmt->execute([$userId]);
+$cartItems = $cartStmt->fetchAll(PDO::FETCH_ASSOC);
 
 $subtotal = 0;
-
 $cartCount = 0;
 
-
 foreach ($cartItems as $item) {
+    $quantity = (int)$item["quantity"];
+    $price = (float)$item["price"];
 
-    $quantity =
-        (int)$item["quantity"];
-
-    $price =
-        (float)$item["price"];
-
-    $subtotal +=
-        $price * $quantity;
-
-    $cartCount +=
-        $quantity;
-
+    $subtotal += $price * $quantity;
+    $cartCount += $quantity;
 }
 
-
-// If order was successfully placed,
-// the cart is empty after processing.
 if ($orderPlaced) {
-
     $cartCount = 0;
-
     $subtotal = 0;
-
 }
-
 
 $shipping = 0;
-
-$total =
-    $subtotal +
-    $shipping;
-
-
-// ==================================================
-// IMAGE FALLBACK
-// ==================================================
+$total = $subtotal + $shipping;
 
 foreach ($cartItems as &$item) {
-
-    $image =
-        trim(
-            (string)$item["image"]
-        );
-
+    $image = trim((string)$item["image"]);
 
     if (
         $image === "" ||
-        !file_exists(
-            __DIR__ . "/" . $image
-        )
+        !file_exists(__DIR__ . "/" . $image)
     ) {
-
-        $image =
-            "assets/products/fc1-cooler.svg";
-
+        $image = "assets/products/fc1-cooler.svg";
     }
 
-
-    $item["display_image"] =
-        $image;
-
+    $item["display_image"] = $image;
 }
 
 unset($item);
@@ -718,219 +361,68 @@ unset($item);
 ?>
 
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>
-        FROSTCORE — Checkout
-    </title>
-
-
-    <!-- GLOBAL CSS -->
-
-    <link
-        rel="stylesheet"
-        href="css/style.css"
-    >
-
-
-    <!-- SHARED HEADER / PRODUCT CSS -->
-
-    <link
-        rel="stylesheet"
-        href="css/products.css"
-    >
-
-
-    <!-- CHECKOUT CSS -->
-
-    <link
-        rel="stylesheet"
-        href="css/checkout.css"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FROSTCORE — Checkout</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/products.css">
+    <link rel="stylesheet" href="css/checkout.css">
 </head>
-
 
 <body>
 
-
-<!-- ==================================================
-     HEADER
-================================================== -->
-
 <header class="products-header">
-
-
-    <a
-        href="index.php"
-        class="brand"
-    >
-
-        <img
-            src="assets/logo/frostcore_logo.png"
-            alt="FROSTCORE Logo"
-            class="brand-logo"
-        >
-
-        <span>
-            FROSTCORE
-        </span>
-
+    <a href="index.php" class="brand">
+        <img src="assets/logo/frostcore_logo.png" alt="FROSTCORE Logo" class="brand-logo">
+        <span>FROSTCORE</span>
     </a>
 
-
     <nav class="products-nav">
-
-        <a href="index.php">
-            HOME
-        </a>
-
-        <a href="products.php">
-            PRODUCTS
-        </a>
-
-        <a href="about.php">
-            ABOUT US
-        </a>
-
-        <a href="contact.php">
-            CONTACT
-        </a>
-
+        <a href="index.php">HOME</a>
+        <a href="products.php">PRODUCTS</a>
+        <a href="about.php">ABOUT US</a>
+        <a href="contact.php">CONTACT</a>
     </nav>
 
-
     <div class="header-actions">
+        <a href="#" class="header-icon logout-button" title="Logout">♙</a>
 
-        <a
-            href="#"
-            class="header-icon logout-button"
-            title="Logout"
-        >
-            ♙
-        </a>
-
-
-        <a
-            href="cart.php"
-            class="cart-link"
-        >
-
+        <a href="cart.php" class="cart-link">
             🛒
-
-            <span class="cart-number">
-                <?= $cartCount ?>
-            </span>
-
+            <span class="cart-number"><?= $cartCount ?></span>
         </a>
-
     </div>
-
 </header>
 
-
-
-<!-- ==================================================
-     CHECKOUT
-================================================== -->
-
 <main class="checkout-page">
-
-
     <div class="checkout-title">
-
-        <h1>
-            CHECKOUT
-        </h1>
-
-        <p>
-            Review your order and enter your delivery information.
-        </p>
-
+        <h1>CHECKOUT</h1>
+        <p>Review your order and enter your delivery information.</p>
     </div>
 
-
-
-    <!-- ==================================================
-         ERRORS
-    ================================================== -->
-
     <?php if (!empty($errors)): ?>
-
         <div class="checkout-errors">
-
             <?php foreach ($errors as $error): ?>
-
-                <p>
-                    <?= e($error) ?>
-                </p>
-
+                <p><?= e($error) ?></p>
             <?php endforeach; ?>
-
         </div>
-
     <?php endif; ?>
-
-
 
     <?php if (!$orderPlaced && !empty($cartItems)): ?>
 
-
-        <!-- ==================================================
-             ORDER FORM
-        ================================================== -->
-
-        <form
-            method="POST"
-            action="checkout.php"
-            id="checkoutForm"
-        >
-
-            <input
-                type="hidden"
-                name="csrf_token"
-                value="<?= e($_SESSION["csrf_token"]) ?>"
-            >
-
+        <form method="POST" action="checkout.php" id="checkoutForm">
+            <input type="hidden" name="csrf_token" value="<?= e($_SESSION["csrf_token"]) ?>">
 
             <div class="checkout-layout">
-
-
-                <!-- ==================================================
-                     LEFT SIDE
-                ================================================== -->
-
                 <section>
-
-
-                    <!-- CUSTOMER INFORMATION -->
-
                     <div class="checkout-section">
-
-                        <h2>
-                            CUSTOMER INFORMATION
-                        </h2>
-
+                        <h2>CUSTOMER INFORMATION</h2>
 
                         <div class="checkout-form-grid">
-
-
                             <div class="checkout-field">
-
-                                <label for="first_name">
-                                    FIRST NAME
-                                </label>
-
+                                <label for="first_name">FIRST NAME</label>
                                 <input
                                     type="text"
                                     id="first_name"
@@ -940,16 +432,10 @@ unset($item);
                                     maxlength="75"
                                     required
                                 >
-
                             </div>
 
-
                             <div class="checkout-field">
-
-                                <label for="last_name">
-                                    LAST NAME
-                                </label>
-
+                                <label for="last_name">LAST NAME</label>
                                 <input
                                     type="text"
                                     id="last_name"
@@ -959,16 +445,10 @@ unset($item);
                                     maxlength="75"
                                     required
                                 >
-
                             </div>
 
-
                             <div class="checkout-field">
-
-                                <label for="email">
-                                    EMAIL
-                                </label>
-
+                                <label for="email">EMAIL</label>
                                 <input
                                     type="email"
                                     id="email"
@@ -978,16 +458,10 @@ unset($item);
                                     maxlength="190"
                                     required
                                 >
-
                             </div>
 
-
                             <div class="checkout-field">
-
-                                <label for="phone">
-                                    PHONE
-                                </label>
-
+                                <label for="phone">PHONE</label>
                                 <input
                                     type="tel"
                                     id="phone"
@@ -997,16 +471,10 @@ unset($item);
                                     maxlength="40"
                                     required
                                 >
-
                             </div>
 
-
                             <div class="checkout-field full">
-
-                                <label for="address">
-                                    COMPLETE ADDRESS
-                                </label>
-
+                                <label for="address">COMPLETE ADDRESS</label>
                                 <textarea
                                     id="address"
                                     name="address"
@@ -1014,16 +482,10 @@ unset($item);
                                     maxlength="255"
                                     required
                                 ><?= e($_POST["address"] ?? "") ?></textarea>
-
                             </div>
 
-
                             <div class="checkout-field">
-
-                                <label for="city">
-                                    CITY / MUNICIPALITY
-                                </label>
-
+                                <label for="city">CITY / MUNICIPALITY</label>
                                 <input
                                     type="text"
                                     id="city"
@@ -1033,16 +495,10 @@ unset($item);
                                     maxlength="100"
                                     required
                                 >
-
                             </div>
 
-
                             <div class="checkout-field">
-
-                                <label for="province">
-                                    PROVINCE
-                                </label>
-
+                                <label for="province">PROVINCE</label>
                                 <input
                                     type="text"
                                     id="province"
@@ -1052,16 +508,10 @@ unset($item);
                                     maxlength="100"
                                     required
                                 >
-
                             </div>
 
-
                             <div class="checkout-field">
-
-                                <label for="postal_code">
-                                    POSTAL CODE
-                                </label>
-
+                                <label for="postal_code">POSTAL CODE</label>
                                 <input
                                     type="text"
                                     id="postal_code"
@@ -1071,407 +521,161 @@ unset($item);
                                     maxlength="20"
                                     required
                                 >
-
                             </div>
-
-
                         </div>
-
                     </div>
 
-
-
-                    <!-- PAYMENT -->
-
                     <div class="checkout-section">
-
-                        <h2>
-                            PAYMENT METHOD
-                        </h2>
-
+                        <h2>PAYMENT METHOD</h2>
 
                         <div class="payment-options">
-
-
                             <label class="payment-option">
-
                                 <input
                                     type="radio"
                                     name="payment_method"
                                     value="COD"
-                                    <?= (
-                                        $_POST["payment_method"] ?? "COD"
-                                    ) === "COD"
-                                        ? "checked"
-                                        : "" ?>
+                                    <?= ($_POST["payment_method"] ?? "COD") === "COD" ? "checked" : "" ?>
                                     required
                                 >
-
-                                <span>
-                                    Cash on Delivery
-                                </span>
-
+                                <span>Cash on Delivery</span>
                             </label>
 
-
                             <label class="payment-option">
-
                                 <input
                                     type="radio"
                                     name="payment_method"
                                     value="GCash"
-                                    <?= (
-                                        $_POST["payment_method"] ?? ""
-                                    ) === "GCash"
-                                        ? "checked"
-                                        : "" ?>
+                                    <?= ($_POST["payment_method"] ?? "") === "GCash" ? "checked" : "" ?>
                                 >
-
-                                <span>
-                                    GCash
-                                </span>
-
+                                <span>GCash</span>
                             </label>
 
-
                             <label class="payment-option">
-
                                 <input
                                     type="radio"
                                     name="payment_method"
                                     value="Card"
-                                    <?= (
-                                        $_POST["payment_method"] ?? ""
-                                    ) === "Card"
-                                        ? "checked"
-                                        : "" ?>
+                                    <?= ($_POST["payment_method"] ?? "") === "Card" ? "checked" : "" ?>
                                 >
-
-                                <span>
-                                    Card
-                                </span>
-
+                                <span>Card</span>
                             </label>
-
-
                         </div>
-
                     </div>
 
-
-
-                    <!-- YOUR ORDER -->
-
                     <div class="checkout-section">
-
-                        <h2>
-                            YOUR ORDER
-                        </h2>
-
+                        <h2>YOUR ORDER</h2>
 
                         <?php foreach ($cartItems as $item): ?>
-
                             <?php
-
                             $itemTotal =
                                 (float)$item["price"] *
                                 (int)$item["quantity"];
-
                             ?>
 
-
                             <div class="checkout-item">
-
-
                                 <div class="checkout-item-image">
-
                                     <img
-                                        src="<?= e(
-                                            $item["display_image"]
-                                        ) ?>"
-                                        alt="<?= e(
-                                            $item["name"]
-                                        ) ?>"
+                                        src="<?= e($item["display_image"]) ?>"
+                                        alt="<?= e($item["name"]) ?>"
                                     >
-
                                 </div>
-
 
                                 <div class="checkout-item-info">
-
-                                    <h3>
-
-                                        <?= e(
-                                            $item["name"]
-                                        ) ?>
-
-                                    </h3>
-
-
+                                    <h3><?= e($item["name"]) ?></h3>
                                     <p>
-
                                         <?= (int)$item["quantity"] ?>
-
                                         ×
-
-                                        <?= money(
-                                            $item["price"]
-                                        ) ?>
-
+                                        <?= money($item["price"]) ?>
                                     </p>
-
                                 </div>
-
 
                                 <div class="checkout-item-price">
-
-                                    <?= money(
-                                        $itemTotal
-                                    ) ?>
-
+                                    <?= money($itemTotal) ?>
                                 </div>
-
-
                             </div>
-
-
                         <?php endforeach; ?>
-
-
                     </div>
-
-
                 </section>
 
-
-
-                <!-- ==================================================
-                     RIGHT SIDE
-                ================================================== -->
-
                 <aside class="checkout-summary">
-
-
-                    <h2>
-                        ORDER SUMMARY
-                    </h2>
-
+                    <h2>ORDER SUMMARY</h2>
 
                     <div class="summary-row">
-
-                        <span>
-                            Items
-                        </span>
-
-                        <strong>
-                            <?= $cartCount ?>
-                        </strong>
-
+                        <span>Items</span>
+                        <strong><?= $cartCount ?></strong>
                     </div>
-
 
                     <div class="summary-row">
-
-                        <span>
-                            Subtotal
-                        </span>
-
-                        <strong>
-
-                            <?= money(
-                                $subtotal
-                            ) ?>
-
-                        </strong>
-
+                        <span>Subtotal</span>
+                        <strong><?= money($subtotal) ?></strong>
                     </div>
-
 
                     <div class="summary-row">
-
-                        <span>
-                            Shipping
-                        </span>
-
-                        <strong>
-                            FREE
-                        </strong>
-
+                        <span>Shipping</span>
+                        <strong>FREE</strong>
                     </div>
-
 
                     <div class="summary-total">
-
-                        <span>
-                            TOTAL
-                        </span>
-
-                        <strong>
-
-                            <?= money(
-                                $total
-                            ) ?>
-
-                        </strong>
-
+                        <span>TOTAL</span>
+                        <strong><?= money($total) ?></strong>
                     </div>
 
-
-                    <button
-                        type="submit"
-                        class="place-order-button"
-                    >
+                    <button type="submit" class="place-order-button">
                         PLACE ORDER
                     </button>
 
-
-                    <a
-                        href="cart.php"
-                        class="back-cart"
-                    >
+                    <a href="cart.php" class="back-cart">
                         ← BACK TO CART
                     </a>
-
-
                 </aside>
-
-
             </div>
-
-
         </form>
-
 
     <?php elseif (!$orderPlaced): ?>
 
-
-        <!-- ==================================================
-             EMPTY CART
-        ================================================== -->
-
         <div class="checkout-section empty-checkout">
-
-            <h2>
-                YOUR CART IS EMPTY
-            </h2>
-
+            <h2>YOUR CART IS EMPTY</h2>
 
             <p class="empty-checkout-message">
-
                 Add products to your cart before checking out.
-
             </p>
 
-
-            <a
-                href="products.php"
-                class="checkout-button"
-            >
+            <a href="products.php" class="checkout-button">
                 CONTINUE SHOPPING
             </a>
-
         </div>
-
 
     <?php endif; ?>
-
-
 </main>
 
-
-
-<!-- ==================================================
-     ORDER SUCCESS
-================================================== -->
-
 <?php if ($orderPlaced): ?>
-
-
     <div class="order-success-overlay">
-
-
         <div class="order-success-modal">
+            <div class="order-success-icon">✓</div>
 
+            <h2>ORDER CONFIRMED</h2>
 
-            <div class="order-success-icon">
-
-                ✓
-
-            </div>
-
-
-            <h2>
-
-                ORDER CONFIRMED
-
-            </h2>
-
+            <p>Thank you for your FROSTCORE order.</p>
 
             <p>
-
-                Thank you for your FROSTCORE order.
-
-            </p>
-
-
-            <p>
-
                 Order Number:
-
-                <strong>
-
-                    <?= e(
-                        $orderNumber
-                    ) ?>
-
-                </strong>
-
+                <strong><?= e($orderNumber) ?></strong>
             </p>
-
 
             <p class="order-success-total">
-
-                <?= money(
-                    $orderTotal
-                ) ?>
-
+                <?= money($orderTotal) ?>
             </p>
 
-
-            <a
-                href="products.php"
-                class="order-success-button"
-            >
-
+            <a href="products.php" class="order-success-button">
                 CONTINUE SHOPPING
-
             </a>
-
-
         </div>
-
-
     </div>
-
-
 <?php endif; ?>
-
-
-
-<!-- ==================================================
-     SHARED LOGOUT POPUP
-================================================== -->
 
 <?php require_once "includes/logout-popup.php"; ?>
 
-
-<!-- ==================================================
-     JAVASCRIPT
-================================================== -->
-
 <script src="js/script.js"></script>
 
-
 </body>
-
 </html>

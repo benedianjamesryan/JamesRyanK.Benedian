@@ -1,0 +1,116 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #050A16;
+    color: #F4F7FF;
+    font-family: Inter, Arial, sans-serif;
+}
+
+.admin-login {
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
+    background: #111A31;
+    border: 1px solid #263452;
+    box-shadow: 0 0 35px rgba(0, 215, 255, 0.08);
+}
+
+.admin-brand {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.admin-brand img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    margin: 0 auto 15px;
+}
+
+.admin-brand h1 {
+    margin: 0;
+    font-family: Orbitron, sans-serif;
+    font-size: 24px;
+    letter-spacing: 1px;
+}
+
+.admin-brand p {
+    margin: 8px 0 0;
+    color: #AAB5CA;
+    font-size: 11px;
+}
+
+.admin-error {
+    margin-bottom: 18px;
+    padding: 12px;
+    background: rgba(255, 95, 95, 0.08);
+    border: 1px solid #ff5f5f;
+    color: #ff9a9a;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.admin-field {
+    margin-bottom: 18px;
+}
+
+.admin-field label {
+    display: block;
+    margin-bottom: 7px;
+    color: #AAB5CA;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.admin-field input {
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    background: #081225;
+    border: 1px solid #263452;
+    color: #F4F7FF;
+    outline: none;
+    font-size: 11px;
+}
+
+.admin-field input:focus {
+    border-color: #4DBCF4;
+    box-shadow: 0 0 10px rgba(77, 188, 244, 0.08);
+}
+
+.admin-submit {
+    width: 100%;
+    height: 45px;
+    border: 1px solid #4DBCF4;
+    background: #4DBCF4;
+    color: #050A16;
+    font-size: 10px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.admin-submit:hover {
+    filter: brightness(1.08);
+}
+
+.back-home {
+    display: block;
+    margin-top: 18px;
+    text-align: center;
+    color: #AAB5CA;
+    font-size: 9px;
+    text-decoration: none;
+}
+
+.back-home:hover {
+    color: #4DBCF4;
+}

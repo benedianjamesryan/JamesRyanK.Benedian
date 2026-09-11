@@ -1,20 +1,10 @@
 <?php
 
-// ==================================================
-// FROSTCORE LOGIN
-// ==================================================
-
 session_start();
 
 require_once "database/config.php";
 
-
-// ==================================================
-// DEFAULT VALUES
-// ==================================================
-
 $error = "";
-
 $email = "";
 
 $redirect =
@@ -22,71 +12,32 @@ $redirect =
     $_POST["redirect"] ??
     "products.php";
 
-
-// ==================================================
-// SAFE REDIRECT
-// ==================================================
-
 if (
     $redirect === "" ||
     str_contains($redirect, "://") ||
     str_starts_with($redirect, "//") ||
     str_starts_with($redirect, "../")
 ) {
-
     $redirect = "index.php";
-
 }
 
-
-// ==================================================
-// HANDLE LOGIN
-// ==================================================
-
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
-    $email =
-        trim(
-            $_POST["email"] ?? ""
-        );
-
-    $password =
-        $_POST["password"] ?? "";
-
-
-    // --------------------------------------------------
-    // VALIDATION
-    // --------------------------------------------------
+    $email = trim($_POST["email"] ?? "");
+    $password = $_POST["password"] ?? "";
 
     if (
         $email === "" ||
         $password === ""
     ) {
-
-        $error =
-            "Please enter your email and password.";
-
-    }
-
-    elseif (
+        $error = "Please enter your email and password.";
+    } elseif (
         !filter_var(
             $email,
             FILTER_VALIDATE_EMAIL
         )
     ) {
-
-        $error =
-            "Please enter a valid email address.";
-
-    }
-
-    else {
-
-
-        // --------------------------------------------------
-        // FIND USER
-        // --------------------------------------------------
-
+        $error = "Please enter a valid email address.";
+    } else {
         $stmt = $pdo->prepare("
             SELECT
                 id,
@@ -103,15 +54,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $email
         ]);
 
-        $user =
-            $stmt->fetch(
-                PDO::FETCH_ASSOC
-            );
-
-
-        // --------------------------------------------------
-        // VERIFY PASSWORD
-        // --------------------------------------------------
+        $user = $stmt->fetch(
+            PDO::FETCH_ASSOC
+        );
 
         if (
             !$user ||
@@ -120,29 +65,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $user["password"]
             )
         ) {
-
-            $error =
-                "Invalid email or password.";
-
-        }
-
-        else {
-
-
-            // ==================================================
-            // RESET PREVIOUS SESSION
-            // ==================================================
-
+            $error = "Invalid email or password.";
+        } else {
             $_SESSION = [];
 
-
-            // Generate a new session ID.
             session_regenerate_id(true);
-
-
-            // --------------------------------------------------
-            // SAVE USER SESSION
-            // --------------------------------------------------
 
             $_SESSION["user_id"] =
                 (int)$user["id"];
@@ -156,188 +83,96 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $_SESSION["role"] =
                 (string)$user["role"];
 
-
-            // --------------------------------------------------
-            // REDIRECT
-            // --------------------------------------------------
-
             header(
                 "Location: " . $redirect
             );
 
             exit;
-
         }
-
     }
-
 }
 
-
-// ==================================================
-// YEAR
-// ==================================================
-
-$year =
-    date("Y");
+$year = date("Y");
 
 ?>
 
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-
-
-    <title>
-        FROSTCORE — Login
-    </title>
-
-
-    <!-- ==================================================
-         SHARED CSS
-    ================================================== -->
+    <title>FROSTCORE — Login</title>
 
     <link
         rel="stylesheet"
         href="css/style.css"
     >
 
-
-    <!-- ==================================================
-         LOGIN PAGE CSS
-    ================================================== -->
-
     <link
         rel="stylesheet"
         href="css/login.css"
     >
-
 </head>
-
 
 <body class="login-page">
 
-
-<!-- ==================================================
-     HEADER
-================================================== -->
-
 <header class="site-header">
-
-
-    <!-- BRAND -->
-
     <a
         class="brand"
         href="index.php"
     >
-
         <img
             class="brand-logo"
             src="assets/logo/frostcore_logo.png"
             alt="FROSTCORE logo"
         >
 
-
         <span>
             FROSTCORE
         </span>
-
     </a>
-
-
-    <!-- BACK HOME -->
 
     <a
         class="btn btn-small"
         href="index.php"
     >
-
         BACK HOME
-
     </a>
-
-
 </header>
 
-
-
-<!-- ==================================================
-     LOGIN MAIN
-================================================== -->
-
 <main class="login-page-main">
-
-
     <div class="login-card">
-
-
-        <!-- LOGO -->
-
         <img
             class="login-logo"
             src="assets/logo/frostcore_logo.png"
             alt="FROSTCORE logo"
         >
 
-
-        <!-- TITLE -->
-
         <h1>
             WELCOME BACK
         </h1>
 
-
         <p class="login-subtitle">
-
             Sign in to your FROSTCORE experience.
-
         </p>
 
-
-
-        <!-- ==================================================
-             ERROR MESSAGE
-        ================================================== -->
-
         <?php if ($error !== ""): ?>
-
             <div class="form-error">
-
                 <?= htmlspecialchars(
                     $error,
                     ENT_QUOTES,
                     "UTF-8"
                 ) ?>
-
             </div>
-
         <?php endif; ?>
-
-
-
-        <!-- ==================================================
-             LOGIN FORM
-        ================================================== -->
 
         <form
             action="login.php"
             method="post"
         >
-
-
-            <!-- PRESERVE REDIRECT -->
-
             <input
                 type="hidden"
                 name="redirect"
@@ -348,15 +183,9 @@ $year =
                 ) ?>"
             >
 
-
-            <!-- EMAIL -->
-
             <label for="page-email">
-
                 EMAIL
-
             </label>
-
 
             <input
                 id="page-email"
@@ -372,16 +201,9 @@ $year =
                 autocomplete="username"
             >
 
-
-
-            <!-- PASSWORD -->
-
             <label for="page-password">
-
                 PASSWORD
-
             </label>
-
 
             <input
                 id="page-password"
@@ -392,28 +214,15 @@ $year =
                 autocomplete="current-password"
             >
 
-
-
-            <!-- LOGIN BUTTON -->
-
             <button
                 class="btn login-submit"
                 type="submit"
             >
-
                 SIGN IN →
-
             </button>
-
-
         </form>
 
-
-
-        <!-- CREATE ACCOUNT -->
-
         <p class="create">
-
             Don't have an account?
 
             <a
@@ -421,52 +230,27 @@ $year =
                     $redirect
                 ) ?>"
             >
-
                 CREATE ACCOUNT
-
             </a>
-
         </p>
-
-
     </div>
-
-
 </main>
 
-
-
-<!-- ==================================================
-     FOOTER
-================================================== -->
-
 <footer class="footer-bottom login-footer">
-
-
     <span>
-
         © <?= htmlspecialchars(
             $year,
             ENT_QUOTES,
             "UTF-8"
         ) ?>
-
         FROSTCORE.
         All rights reserved.
-
     </span>
-
 
     <span>
-
         STAY COOL. PLAY BETTER.
-
     </span>
-
-
 </footer>
 
-
 </body>
-
 </html>

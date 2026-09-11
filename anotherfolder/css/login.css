@@ -1,395 +1,143 @@
-
-/* =========================================================
-   FROSTCORE — LOGIN PAGE
-   Page-Specific Styles
-   ========================================================= */
-
-
-/* =========================================================
-   LOGIN PAGE
-   ========================================================= */
-
 .login-page {
     min-height: 100vh;
-
     display: flex;
     flex-direction: column;
-
     background: var(--bg);
 }
 
-
-/* =========================================================
-   LOGIN MAIN AREA
-   ========================================================= */
-
 .login-page-main {
     flex: 1;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
-    padding:
-        45px 20px;
+    padding: 45px 20px;
 }
-
-
-/* =========================================================
-   LOGIN CARD
-   ========================================================= */
 
 .login-page .login-card {
     position: relative;
-
-    width:
-        min(450px, 100%);
-
-    padding:
-        35px 40px;
-
-    background:
-        rgba(
-            17,
-            26,
-            49,
-            0.96
-        );
-
-    border:
-        1px solid
-        #2d4568;
-
-    border-radius:
-        8px;
-
-    box-shadow:
-        0 25px 80px
-        rgba(
-            0,
-            0,
-            0,
-            0.55
-        );
+    width: min(450px, 100%);
+    padding: 35px 40px;
+    background: rgba(17, 26, 49, 0.96);
+    border: 1px solid #2d4568;
+    border-radius: 8px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.55);
 }
-
-
-/* =========================================================
-   LOGIN LOGO
-   ========================================================= */
 
 .login-page .login-logo {
-    width:
-        70px;
-
-    height:
-        70px;
-
-    margin:
-        0 auto 10px;
-
-    object-fit:
-        contain;
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 10px;
+    object-fit: contain;
 }
-
-
-/* =========================================================
-   LOGIN TITLE
-   ========================================================= */
 
 .login-page .login-card h1 {
-    margin:
-        0 0 5px;
-
-    text-align:
-        center;
-
-    font-family:
-        "Orbitron",
-        sans-serif;
-
-    font-size:
-        27px;
-
-    line-height:
-        1.08;
+    margin: 0 0 5px;
+    text-align: center;
+    font-family: "Orbitron", sans-serif;
+    font-size: 27px;
+    line-height: 1.08;
 }
-
-
-/* =========================================================
-   LOGIN SUBTITLE
-   ========================================================= */
 
 .login-page .login-subtitle {
-    margin:
-        0 0 25px;
-
-    color:
-        #71809b;
-
-    text-align:
-        center;
-
-    font-size:
-        11px;
+    margin: 0 0 25px;
+    color: #71809b;
+    text-align: center;
+    font-size: 11px;
 }
-
-
-/* =========================================================
-   LOGIN ERROR
-   ========================================================= */
 
 .login-page .form-error {
-    margin-bottom:
-        15px;
-
-    padding:
-        10px 12px;
-
-    color:
-        #ff9a9a;
-
-    background:
-        rgba(
-            255,
-            95,
-            95,
-            0.08
-        );
-
-    border:
-        1px solid
-        rgba(
-            255,
-            95,
-            95,
-            0.35
-        );
-
-    font-size:
-        10px;
-
-    line-height:
-        1.5;
+    margin-bottom: 15px;
+    padding: 10px 12px;
+    color: #ff9a9a;
+    background: rgba(255, 95, 95, 0.08);
+    border: 1px solid rgba(255, 95, 95, 0.35);
+    font-size: 10px;
+    line-height: 1.5;
 }
-
-
-/* =========================================================
-   LOGIN FORM
-   ========================================================= */
 
 .login-page .login-card form {
-    width:
-        100%;
+    width: 100%;
 }
-
-
-/* =========================================================
-   LOGIN LABELS
-   ========================================================= */
 
 .login-page .login-card label {
-    display:
-        block;
-
-    margin:
-        13px 0 6px;
-
-    color:
-        #d6ddec;
-
-    font-size:
-        9px;
-
-    font-weight:
-        700;
-
-    letter-spacing:
-        0.03em;
+    display: block;
+    margin: 13px 0 6px;
+    color: #d6ddec;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
 }
-
-
-/* =========================================================
-   LOGIN INPUTS
-   ========================================================= */
 
 .login-page .login-card input {
-    width:
-        100%;
-
-    height:
-        42px;
-
-    padding:
-        0 12px;
-
-    background:
-        var(--input-bg);
-
-    border:
-        1px solid
-        #2a4263;
-
-    border-radius:
-        4px;
-
-    color:
-        #ffffff;
-
-    outline:
-        none;
-
-    font-family:
-        Inter,
-        Arial,
-        sans-serif;
-
-    font-size:
-        11px;
-
-    transition:
-        0.2s ease;
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    background: var(--input-bg);
+    border: 1px solid #2a4263;
+    border-radius: 4px;
+    color: #ffffff;
+    outline: none;
+    font-family: Inter, Arial, sans-serif;
+    font-size: 11px;
+    transition: 0.2s ease;
 }
-
 
 .login-page .login-card input::placeholder {
-    color:
-        #596a85;
+    color: #596a85;
 }
-
 
 .login-page .login-card input:focus {
-    border-color:
-        var(--blue);
-
-    box-shadow:
-        0 0 0 1px
-        rgba(
-            77,
-            188,
-            244,
-            0.15
-        );
+    border-color: var(--blue);
+    box-shadow: 0 0 0 1px rgba(77, 188, 244, 0.15);
 }
-
-
-/* =========================================================
-   LOGIN SUBMIT BUTTON
-   ========================================================= */
 
 .login-page .login-submit {
-    width:
-        100%;
-
-    margin-top:
-        20px;
+    width: 100%;
+    margin-top: 20px;
 }
-
-
-/* =========================================================
-   CREATE ACCOUNT
-   ========================================================= */
 
 .login-page .create {
-    margin-top:
-        18px;
-
-    color:
-        #71809b;
-
-    text-align:
-        center;
-
-    font-size:
-        10px;
+    margin-top: 18px;
+    color: #71809b;
+    text-align: center;
+    font-size: 10px;
 }
-
 
 .login-page .create a {
-    color:
-        var(--blue);
-
-    font-weight:
-        700;
+    color: var(--blue);
+    font-weight: 700;
 }
-
 
 .login-page .create a:hover {
-    text-decoration:
-        underline;
+    text-decoration: underline;
 }
-
-
-/* =========================================================
-   LOGIN FOOTER
-   ========================================================= */
 
 .login-page .login-footer {
-    width:
-        100%;
-
-    padding:
-        15px 9%;
-
-    margin:
-        0;
-
-    border-top:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.04
-        );
-
-    color:
-        #68758d;
-
-    font-family:
-        "Orbitron",
-        sans-serif;
-
-    font-size:
-        8px;
+    width: 100%;
+    padding: 15px 9%;
+    margin: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    color: #68758d;
+    font-family: "Orbitron", sans-serif;
+    font-size: 8px;
 }
 
-
-/* =========================================================
-   LOGIN RESPONSIVE
-   ========================================================= */
-
 @media (max-width: 520px) {
-
     .login-page-main {
-        padding:
-            30px 15px;
+        padding: 30px 15px;
     }
-
 
     .login-page .login-card {
-        width:
-            100%;
-
-        padding:
-            28px 22px;
+        width: 100%;
+        padding: 28px 22px;
     }
-
 
     .login-page .login-logo {
-        width:
-            55px;
-
-        height:
-            55px;
+        width: 55px;
+        height: 55px;
     }
-
 
     .login-page .login-card h1 {
-        font-size:
-            23px;
+        font-size: 23px;
     }
-
 }

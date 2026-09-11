@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+<defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#17233d"/><stop offset="1" stop-color="#050a16"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<circle cx="250" cy="250" r="180" fill="url(#g)" stroke="#4dbcf4" stroke-width="8"/><circle cx="250" cy="250" r="142" fill="#0a1224" stroke="#31506f" stroke-width="5"/>
+<g fill="#4dbcf4" opacity=".9" filter="url(#glow)"><path d="M250 250 L250 115 Q285 145 276 198 Z"/><path d="M250 250 L385 170 Q390 218 350 240 Z"/><path d="M250 250 L385 330 Q345 350 300 320 Z"/><path d="M250 250 L250 385 Q215 350 224 302 Z"/><path d="M250 250 L115 330 Q110 282 150 260 Z"/><path d="M250 250 L115 170 Q155 150 200 180 Z"/></g>
+<circle cx="250" cy="250" r="48" fill="#f4f7ff" stroke="#00d7ff" stroke-width="7"/><circle cx="250" cy="250" r="15" fill="#4dbcf4"/><polygon points="250,180 264,235 320,235 275,268 290,323 250,290 210,323 225,268 180,235 236,235" fill="#00d7ff" opacity=".85"/>
+</svg>
